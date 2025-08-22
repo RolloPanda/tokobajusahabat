@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Overview — Dashboard Admin</title>
+  <link rel="icon" href="assets/favicon.ico" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    html, body { font-family: system-ui, sans-serif; background-color: #f8f9fa; height: 100%; }
+    .btn-outline-primary { border-color: #8B004B; color: #8B004B; }
+    .btn-outline-primary:hover { background-color: #8B004B; color: white; }
+    .hero { background: linear-gradient(to right, #8B004B, #ad1457); color: white; padding: 3rem 1rem; text-align: center; }
+    .sidebar { background: #fff; border-right: 1px solid #e5e5e5; height: calc(100vh - 56px - 80px); padding-top: 1rem; }
+    .sidebar a { color: #333; display: block; padding: .75rem 1.5rem; text-decoration: none; }
+    .sidebar a.active, .sidebar a:hover { background-color: #f1f1f1; color: #8B004B; }
+    .content { padding: 2rem; }
+    .card-overview {
+      border-radius: 1rem;
+      box-shadow: 0 .25rem .5rem rgba(0,0,0,0.1);
+      transition: transform .2s;
+      cursor: pointer;
+      height: 160px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+    .card-overview:hover { transform: translateY(-5px); }
+    .preview-title { color: #8B004B; font-weight: bold; font-size: 1.2rem; margin-bottom: .5rem; }
+    .preview-text { font-size: .95rem; color: #555; }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="dashboardadmin.html">Toko Baju Sahabat</a>
+      <div class="d-flex align-items-center ms-auto" style="gap:.5rem;">
+        <button id="logout" class="btn btn-outline-primary btn-sm">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>Overview</h1>
+    <p id="welcome">Memuat informasi...</p>
+  </section>
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <nav class="col-md-2 sidebar d-none d-md-block">
+        <a href="dashboardadmin.html" class="active">
+          <i class="bi bi-speedometer2 me-2"></i>Dashboard
+        </a>
+        <a href="produkadmin.html">
+          <i class="bi bi-tags me-2"></i>Kelola Produk
+        </a>
+        <a href="stok.html">
+          <i class="bi bi-box-seam me-2"></i>Manajemen Stok
+        </a>
+        <a href="pembelian.html">
+          <i class="bi bi-download me-2"></i>Pembelian (Barang Masuk)
+        </a>
+        <a href="penjualan.html">
+          <i class="bi bi-upload me-2"></i>Penjualan (Barang Keluar)
+        </a>
+        <a href="offline.html">
+          <i class="bi bi-shop me-2"></i>Penjualan Offline
+        </a>
+        <a href="kelolapesanan.html">
+          <i class="bi bi-inboxes me-2"></i>Kelola Pesanan Online
+        </a>
+        <a href="laporan.html">
+          <i class="bi bi-file-earmark-bar-graph me-2"></i>Laporan Stok
+        </a>
+        <a href="laporanpenjualan.html">
+          <i class="bi bi-clipboard-data me-2"></i>Laporan Penjualan
+        </a>
+        <a href="grafik.html">
+          <i class="bi bi-bar-chart me-2"></i>Grafik
+        </a>
+        <a href="pengaturan.html">
+          <i class="bi bi-gear me-2"></i>Pengaturan Admin
+        </a>
+      </nav>
+
+      <!-- Main Content -->
+      <main class="col-md-10 content">
+        <div class="row g-4">
+          <div class="col-sm-6 col-lg-3">
+            <div class="card card-admin p-3 text-center">
+              <h6>Total Produk</h6>
+              <h2 id="totalProduk">—</h2>
+            </div>
+          </div>
+          <div class="col-sm-6 col-lg-3">
+            <div class="card card-admin p-3 text-center">
+              <h6>Penjualan Hari Ini</h6>
+              <h2 id="penjualanHari">—</h2>
+            </div>
+          </div>
+          <div class="col-sm-6 col-lg-3">
+            <div class="card card-admin p-3 text-center">
+              <h6>Stok Menipis</h6>
+              <h2 id="stokMenipis">—</h2>
+            </div>
+          </div>
+          <div class="col-sm-6 col-lg-3">
+            <div class="card card-admin p-3 text-center">
+              <h6>Pendapatan Hari Ini</h6>
+              <h2 id="pendapatan">—</h2>
+            </div>
+          </div>
+        </div>
+        <div class="section-preview mt-4">
+          <div class="row g-3">
+            <div class="col-md-4">
+              <div class="card-overview" onclick="location.href='kelolapesanan.html'">
+                <h5 class="preview-title">Kelola Pesanan</h5>
+                <p class="preview-text">Kelola seluruh pesanan masuk & proses pesanan</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card-overview" onclick="location.href='pembelian.html'">
+                <h5 class="preview-title">Pembelian & Penjualan</h5>
+                <p class="preview-text">Sekilas transaksi masuk/keluar</p>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card-overview" onclick="location.href='stok.html'">
+                <h5 class="preview-title">Stok & Manajemen</h5>
+                <p class="preview-text">Sekilas stok & alert minimal</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // ✅ Periksa token admin
+    const token = localStorage.getItem('adminToken');
+    if (!token || token === "null" || token === "undefined") {
+      alert('Silakan login terlebih dahulu!');
+      localStorage.clear();
+      window.location.href = 'loginadmin.html';
+    }
+
+    // ✅ Logout
+    document.getElementById('logout').addEventListener('click', () => {
+      if (confirm('Yakin ingin logout?')) {
+        localStorage.clear();
+        window.location.href = 'loginadmin.html';
+      }
+    });
+
+    // ✅ Ambil data dashboard
+    (async () => {
+      try {
+        const res = await fetch('/api/admin/dashboard', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          }
+        });
+
+        if (!res.ok) {
+          alert('Sesi Anda berakhir atau token tidak valid, silakan login ulang.');
+          localStorage.clear();
+          window.location.href = 'loginadmin.html';
+          return;
+        }
+
+        const data = await res.json();
+        if (!data.success) {
+          alert(data.message || 'Gagal memuat data dashboard');
+          return;
+        }
+
+        document.getElementById('welcome').textContent = `Selamat datang, ${data.admin.email}`;
+        document.getElementById('totalProduk').textContent = data.stats.totalProduk;
+        document.getElementById('penjualanHari').textContent = data.stats.penjualanHari;
+        document.getElementById('stokMenipis').textContent = data.stats.stokMenipis;
+        document.getElementById('pendapatan').textContent = `Rp ${data.stats.pendapatanHari.toLocaleString('id-ID')}`;
+      } catch (err) {
+        console.error('Error Dashboard:', err);
+        alert('Terjadi kesalahan, silakan login ulang.');
+        localStorage.clear();
+        window.location.href = 'loginadmin.html';
+      }
+    })();
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

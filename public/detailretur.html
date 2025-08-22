@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Detail Retur - Toko Baju Sahabat</title>
+  <link rel="icon" href="assets/favicon.ico" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    body { background-color: #f8f9fa; font-family: system-ui, sans-serif; padding-top: 70px; color: #222; }
+    .content-container {
+      max-width: 900px; background: #fff; border-radius: 15px;
+      padding: 2rem 2.5rem; box-shadow: 0 0.3rem 0.9rem rgba(139,0,75,0.13);
+      margin: 2rem auto; border: 2px solid #f8dff2;
+    }
+    h2 { color: #8B004B; font-weight: 800; text-align: center; margin-bottom: 1.5rem; }
+    .badge-retur { font-size: .95em; font-weight:600; padding:.35em 1em; border-radius:.7em; margin-left:.5em; }
+    .badge-retur.menunggu { background:#fff3cd; color:#8B7300; }
+    .badge-retur.diproses  { background:#e7dfff; color:#6c24b7; }
+    .badge-retur.diterima  { background:#d2ffe3; color:#008B2F; }
+    .badge-retur.ditolak   { background:#ffe2e2; color:#e14c61; }
+    .badge-retur.kosong    { background:#eaeaea; color:#999; }
+    .info-box {
+      border:1.5px solid #8B004B33; border-radius:10px;
+      background:#fdf6fa; padding:1.2rem 1.4rem; margin-bottom:1.2rem;
+    }
+    .bukti-retur-img {
+      max-width:340px; max-height:320px; display:block; margin:0 auto 1rem;
+      border:2px solid #f7d2ee; border-radius:12px;
+      box-shadow:0 1px 8px #8B004B22;
+    }
+    .table thead { background:#8B004B; color:#fff; }
+    .table td, .table th { border:none; padding:.72rem 1rem; }
+    .table-striped > tbody > tr:nth-of-type(odd) { background-color: #fbe7f2; }
+    .form-shipping, .shipping-info { display: none; margin-top: 1.5rem; }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm fixed-top">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">Toko Baju Sahabat</a>
+    </div>
+  </nav>
+
+  <div class="container content-container">
+    <h2>Detail Retur Pesanan</h2>
+    <div id="detailContainer"></div>
+
+    <!-- Form Pengiriman Balik -->
+    <div class="info-box form-shipping" id="shippingBox">
+      <h5><i class="bi bi-truck"></i> Konfirmasi Pengiriman Balik</h5>
+      <form id="formShipping">
+        <div class="mb-3">
+          <label for="awb" class="form-label">No. AWB <span class="text-danger">*</span></label>
+          <input type="text" id="awb" name="awb" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label for="kurir" class="form-label">Kurir <span class="text-danger">*</span></label>
+          <input type="text" id="kurir" name="kurir" class="form-control" required>
+        </div>
+        <div class="mb-3">
+          <label for="ongkir" class="form-label">Ongkir (Rp) <span class="text-danger">*</span></label>
+          <input type="number" id="ongkir" name="ongkir" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary w-100">
+          <i class="bi bi-box-arrow-in-up-right"></i> Kirim Retur
+        </button>
+      </form>
+    </div>
+
+    <!-- Info Pengiriman Balik -->
+    <div class="info-box shipping-info" id="shippingInfo">
+      <h5><i class="bi bi-truck"></i> Data Pengiriman Balik</h5>
+      <p><strong>Kurir Pengembalian:</strong> <span id="infoKurir"></span></p>
+      <p><strong>No. AWB:</strong> <span id="infoAwb"></span></p>
+      <p><strong>Ongkir:</strong> Rp <span id="infoOngkir"></span></p>
+    </div>
+  </div>
+
+  <script>
+    const id              = new URLSearchParams(location.search).get('id');
+    const detailContainer = document.getElementById('detailContainer');
+    const shippingBox     = document.getElementById('shippingBox');
+    const shippingInfo    = document.getElementById('shippingInfo');
+    const infoKurir       = document.getElementById('infoKurir');
+    const infoAwb         = document.getElementById('infoAwb');
+    const infoOngkir      = document.getElementById('infoOngkir');
+    const formShipping    = document.getElementById('formShipping');
+
+    function fmtDate(d) {
+      return d ? new Date(d).toLocaleString('id-ID') : '-';
+    }
+
+    async function loadDetail() {
+      if (!id) return alert('ID pesanan tidak ditemukan.');
+
+      shippingBox.style.display  = 'none';
+      shippingInfo.style.display = 'none';
+
+      // 1) ambil status retur
+      const r1 = await fetch(`/api/pembayaran/retur/${id}`);
+      if (!r1.ok) return alert('Gagal memuat status retur.');
+      const retur = await r1.json();
+
+      // 2) ambil detail pesanan
+      const r2 = await fetch(`/api/pembayaran/${id}`);
+      if (!r2.ok) return alert('Gagal memuat detail pesanan.');
+      const o = await r2.json();
+
+      // hitung berat
+      let totalBerat = 0;
+      ((retur.items && retur.items.length) ? retur.items : (o.items || [])).forEach(i => {
+        totalBerat += (i.berat || 0) * i.jumlah;
+      });
+      const bAkurat = (totalBerat / 1000).toFixed(2) + ' kg';
+      const bBulat = Math.ceil(totalBerat / 1000) + ' kg';
+
+      detailContainer.innerHTML = `
+        <div class="info-box mb-4">
+          <h5><i class="bi bi-arrow-counterclockwise"></i> Info Retur
+            <span class="badge-retur ${
+              { "Menunggu Konfirmasi":"menunggu",
+                "Diproses":"diproses",
+                "Diterima":"diterima",
+                "Ditolak":"ditolak"
+              }[retur.status]||"kosong"}">${retur.status||'-'}</span>
+          </h5>
+          <p><strong>Alasan:</strong> ${retur.alasan||'-'}</p>
+          <p><strong>Deskripsi:</strong> ${retur.deskripsi||'-'}</p>
+          <p><strong>Ajukan:</strong> ${fmtDate(retur.createdAt)}</p>
+          <p><strong>Update:</strong> ${fmtDate(retur.updatedAt)}</p>
+          <p><strong>Bank:</strong> ${retur.bank||'-'}</p>
+          <p><strong>Rek:</strong> ${retur.rekening||'-'}</p>
+          <p><strong>Pemilik:</strong> ${retur.pemilik||'-'}</p>
+          <div id="buktiRetur"></div>
+        </div>
+
+        <div class="info-box mb-4">
+          <h5><i class="bi bi-truck"></i> Pengiriman Awal</h5>
+          <p>${o.detailPesanan?.alamat||'-'}, ${o.detailPesanan?.kota||'-'}<br>${o.detailPesanan?.provinsi||'-'}</p>
+          <p><strong>Kurir:</strong> ${o.detailPesanan?.kurir||'-'}</p>
+          <p><strong>Resi:</strong> ${o.detailPesanan?.resi||'-'}</p>
+          <p><strong>Berat Akurat:</strong> ${bAkurat}</p>
+          <p><strong>Berat Dibulatkan:</strong> ${bBulat}</p>
+        </div>
+
+        <div class="table-responsive mb-4">
+          <h5><i class="bi bi-bag"></i> Daftar Produk</h5>
+          <table class="table table-striped table-sm">
+            <thead>
+              <tr>
+                <th>No</th><th>Nama</th><th>Jumlah</th><th>Ukuran</th><th>Harga</th><th>Total</th><th>Berat</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${
+                ((retur.items && retur.items.length) ? retur.items : (o.items || [])).map((it,i) => `
+                  <tr>
+                    <td>${i+1}</td>
+                    <td>${it.nama}</td>
+                    <td>${it.jumlah}</td>
+                    <td>${it.ukuran || '-'}</td>
+                    <td>Rp ${(it.harga || 0).toLocaleString('id-ID')}</td>
+                    <td>Rp ${((it.harga || 0) * it.jumlah).toLocaleString('id-ID')}</td>
+                    <td>${it.berat || 0} gr</td>
+                  </tr>
+                `).join('')
+              }
+            </tbody>
+          </table>
+        </div>
+      `;
+
+      // muat gambar bukti retur
+      fetch(`/api/pembayaran/retur/bukti/${id}`)
+        .then(r => r.ok ? r.blob() : Promise.reject())
+        .then(blob => {
+          const img = document.createElement('img');
+          img.src = URL.createObjectURL(blob);
+          img.className = 'bukti-retur-img';
+          document.getElementById('buktiRetur').appendChild(img);
+        })
+        .catch(() => {});
+
+      // === Workflow shipping ===
+      if (retur.status === 'Diterima') {
+        if (
+          retur.shipmentAwb && retur.shipmentKurir && typeof retur.shipmentOngkir !== 'undefined'
+        ) {
+          infoKurir.textContent  = retur.shipmentKurir || '-';
+          infoAwb.textContent    = retur.shipmentAwb   || '-';
+          infoOngkir.textContent = Number(retur.shipmentOngkir || 0).toLocaleString('id-ID');
+          shippingInfo.style.display = 'block';
+          shippingBox.style.display  = 'none';
+        } else {
+          shippingBox.style.display = 'block';
+          shippingInfo.style.display = 'none';
+        }
+      }
+    }
+
+    formShipping.addEventListener('submit', async e => {
+      e.preventDefault();
+      const awb   = formShipping.awb.value.trim();
+      const kurir = formShipping.kurir.value.trim();
+      const ongkir= parseInt(formShipping.ongkir.value.trim(), 10);
+      if (!awb || !kurir || isNaN(ongkir)) {
+        return alert('Semua field wajib diisi dengan benar.');
+      }
+      const res = await fetch(`/api/pembayaran/retur/${id}/kirim`, {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ awb, kurir, ongkir })
+      });
+      const j = await res.json();
+      if (res.ok) {
+        alert('Pengiriman retur berhasil disimpan.');
+        await loadDetail();
+      } else {
+        alert(j.message || 'Gagal kirim retur.');
+      }
+    });
+
+    document.addEventListener('DOMContentLoaded', loadDetail);
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

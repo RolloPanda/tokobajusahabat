@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Busana Muslim - Toko Baju Sahabat</title>
+  <link rel="icon" href="assets/favicon.ico" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background-color: #f8f9fa;
+      min-height: 100vh;
+    }
+
+    /* ====== Navbar ====== */
+    .navbar-brand { color: #8B004B !important; letter-spacing:.5px; }
+    .navbar { box-shadow: 0 2px 10px 0 rgba(139,0,75,.05);}
+
+    .navbar .dropdown-menu {
+      border-radius: 0.7em; box-shadow: 0 6px 32px #8b004b20; border: 1.5px solid #8b004b0d;
+      min-width: 210px; padding: .7em 0; margin-top: 0.6em; transition: box-shadow .13s;
+    }
+    .navbar .dropdown-menu .dropdown-item {
+      padding: .53em 1.3em; transition: background .15s, color .15s; font-size: 1.05em; border-radius: 8px;
+    }
+    .navbar .dropdown-menu .dropdown-item:hover,
+    .navbar .dropdown-menu .dropdown-item:focus {
+      background: linear-gradient(90deg, #ffd1eb2a 0%, #8B004B11 100%);
+      color: #8B004B; font-weight: 500; box-shadow: 0 2px 7px #8B004B0c;
+    }
+    .dropdown-divider { border-color:#eee; margin:.3em 0; }
+    .dropdown-submenu { position:relative; }
+    .dropdown-submenu > .dropdown-menu {
+      left: 100%; top: 0; margin-top: -1px; border-radius: 0.7em; box-shadow: 0 6px 32px #8b004b1c;
+      border: 1.5px solid #8b004b0d; min-width: 185px; display: none; position: absolute;
+    }
+
+    @media (min-width: 992px) {
+      .navbar .dropdown:hover > .dropdown-menu { display: block; margin-top: 0; animation: navDrop .17s; }
+      .dropdown-submenu:hover > .dropdown-menu { display: block; left: 100%; top: 0; margin-top: -1px; }
+    }
+    @keyframes navDrop { from { opacity: 0; transform: translateY(13px);} to { opacity: 1; transform: none;} }
+
+    /* ====== Mobile Navbar behaviors (samakan dengan index.html) ====== */
+    @media (max-width:991.98px){
+      .navbar .dropdown-menu { position: static !important; box-shadow: none; border-radius: 0.7em; margin-top: .6em; }
+      .dropdown-submenu > .dropdown-menu { position: static !important; margin: .25rem 0 .5rem 1.2rem; box-shadow: none; border: none; background: #fff; min-width: unset; display: none; }
+      .dropdown-submenu.show > .dropdown-menu { display: block !important; }
+
+      .navbar .collapse .d-flex { flex-wrap:wrap; gap:.5rem; }
+      .navbar .collapse form { width:100%; order:-1; margin-bottom:.25rem; }
+      .navbar .collapse form .form-control { width:100%; }
+      .navbar .collapse a.btn, .navbar .collapse button.btn { flex:1 1 auto; min-width:44%; }
+    }
+
+    /* ====== Section & Cards ====== */
+    .section-title {
+      text-align: center; font-weight: bold; margin-top: 3rem; margin-bottom: 1.5rem;
+      color: #8B004B; letter-spacing: .5px; font-size: 1.35rem;
+    }
+    .produk-container {
+      display: flex; flex-wrap: wrap; justify-content: flex-start;
+      gap: 1.5rem; padding: 0 2rem 3rem; max-width: 1200px; margin: 0 auto;
+    }
+    .produk-item {
+      width: 260px; background: #fff; border-radius: 1rem; overflow: hidden;
+      box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1); text-align: center;
+      transition: transform 0.2s ease; display: flex; flex-direction: column;
+    }
+    .produk-item:hover { transform: translateY(-5px); }
+    .produk-img {
+      width: 100%; height: 220px; background-size: cover; background-position: center;
+      border-bottom: 1px solid #eee; transition: filter .15s;
+    }
+    .produk-item:hover .produk-img { filter: brightness(.97) contrast(1.04); }
+    .produk-info { padding: 1rem; flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .produk-info h5 {
+      margin-bottom: 0.5rem; font-size: 1.1rem; color: #8B004B; letter-spacing: .04em;
+      white-space: nowrap; text-overflow: ellipsis; overflow: hidden;
+    }
+    .produk-info p { margin-bottom: 1rem; color: #555; font-weight: 500; font-size: 1.01rem; }
+    .produk-btns { display: flex; justify-content: center; gap: 0.5rem; padding-bottom: 1rem; }
+    .produk-btns .btn-outline-primary {
+      border-color: #8B004B; color: #8B004B; font-weight: 500; border-radius: 22px; padding: .38em 1.05em;
+    }
+    .produk-btns .btn-outline-primary:hover { background-color: #8B004B; color: white; }
+    .produk-btns .btn-dark {
+      font-weight: 500; font-size: 1.04rem; border-radius: 50%; width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center; padding: 0;
+    }
+    .produk-btns .btn-dark i { font-size: 1.17rem; }
+
+    /* ====== Toast ====== */
+    #toast-container {
+      position: fixed; top: 52%; left: 50%; transform: translate(-50%,-50%);
+      z-index: 3000; max-width: 94vw; pointer-events: none; display: flex; flex-direction: column; align-items: center;
+    }
+    .toko-toast {
+      min-width: 220px; max-width: 340px; color: #fff; background: linear-gradient(90deg,#8B004B,#ad1457);
+      border-radius: 13px; padding: 1rem 1.25rem; margin-bottom: 13px; box-shadow: 0 4px 22px #8B004B11;
+      display: flex; align-items: center; font-weight: 500; font-size: 1.04rem;
+      opacity: 0; transform: translateY(35px) scale(0.95); animation: slideInCenter .48s forwards; gap: 0.7rem;
+    }
+    .toko-toast.toko-toast-error { background: linear-gradient(90deg,#C62828,#FF5252); }
+    .toko-toast.toko-toast-info { background: linear-gradient(90deg,#1976D2,#64B5F6); }
+    @keyframes slideInCenter { to { opacity: 1; transform: none;} }
+
+    /* ====== Size chips ====== */
+    .size-chips { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; }
+    .size-chip {
+      padding: 0.45rem 1rem; border-radius: 50px; border: 2px solid #8B004B; background: #fff; color: #8B004B;
+      cursor: pointer; font-weight: 500; transition: all 0.25s; box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+    .size-chip[aria-pressed="true"] {
+      background: linear-gradient(90deg,#8B004B,#ad1457); color: #fff;
+      box-shadow: 0 4px 10px rgba(139,0,75,0.3); transform: scale(1.05);
+    }
+    .size-chip:hover:not(:disabled) { background: linear-gradient(90deg,#a9005d,#c2185b); color: #fff; transform: translateY(-2px); }
+    .size-chip:disabled { border-color: #ccc; color: #ccc; cursor: not-allowed; background: #f8f9fa; }
+    #btnAddCart { background: linear-gradient(90deg,#8B004B,#ad1457); border: none; }
+    #btnAddCart:hover { background: linear-gradient(90deg,#a9005d,#c2185b); }
+
+    /* ====== Helpers ====== */
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+    /* ====== Mobile tweaks (≤600px) ====== */
+    @media (max-width:600px){
+      .navbar .dropdown-menu { min-width: 95vw; }
+      .navbar-brand { font-size: 1.12em; }
+      .navbar .collapse a.btn, .navbar .collapse button.btn { min-width:48%; }
+
+      /* Center konten produk di mobile */
+      .produk-container {
+        justify-content: center;
+        padding: 0 0.75rem 2rem;
+      }
+      .produk-item {
+        width: 100%;
+        max-width: 320px; /* supaya kartu pas di tengah dan tidak terlalu lebar */
+      }
+    }
+</style>
+</head>
+<body>
+  <!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">Toko Baju Sahabat</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Tentang</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="dropdownToko" role="button" data-bs-toggle="dropdown" aria-expanded="false">Toko</a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownToko">
+              <li><a class="dropdown-item" href="penjualansemua.html">Semua Produk</a></li>
+              <li><a class="dropdown-item" href="barangpopuler.html">Barang Populer</a></li>
+              <li><a class="dropdown-item" href="barangbaru.html">Barang Baru</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li class="dropdown-submenu position-relative">
+  <a class="dropdown-item d-flex align-items-center justify-content-between"
+     href="bajuwanita.html" aria-expanded="false">
+    Baju Wanita
+    <button class="btn btn-sm p-0 border-0 bg-transparent ms-2 submenu-toggle" type="button" aria-label="Buka submenu">
+      <i class="bi bi-caret-down-fill" aria-hidden="true"></i>
+    </button>
+  </a>
+  <ul class="dropdown-menu" aria-label="Submenu Baju Wanita">
+    <li><a class="dropdown-item" href="dress.html">Dress</a></li>
+    <li><a class="dropdown-item" href="blouse.html">Blouse</a></li>
+    <li><a class="dropdown-item" href="tunik.html">Tunik</a></li>
+    <li><a class="dropdown-item" href="gamis.html">Gamis</a></li>
+    <li><a class="dropdown-item" href="rokcelana.html">Rok/Celana</a></li>
+  </ul>
+</li>
+              <li><a class="dropdown-item" href="bajupria.html">Baju Pria</a></li>
+              <li><a class="dropdown-item" href="bajuanak.html">Baju Anak</a></li>
+              <li><a class="dropdown-item" href="busanamuslim.html">Busana Muslim</a></li>
+            </ul>
+          </li>
+        </ul>
+        <div class="d-flex align-items-center" style="gap: 0.5rem;">
+          <form class="d-flex" action="hasilpencarian.html" method="GET">
+            <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="Cari Produk" required />
+            <button class="btn btn-outline-success btn-sm" type="submit">Cari</button>
+          </form>
+          <a id="loginButton" href="login.html" class="btn btn-outline-primary btn-sm">Login</a>
+          <a id="registerButton" href="daftarakun.html" class="btn btn-outline-secondary btn-sm">Buat Akun</a>
+          <a id="manageAccountButton" href="akun.html" class="btn btn-outline-success btn-sm" style="display:none;">Kelola Akun</a>
+          <a id="statusButton" href="stpesanan.html" class="btn btn-outline-info btn-sm" style="display:none;">Status Pesanan</a>
+          <a id="cartButton" href="keranjangbelanja.html" class="btn btn-outline-warning btn-sm position-relative" style="display:none;">
+            <i class="bi bi-cart" style="font-size: 1.2rem;"></i>
+            <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+          </a>
+          <button id="logoutButton" class="btn btn-outline-danger btn-sm" style="display:none;">Logout</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <h3 class="section-title">Busana Muslim</h3>
+  <div class="produk-container" id="produk-container"></div>
+  <div id="toast-container"></div>
+  <div class="modal fade" id="sizeModal" tabindex="-1" aria-labelledby="sizeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <form id="sizeForm" class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="sizeModalLabel">Pilih Ukuran</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div id="sizeChips" class="size-chips"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" id="btnAddCart" class="btn btn-primary" disabled>Tambah ke Keranjang</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <script>
+  function showToast(msg, type = "success") {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = 'toko-toast toko-toast-' + type;
+    let icon = `<i class="bi bi-check-circle-fill"></i>`;
+    if (type === "error") icon = `<i class="bi bi-x-circle-fill"></i>`;
+    if (type === "info") icon = `<i class="bi bi-info-circle-fill"></i>`;
+    toast.innerHTML = icon + `<span style="flex:1;">${msg}</span>`;
+    container.appendChild(toast);
+    setTimeout(() => {
+      toast.style.opacity = 0;
+      toast.style.transform = "translateY(30px) scale(0.98)";
+      setTimeout(() => toast.remove(), 400);
+    }, 2000);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const email = localStorage.getItem('email');
+    const name = localStorage.getItem('name');
+    let selectedSize = '';
+
+    if (email && name) {
+      document.getElementById('loginButton').style.display = 'none';
+      document.getElementById('registerButton').style.display = 'none';
+      document.getElementById('logoutButton').style.display = 'inline-block';
+      document.getElementById('manageAccountButton').style.display = 'inline-block';
+      document.getElementById('statusButton').style.display = 'inline-block';
+      document.getElementById('cartButton').style.display = 'inline-block';
+      updateCartCount();
+    }
+
+    document.getElementById('logoutButton').addEventListener('click', () => {
+      localStorage.clear();
+      window.location.reload();
+    });
+
+    async function updateCartCount() {
+      try {
+        const res = await fetch(`/api/keranjang/jumlah/${email}`);
+        const data = await res.json();
+        document.getElementById('cartCount').textContent = data.totalItem || 0;
+      } catch (err) {
+        console.error('Gagal memuat jumlah keranjang:', err);
+      }
+    }
+
+    async function loadProduk() {
+      try {
+        const res = await fetch('/api/produk');
+        const data = await res.json();
+        const container = document.getElementById('produk-container');
+        container.innerHTML = '';
+
+        // Filter khusus busana muslim
+        const muslim = data.filter(p => p.kategori && p.kategori.toLowerCase().includes('muslim'));
+
+        muslim.forEach(produk => {
+          const adaUkuran = produk.stok && Object.keys(produk.stok).length > 0;
+          const btnCart = email
+            ? `<button class="btn btn-dark btn-sm rounded-circle btn-cart" style="width:36px;height:36px;" data-id="${produk._id}"><i class="bi bi-cart-plus"></i></button>`
+            : '';
+
+          const el = document.createElement('div');
+          el.className = 'produk-item';
+          el.innerHTML = `
+            <a href="detailproduk.html?id=${produk._id}" class="produk-img"
+               style="background-image: url('/api/produk/gambar/${produk._id}');"
+               loading="lazy"></a>
+            <div class="produk-info">
+              <h5>${produk.nama}</h5>
+              <p>Rp ${produk.harga.toLocaleString('id-ID')}</p>
+              <div class="produk-btns">
+                <a href="detailproduk.html?id=${produk._id}" class="btn btn-outline-primary btn-sm">Lihat Produk</a>
+                ${btnCart}
+              </div>
+            </div>
+          `;
+          container.appendChild(el);
+
+          // Event tombol keranjang
+          if (adaUkuran && btnCart) {
+            el.querySelector('.btn-cart').addEventListener('click', async () => {
+              try {
+                const r = await fetch(`/api/produk/${produk._id}`);
+                const p = await r.json();
+                const stok = p.stok || {};
+                const chipContainer = document.getElementById('sizeChips');
+                chipContainer.innerHTML = '';
+                selectedSize = '';
+                document.getElementById('btnAddCart').disabled = true;
+
+                Object.keys(stok).forEach(u => {
+                  const btn = document.createElement('button');
+                  btn.type = 'button';
+                  btn.className = 'size-chip';
+                  btn.textContent = u.toUpperCase();
+                  if (stok[u] <= 0) btn.disabled = true;
+                  btn.addEventListener('click', () => {
+                    chipContainer.querySelectorAll('.size-chip').forEach(c => c.setAttribute('aria-pressed', 'false'));
+                    btn.setAttribute('aria-pressed', 'true');
+                    selectedSize = u;
+                    document.getElementById('btnAddCart').disabled = false;
+                  });
+                  chipContainer.appendChild(btn);
+                });
+
+                const form = document.getElementById('sizeForm');
+                form.dataset.produkId = produk._id;
+                form.dataset.nama = produk.nama;
+                form.dataset.harga = produk.harga;
+
+                bootstrap.Modal.getOrCreateInstance(document.getElementById('sizeModal')).show();
+              } catch {
+                showToast('Gagal mengambil data ukuran', 'error');
+              }
+            });
+          } else if (btnCart) {
+            // Langsung tambah ke keranjang kalau tidak ada ukuran
+            el.querySelector('.btn-cart').addEventListener('click', () => {
+              tambahKeKeranjang({
+                _id: produk._id,
+                nama: produk.nama,
+                harga: produk.harga,
+                jumlah: 1
+              });
+            });
+          }
+        });
+      } catch (err) {
+        console.error('Gagal memuat produk:', err);
+      }
+    }
+
+    document.getElementById('sizeForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      if (!selectedSize) return;
+      const f = e.currentTarget;
+      const bodyProduk = {
+        _id: f.dataset.produkId,
+        nama: f.dataset.nama,
+        harga: Number(f.dataset.harga),
+        jumlah: 1,
+        ukuran: selectedSize
+      };
+      try {
+        const resp = await fetch('/api/keranjang/tambah', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, produk: bodyProduk })
+        });
+        const j = await resp.json();
+        if (j.success) {
+          showToast('Produk ditambahkan ke keranjang!');
+          updateCartCount();
+          bootstrap.Modal.getOrCreateInstance(document.getElementById('sizeModal')).hide();
+        } else {
+          showToast(j.message || 'Gagal menambah', 'error');
+        }
+      } catch {
+        showToast('Terjadi kesalahan', 'error');
+      }
+    });
+
+    async function tambahKeKeranjang(produk) {
+      try {
+        const res = await fetch('/api/keranjang/tambah', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, produk })
+        });
+        const result = await res.json();
+        if (result.success) {
+          showToast('Produk ditambahkan ke keranjang!');
+          updateCartCount();
+        } else {
+          showToast(result.message || 'Gagal menambahkan.', 'error');
+        }
+      } catch (err) {
+        showToast('Terjadi kesalahan.', 'error');
+      }
+    }
+
+    loadProduk();
+    initMobileSubmenu(); // <<=== tambahkan ini
+  });
+
+  // Fungsi tambahan untuk dropdown submenu mobile
+  function initMobileSubmenu() {
+    document.querySelectorAll('.submenu-toggle').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        const submenu = btn.closest('.dropdown-submenu');
+        if (submenu) {
+          submenu.classList.toggle('show');
+          const expanded = submenu.classList.contains('show');
+          btn.setAttribute('aria-expanded', expanded);
+          const target = submenu.querySelector('.dropdown-menu');
+          if (target) target.classList.toggle('show', expanded);
+        }
+      });
+    });
+  }
+</script>
+
+    
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

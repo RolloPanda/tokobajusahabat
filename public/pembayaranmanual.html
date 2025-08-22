@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pembayaran Manual - Transfer Bank</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    body { background: #f8f9fa; font-family: system-ui, sans-serif; min-height: 100vh; }
+
+    /* ===== Navbar (seragam gamis.html) ===== */
+    .navbar-brand { color: #8B004B !important; letter-spacing:.5px; }
+    .navbar { box-shadow: 0 2px 10px 0 rgba(139,0,75,.05);}
+    .navbar .dropdown-menu {
+      border-radius: 0.7em; box-shadow: 0 6px 32px #8b004b20; border: 1.5px solid #8b004b0d;
+      min-width: 210px; padding: .7em 0; margin-top: 0.6em; transition: box-shadow .13s;
+    }
+    .navbar .dropdown-menu .dropdown-item {
+      padding: .53em 1.3em; transition: background .15s, color .15s; font-size: 1.05em; border-radius: 8px;
+    }
+    .navbar .dropdown-menu .dropdown-item:hover,
+    .navbar .dropdown-menu .dropdown-item:focus {
+      background: linear-gradient(90deg, #ffd1eb2a 0%, #8B004B11 100%);
+      color: #8B004B; font-weight: 500; box-shadow: 0 2px 7px #8B004B0c;
+    }
+    .dropdown-divider { border-color:#eee; margin:.3em 0; }
+    .dropdown-submenu { position:relative; }
+    .dropdown-submenu > .dropdown-menu {
+      left: 100%; top: 0; margin-top: -1px; border-radius: 0.7em; box-shadow: 0 6px 32px #8b004b1c;
+      border: 1.5px solid #8b004b0d; min-width: 185px; display: none; position: absolute;
+    }
+    @media (min-width: 992px) {
+      .navbar .dropdown:hover > .dropdown-menu { display: block; margin-top: 0; animation: navDrop .17s; }
+      .dropdown-submenu:hover > .dropdown-menu { display: block; left: 100%; top: 0; margin-top: -1px; }
+    }
+    @keyframes navDrop { from { opacity: 0; transform: translateY(13px);} to { opacity: 1; transform: none;} }
+
+    @media (max-width:991.98px){
+      .navbar .dropdown-menu { position: static !important; box-shadow: none; border-radius: 0.7em; margin-top: .6em; }
+      .dropdown-submenu > .dropdown-menu { position: static !important; margin: .25rem 0 .5rem 1.2rem; box-shadow: none; border: none; background: #fff; min-width: unset; display: none; }
+      .dropdown-submenu.show > .dropdown-menu { display: block !important; }
+      .navbar .collapse .d-flex { flex-wrap:wrap; gap:.5rem; }
+      .navbar .collapse form { width:100%; order:-1; margin-bottom:.25rem; }
+      .navbar .collapse form .form-control { width:100%; }
+      .navbar .collapse a.btn, .navbar .collapse button.btn { flex:1 1 auto; min-width:44%; }
+    }
+    @media (max-width:600px){
+      .navbar .dropdown-menu { min-width: 95vw; }
+      .navbar-brand { font-size: 1.12em; }
+      .navbar .collapse a.btn, .navbar .collapse button.btn { min-width:48%; }
+    }
+
+    /* ===== Style halaman pembayaran tetap sama seperti sebelumnya ===== */
+    main { max-width: 600px; margin: 3rem auto 4rem auto; background: #fff; border-radius: 1rem; box-shadow: 0 0.3rem 0.8rem rgba(139, 0, 75, 0.15); padding: 2.5rem 3rem; color: #555; font-weight: 500; font-size: 1rem; line-height: 1.6; }
+    main h3 { color: #8B004B; font-weight: 700; margin-bottom: 1.8rem; text-align: center; letter-spacing: 0.05em; }
+    .bank-info { background: #f0e6eb; color: #6e4554; border-radius: 0.7rem; padding: 1.1rem 1.5rem; margin-bottom: 1.6rem; font-weight: 600; box-shadow: 0 2px 10px #d0a6bc30; font-size: 1.08rem; }
+    .bank-info span { font-size: 1.12rem; color: #8B004B; font-weight: 700; }
+    ul.detail-penerima { list-style: none; padding-left: 0; margin-bottom: 1.1rem; border-left: 4px solid #8B004B; padding-left: 1rem; }
+    ul.detail-penerima li { margin-top: 0.8rem;}
+    ul.detail-penerima li strong { color: #8B004B;}
+    .alert-info { background: #fff8fc; color: #8B004B; border: 1px solid #f0e6eb; border-radius: 0.7rem; padding: 1.1rem 1.2rem; font-weight: 600; font-size: 1.04rem; margin-bottom: 2rem; box-shadow: 0 0.1rem 0.5rem #8b004b08; text-align: center; }
+    .btn-primary { background-color: #8B004B; border-color: #8B004B; font-weight: 600; font-size: 1.1rem; padding: 0.6rem 1.25rem; border-radius: 0.7rem; width: 100%; box-shadow: 0 5px 15px rgba(139, 0, 75, 0.16); }
+    .btn-primary:hover { background-color: #6a0037; border-color: #6a0037; }
+    .form-label { color: #8B004B; font-weight: 600;}
+    .form-control { border-radius: 8px; }
+    @media (max-width: 640px) { main { margin: 2rem 0.7rem; padding: 1.4rem 0.8rem;} }
+    #toast-container { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 1055; display: flex; flex-direction: column; align-items: center;}
+    #toast-container .toast { min-width: 230px; max-width: 340px; border-radius: 0.7rem; background: linear-gradient(90deg, #8B004B, #ad1457); color: white; box-shadow: 0 4px 22px #8B004B70; font-weight: 600; font-size: 1.04rem; padding: 1rem 1.3rem; display: flex; align-items: center; gap: 0.7rem; opacity: 0; transform: translateY(30px) scale(0.97); animation: toastIn .42s forwards;}
+    #toast-container .toast.toast-error { background: linear-gradient(90deg,#C62828,#FF5252); }
+    @keyframes toastIn { to { opacity: 1; transform: none;} }
+  </style>
+</head>
+<body>
+  <!-- Navbar seragam -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">Toko Baju Sahabat</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Tentang</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Toko</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="penjualansemua.html">Semua Produk</a></li>
+              <li><a class="dropdown-item" href="barangpopuler.html">Barang Populer</a></li>
+              <li><a class="dropdown-item" href="barangbaru.html">Barang Baru</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li class="dropdown-submenu position-relative">
+                <a class="dropdown-item d-flex align-items-center justify-content-between"
+                   href="bajuwanita.html" aria-expanded="false">
+                  Baju Wanita
+                  <button class="btn btn-sm p-0 border-0 bg-transparent ms-2 submenu-toggle" type="button" aria-label="Buka submenu">
+                    <i class="bi bi-caret-down-fill" aria-hidden="true"></i>
+                  </button>
+                </a>
+                <ul class="dropdown-menu" aria-label="Submenu Baju Wanita">
+                  <li><a class="dropdown-item" href="dress.html">Dress</a></li>
+                  <li><a class="dropdown-item" href="blouse.html">Blouse</a></li>
+                  <li><a class="dropdown-item" href="tunik.html">Tunik</a></li>
+                  <li><a class="dropdown-item" href="gamis.html">Gamis</a></li>
+                  <li><a class="dropdown-item" href="rokcelana.html">Rok/Celana</a></li>
+                </ul>
+              </li>
+              <li><a class="dropdown-item" href="bajupria.html">Baju Pria</a></li>
+              <li><a class="dropdown-item" href="bajuanak.html">Baju Anak</a></li>
+              <li><a class="dropdown-item" href="busanamuslim.html">Busana Muslim</a></li>
+            </ul>
+          </li>
+        </ul>
+        <div class="d-flex align-items-center" style="gap: 0.5rem;">
+          <form class="d-flex" action="hasilpencarian.html" method="GET">
+            <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="Cari Produk" required />
+            <button class="btn btn-outline-success btn-sm" type="submit">Cari</button>
+          </form>
+          <a id="loginButton" href="login.html" class="btn btn-outline-primary btn-sm">Login</a>
+          <a id="registerButton" href="daftarakun.html" class="btn btn-outline-secondary btn-sm">Buat Akun</a>
+          <a id="manageAccountButton" href="akun.html" class="btn btn-outline-success btn-sm" style="display:none;">Kelola Akun</a>
+          <a id="statusButton" href="statuspesanan.html" class="btn btn-outline-info btn-sm" style="display:none;">Status Pesanan</a>
+          <a id="cartButton" href="keranjangbelanja.html" class="btn btn-outline-warning btn-sm position-relative" style="display:none;">
+            <i class="bi bi-cart"></i>
+            <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+          </a>
+          <button id="logoutButton" class="btn btn-outline-danger btn-sm" style="display:none;">Logout</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+<main>
+  <h3>Transfer ke Rekening Bank</h3>
+  <div class="bank-info mb-4">
+    <div>Bank: <span>BCA</span></div>
+    <div>No. Rekening: <span>1234567890</span></div>
+    <div>Atas Nama: <span>Toko Baju Sahabat</span></div>
+  </div>
+
+  <ul class="detail-penerima mb-3">
+    <li><strong>Nama Penerima:</strong> <span id="namaTampil"></span></li>
+    <li><strong>Email:</strong> <span id="emailTampil"></span></li>
+    <li><strong>Alamat:</strong> <span id="alamatTampil"></span></li>
+    <li><strong>Kota:</strong> <span id="kotaTampil"></span></li>
+    <li><strong>Provinsi:</strong> <span id="provinsiTampil"></span></li>
+    <li><strong>Kurir:</strong> <span id="kurirTampil"></span></li>
+    <li><strong>Berat Total:</strong> <span id="beratTampil">0 gram (0 kg)</span></li>
+  </ul>
+
+  <!-- PRODUK DAN UKURAN DITAMPILKAN DI SINI -->
+  <ul id="daftarProduk" class="mb-4" style="list-style:none; padding:0; font-size:1.02em;"></ul>
+
+  <div class="alert alert-info mb-4">
+    <div>Subtotal Produk: <span id="subtotalText">Rp 0</span></div>
+    <div>Ongkir: <span id="ongkirText">Rp 0</span></div>
+    <hr />
+    <strong>Total Bayar (Transfer): <span id="totalText">Rp 0</span></strong>
+  </div>
+
+  <form id="uploadForm" autocomplete="off">
+    <div class="mb-3">
+      <label for="namaRekening" class="form-label">Nama Pemilik Rekening Anda</label>
+      <input type="text" class="form-control" id="namaRekening" required />
+    </div>
+    <div class="mb-3">
+      <label for="bukti" class="form-label">Unggah Bukti Transfer</label>
+      <input type="file" class="form-control" id="bukti" accept="image/*" required />
+    </div>
+    <button type="submit" class="btn btn-primary mt-2">Kirim Bukti Pembayaran</button>
+  </form>
+</main>
+
+<!-- Toast Container -->
+<div id="toast-container" aria-live="polite" aria-atomic="true"></div>
+
+<script>
+function showToast(msg, type = "success", duration = 2400) {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = 'toast' + (type === "error" ? ' toast-error' : '');
+  let icon = `<i class="bi bi-check-circle-fill"></i>`;
+  if (type === "error") icon = `<i class="bi bi-x-circle-fill"></i>`;
+  if (type === "info") icon = `<i class="bi bi-info-circle-fill"></i>`;
+  toast.innerHTML = icon + `<span style="flex:1;">${msg}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = 0;
+    toast.style.transform = "translateY(30px) scale(0.97)";
+    setTimeout(() => toast.remove(), 420);
+  }, duration);
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const email = localStorage.getItem("email");
+  const name = localStorage.getItem("name");
+
+  if (email && name) {
+    document.getElementById("loginButton").style.display = "none";
+    document.getElementById("registerButton").style.display = "none";
+    document.getElementById("logoutButton").style.display = "inline-block";
+    document.getElementById("manageAccountButton").style.display = "inline-block";
+    document.getElementById("statusButton").style.display = "inline-block";
+    document.getElementById("cartButton").style.display = "inline-block";
+    updateCartCount(email);
+  } else {
+    showToast("Silakan login terlebih dahulu.", "error", 2600);
+    setTimeout(() => window.location.href = "login.html", 2500);
+    return;
+  }
+
+  document.getElementById("logoutButton").addEventListener("click", () => {
+    localStorage.clear();
+    window.location.reload();
+  });
+
+  async function updateCartCount(email) {
+    try {
+      const res = await fetch(`/api/keranjang/jumlah/${email}`);
+      const data = await res.json();
+      document.getElementById("cartCount").textContent = data.totalItem || 0;
+    } catch (err) {
+      console.error("Gagal memuat jumlah keranjang:", err);
+    }
+  }
+
+  const namaPenerima = localStorage.getItem("namaPenerima");
+  const alamat = localStorage.getItem("alamat");
+  const kota = localStorage.getItem("kota");
+  const provinsi = localStorage.getItem("provinsi");
+  const kurir = localStorage.getItem("kurir");
+  const phone = localStorage.getItem("phone");
+  const subtotal = parseInt(localStorage.getItem("checkoutSubtotal")) || 0;
+  const ongkir = parseInt(localStorage.getItem("checkoutOngkir")) || 0;
+  const total = subtotal + ongkir;
+  const beratGram = parseInt(localStorage.getItem("checkoutBeratGram")) || 0;
+  const beratKg = Math.ceil(beratGram / 1000);
+
+  document.getElementById("namaTampil").textContent = namaPenerima;
+  document.getElementById("emailTampil").textContent = email;
+  document.getElementById("alamatTampil").textContent = alamat;
+  document.getElementById("kotaTampil").textContent = kota;
+  document.getElementById("provinsiTampil").textContent = provinsi;
+  document.getElementById("kurirTampil").textContent = kurir;
+  document.getElementById("subtotalText").textContent = "Rp " + subtotal.toLocaleString("id-ID");
+  document.getElementById("ongkirText").textContent = "Rp " + ongkir.toLocaleString("id-ID");
+  document.getElementById("totalText").textContent = "Rp " + total.toLocaleString("id-ID");
+  document.getElementById("beratTampil").textContent = `${beratGram} gram (${beratKg} kg)`;
+
+  // tampilkan produk
+  const daftarProduk = document.getElementById("daftarProduk");
+  const items = JSON.parse(localStorage.getItem("cart") || "[]");
+  if (items && items.length) {
+    daftarProduk.innerHTML = items.map(item =>
+      `<li>
+        <span style="color:#8B004B;font-weight:600;">${item.nama}</span>
+        ${item.ukuran ? `<span style="color:#ad1457;"> (${item.ukuran})</span>` : ""}
+        <span class="text-muted"> x${item.jumlah}</span>
+      </li>`
+    ).join("");
+  }
+
+  document.getElementById("uploadForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const namaRekening = document.getElementById("namaRekening").value.trim();
+    const buktiFile = document.getElementById("bukti").files[0];
+    if (!buktiFile) {
+      showToast("Silakan unggah bukti transfer.", "error");
+      return;
+    }
+
+    try {
+      const resPesanan = await fetch("/api/pembayaran", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email,
+          phone,
+          metode: "Transfer",
+          namaPenerima,
+          namaRekening,
+          subtotal,
+          ongkir,
+          total,
+          items,
+          detailPesanan: { provinsi, kota, alamat, kurir, ongkir, berat: beratGram }
+        })
+      });
+
+      const dataPesanan = await resPesanan.json();
+      if (!resPesanan.ok || !dataPesanan.success) throw new Error(dataPesanan.message || "Gagal menyimpan pesanan");
+
+      const id = dataPesanan._id || dataPesanan.pembayaran?._id;
+      if (!id) throw new Error("ID pesanan tidak ditemukan");
+
+      const formData = new FormData();
+      formData.append("bukti", buktiFile);
+      const resUpload = await fetch(`/api/pembayaran/upload/${id}`, {
+        method: "POST",
+        body: formData
+      });
+
+      const dataUpload = await resUpload.json();
+      if (!resUpload.ok || !dataUpload.success) throw new Error(dataUpload.message || "Gagal upload bukti");
+
+      showToast("Pesanan & bukti pembayaran berhasil diunggah!");
+      [
+        "checkoutTotal","checkoutSubtotal","checkoutOngkir","alamat","kota","provinsi","kurir",
+        "metode","namaPenerima","phone","cart","checkoutBeratGram","checkoutBeratKg"
+      ].forEach(k => localStorage.removeItem(k));
+      setTimeout(() => window.location.href = "statuspesanan.html", 2100);
+
+    } catch (err) {
+      console.error(err);
+      showToast("Terjadi kesalahan: " + err.message, "error");
+    }
+  });
+
+  // ===== Navbar mobile caret toggle =====
+  document.querySelectorAll('.submenu-toggle').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      e.stopPropagation();
+      const parent = btn.closest('.dropdown-submenu');
+      parent.classList.toggle('show');
+      const submenu = parent.querySelector('.dropdown-menu');
+      submenu.classList.toggle('show');
+    });
+  });
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

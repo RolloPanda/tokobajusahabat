@@ -1,0 +1,123 @@
+Halaman Login
+
+Halaman Buat Akun Baru
+
+Halaman Lupa Password
+
+Halaman Reset Password (setelah link reset dikirim)
+
+Halaman Ubah Password Baru (setelah reset)
+
+Halaman Utama / Beranda
+
+Halaman Detail Produk
+
+Halaman Semua Produk
+
+Halaman Produk Kategori
+
+Baju Wanita (Dress, Blouse, Tunik, Gamis, Rok/Celana)
+
+Baju Pria
+
+Baju Anak-anak
+
+Busana Muslim
+
+Halaman Barang Populer
+
+Halaman Barang Baru
+
+Halaman Keranjang Belanja
+
+Halaman Checkout / Pemesanan
+
+Halaman Pembayaran
+
+BRIVA
+
+Manual Transfer
+
+Halaman Konfirmasi Pembayaran Manual
+
+Halaman Status Pesanan (Track Order)
+
+Halaman Akun Saya (Profil User)
+
+Halaman Ubah Profil & Password
+
+Halaman Manajemen Alamat (Multi-alamat)
+
+Tombol Manage Alamat dimunculkan di halaman-halaman setelah login
+
+Navbar Konsisten (warna ungu di halaman selain utama)
+
+
+Dashboard Admin
+
+Ringkasan order, penjualan, stok, grafik stok, pembelian, penjualan offline/online
+
+Manajemen Produk
+
+Tambah/Edit/Hapus Produk
+
+Kelola gambar produk
+
+Kelola stok produk
+
+Manajemen Kategori & Subkategori Produk
+
+Manajemen Kategori Pelanggan
+
+Manajemen Pembelian
+
+Input pembelian barang masuk
+
+Manajemen Penjualan
+
+Input penjualan barang keluar
+
+Pisahkan penjualan offline dan online
+
+Pengaturan Batas Minimal Stok
+
+Manajemen Stok
+
+Monitoring stok real-time
+
+Manajemen Order & Riwayat Transaksi
+
+Manajemen Pembayaran
+
+Verifikasi pembayaran manual
+
+Status pembayaran otomatis (BRIVA)
+
+Manajemen Pengiriman
+
+Input resi
+
+Status pengiriman
+
+Manajemen Akun Pelanggan
+
+Ubah status, banned, dll
+
+Manajemen Admin (jika multi admin)
+
+Laporan Penjualan & Stok
+
+Laporan stok (harian/bulanan)
+
+Laporan penjualan (online/offline)
+
+Grafik stok dan penjualan
+
+Kelola Banner / Highlight Produk di Beranda
+
+Kelola Testimoni / Review Produk (opsional)
+
+Kelola Pengaturan Umum Sistem (opsional)
+
+Rancangan Output Laporan (cetak dan digital)
+

@@ -1,0 +1,2742 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Checkout & Pemesanan - Toko Baju Sahabat</title>
+  <link rel="icon" href="assets/favicon.ico" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+  body {
+    font-family: system-ui, sans-serif;
+    background: #f8f9fa;
+    min-height: 100vh;
+  }
+
+  /* ===== Navbar ===== */
+  .navbar-brand { color: #8B004B !important; letter-spacing: .5px; }
+  .navbar { box-shadow: 0 2px 10px 0 rgba(139,0,75,.05); }
+
+  .navbar .dropdown-menu {
+    border-radius: 0.7em;
+    box-shadow: 0 6px 32px #8b004b20;
+    border: 1.5px solid #8b004b0d;
+    min-width: 210px;
+    padding: .7em 0;
+    margin-top: 0.6em;
+    transition: box-shadow .13s;
+  }
+  .navbar .dropdown-menu .dropdown-item {
+    padding: .53em 1.3em;
+    transition: background .15s, color .15s;
+    font-size: 1.05em;
+    border-radius: 8px;
+  }
+  .navbar .dropdown-menu .dropdown-item:hover,
+  .navbar .dropdown-menu .dropdown-item:focus {
+    background: linear-gradient(90deg, #ffd1eb2a 0%, #8B004B11 100%);
+    color: #8B004B;
+    font-weight: 500;
+    box-shadow: 0 2px 7px #8B004B0c;
+  }
+
+  .dropdown-divider { border-color:#eee; margin:.3em 0; }
+  .dropdown-submenu { position:relative; }
+  .dropdown-submenu > .dropdown-menu {
+    left: 100%; top: 0; margin-top: -1px;
+    border-radius: 0.7em;
+    box-shadow: 0 6px 32px #8b004b1c;
+    border: 1.5px solid #8b004b0d;
+    min-width: 185px;
+    display: none;
+    position: absolute;
+  }
+  .dropdown-submenu-toggle {
+    background: none;
+    border: none;
+    padding: 0 .3em;
+    color: inherit;
+    font-size: 1em;
+    cursor: pointer;
+    position: absolute;
+    right: 1em; top: 0; bottom: 0;
+    z-index: 3;
+  }
+
+  @media (min-width: 992px) {
+    .navbar .dropdown:hover > .dropdown-menu {
+      display: block; margin-top: 0; animation: navDrop .17s;
+    }
+    .dropdown-submenu:hover > .dropdown-menu {
+      display: block; left: 100%; top: 0; margin-top: -1px;
+    }
+  }
+  @keyframes navDrop {
+    from { opacity: 0; transform: translateY(13px);}
+    to { opacity: 1; transform: none;}
+  }
+
+  /* ===== Mobile Navbar (seragam dengan blouse) ===== */
+  @media (max-width:991.98px){
+    .navbar .dropdown-menu {
+      position: static !important;
+      box-shadow: none;
+      border-radius: 0.7em;
+      margin-top: .6em;
+      padding: .5em 0;          /* lebih ramping */
+    }
+    .dropdown-submenu > .dropdown-menu {
+      position: static !important;
+      margin: .25rem 0 .5rem 1.2rem;
+      box-shadow: none;
+      border: none;
+      background: #fff;
+      min-width: unset;
+      display: none;
+      padding: .35em 0;         /* kecilkan padding submenu */
+    }
+    .dropdown-submenu.show > .dropdown-menu { display: block !important; }
+    .dropdown-submenu-toggle {
+      display: inline-block;
+      font-size: .8rem;         /* caret kecil */
+      color: #8B004B;           /* caret pink */
+    }
+    .navbar .dropdown-menu .dropdown-item {
+      padding: .48em 1.1em;     /* seragam blouse */
+      font-size: 1rem;
+    }
+
+    /* tombol di collapse biar rapi */
+    .navbar .collapse .d-flex { flex-wrap:wrap; gap:.5rem; }
+    .navbar .collapse form { width:100%; order:-1; margin-bottom:.25rem; }
+    .navbar .collapse form .form-control { width:100%; }
+    .navbar .collapse a.btn, .navbar .collapse button.btn { flex:1 1 auto; min-width:44%; }
+  }
+
+  /* ===== Extra small (≤600px) ===== */
+  @media (max-width:600px){
+    .navbar .dropdown-menu { min-width: 95vw; }
+    .navbar-brand { font-size: 1.12em; }
+  }
+
+  /* ===== Checkout ===== */
+  .checkout-title {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 2.7rem;
+    margin-bottom: 1.7rem;
+    color: #8B004B;
+    font-size: 1.5rem;
+    letter-spacing:.4px;
+  }
+  .checkout-section { padding: 0 0 2.5rem 0; }
+  .summary-box {
+    background: white;
+    border: 1.5px solid #8B004B0f;
+    padding: 1.55rem;
+    border-radius: 1.1em;
+    font-size: 1rem;
+    box-shadow: 0 6px 32px #8b004b0b;
+    margin-bottom: 1.3rem;
+  }
+  .form-control, .form-select { font-size: 1.03rem;}
+  .btn-primary {
+    background: linear-gradient(90deg,#8B004B,#ad1457);
+    border: none;
+    font-size: 1.07rem;
+    border-radius: 12px;
+    font-weight: 600;
+    letter-spacing:.04em;
+    box-shadow: 0 3px 10px #8b004b1a;
+  }
+  .btn-primary:hover, .btn-primary:focus {
+    background: linear-gradient(90deg,#ad1457,#8B004B);
+    border: none;
+    color: #fff;
+    outline: none;
+  }
+
+  /* ===== Toast ===== */
+  #toast-container {
+    position: fixed;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    z-index: 3000;
+    max-width: 94vw;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .toko-toast {
+    min-width: 220px;
+    max-width: 340px;
+    color: #fff;
+    background: linear-gradient(90deg,#8B004B,#ad1457);
+    border-radius: 13px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 13px;
+    box-shadow: 0 4px 22px #8B004B11;
+    display: flex; align-items: center;
+    font-weight: 500; font-size: 1.04rem;
+    opacity: 0;
+    transform: translateY(35px) scale(0.95);
+    animation: slideInCenter .48s forwards;
+    gap: 0.7rem;
+    pointer-events: auto;
+  }
+  .toko-toast.toko-toast-error { background: linear-gradient(90deg,#C62828,#FF5252); }
+  .toko-toast.toko-toast-info { background: linear-gradient(90deg,#1976D2,#64B5F6); }
+  @keyframes slideInCenter { to { opacity: 1; transform: none;} }
+
+  @media (max-width:991.98px){
+    .checkout-section { padding: 0 0.5rem 1.6rem; }
+    .summary-box { padding: 1.1rem; }
+  }
+</style>
+
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">Toko Baju Sahabat</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Tentang</a></li>
+          <li class="nav-item dropdown">
+  <a class="nav-link dropdown-toggle" href="#" id="dropdownToko" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Toko
+  </a>
+  <ul class="dropdown-menu" aria-labelledby="dropdownToko">
+    <li><a class="dropdown-item" href="penjualansemua.html">Semua Produk</a></li>
+    <li><a class="dropdown-item" href="barangpopuler.html">Barang Populer</a></li>
+    <li><a class="dropdown-item" href="barangbaru.html">Barang Baru</a></li>
+    <li><hr class="dropdown-divider" /></li>
+
+    <!-- Submenu Baju Wanita -->
+    <li class="dropdown-submenu position-relative">
+      <div class="d-flex align-items-center justify-content-between">
+        <a class="dropdown-item flex-grow-1" href="bajuwanita.html">Baju Wanita</a>
+        <button class="dropdown-submenu-toggle btn btn-sm p-0 border-0 bg-transparent" type="button" aria-label="Toggle submenu">
+          <i class="bi bi-caret-down-fill"></i>
+        </button>
+      </div>
+      <ul class="dropdown-menu" aria-label="Submenu Baju Wanita">
+        <li><a class="dropdown-item" href="dress.html">Dress</a></li>
+        <li><a class="dropdown-item" href="blouse.html">Blouse</a></li>
+        <li><a class="dropdown-item" href="tunik.html">Tunik</a></li>
+        <li><a class="dropdown-item" href="gamis.html">Gamis</a></li>
+        <li><a class="dropdown-item" href="rokcelana.html">Rok/Celana</a></li>
+      </ul>
+    </li>
+
+    <li><a class="dropdown-item" href="bajupria.html">Baju Pria</a></li>
+    <li><a class="dropdown-item" href="bajuanak.html">Baju Anak</a></li>
+    <li><a class="dropdown-item" href="busanamuslim.html">Busana Muslim</a></li>
+  </ul>
+</li>
+
+        </ul>
+        <div class="d-flex align-items-center" style="gap: 0.5rem;">
+          <form class="d-flex" action="hasilpencarian.html" method="GET">
+            <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="Cari Produk" required />
+            <button class="btn btn-outline-success btn-sm" type="submit">Cari</button>
+          </form>
+          <a id="loginButton" href="login.html" class="btn btn-outline-primary btn-sm">Login</a>
+          <a id="registerButton" href="daftarakun.html" class="btn btn-outline-secondary btn-sm">Buat Akun</a>
+          <a id="manageAccountButton" href="akun.html" class="btn btn-outline-success btn-sm" style="display:none;">Kelola Akun</a>
+          <a id="statusButton" href="stpesanan.html" class="btn btn-outline-info btn-sm" style="display:none;">Status Pesanan</a>
+          <a id="cartButton" href="keranjangbelanja.html" class="btn btn-outline-warning btn-sm position-relative" style="display:none;">
+            <i class="bi bi-cart" style="font-size: 1.2rem;"></i>
+            <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+          </a>
+          <button id="logoutButton" class="btn btn-outline-danger btn-sm" style="display:none;">Logout</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+<!-- Toast Notification Container -->
+<div id="toast-container"></div>
+
+<!-- Section Title -->
+<h2 class="checkout-title">Checkout & Pemesanan</h2>
+
+<!-- Checkout Section -->
+<section class="checkout-section">
+  <div class="container">
+    <form id="checkoutForm">
+      <div class="row g-4">
+
+        <!-- Kolom Kiri -->
+        <div class="col-lg-7">
+          <div class="bg-white p-4 rounded shadow-sm">
+            <h3 class="mb-4" style="color:#8B004B; font-weight:600; font-size:1.22rem;">Data Pengiriman</h3>
+            <div class="mb-3">
+              <label for="namaPenerima" class="form-label">Nama Penerima</label>
+              <input type="text" class="form-control" id="namaPenerima" required />
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" class="form-control" id="email" required />
+            </div>
+            <div class="mb-3">
+              <label for="phone" class="form-label">Nomor Telepon</label>
+              <input type="tel" class="form-control" id="phone" required />
+            </div>
+            <div class="mb-3">
+              <label for="provinsi" class="form-label">Provinsi</label>
+              <select class="form-select" id="provinsi" required>
+                <option value="">Pilih Provinsi</option>
+                <option value="Aceh">Aceh</option>
+                <option value="Sumatera Utara">Sumatera Utara</option>
+                <option value="Sumatera Barat">Sumatera Barat</option>
+                <option value="Riau">Riau</option>
+                <option value="Jambi">Jambi</option>
+                <option value="Sumatera Selatan">Sumatera Selatan</option>
+                <option value="Bengkulu">Bengkulu</option>
+                <option value="Lampung">Lampung</option>
+                <option value="Kepulauan Bangka Belitung">Kepulauan Bangka Belitung</option>
+                <option value="Kepulauan Riau">Kepulauan Riau</option>
+                <option value="DKI Jakarta">DKI Jakarta</option>
+                <option value="Jawa Barat">Jawa Barat</option>
+                <option value="Jawa Tengah">Jawa Tengah</option>
+                <option value="DI Yogyakarta">DI Yogyakarta</option>
+                <option value="Jawa Timur">Jawa Timur</option>
+                <option value="Banten">Banten</option>
+                <option value="Bali">Bali</option>
+                <option value="Nusa Tenggara Barat">Nusa Tenggara Barat</option>
+                <option value="Nusa Tenggara Timur">Nusa Tenggara Timur</option>
+                <option value="Kalimantan Barat">Kalimantan Barat</option>
+                <option value="Kalimantan Tengah">Kalimantan Tengah</option>
+                <option value="Kalimantan Selatan">Kalimantan Selatan</option>
+                <option value="Kalimantan Timur">Kalimantan Timur</option>
+                <option value="Kalimantan Utara">Kalimantan Utara</option>
+                <option value="Sulawesi Utara">Sulawesi Utara</option>
+                <option value="Sulawesi Tengah">Sulawesi Tengah</option>
+                <option value="Sulawesi Selatan">Sulawesi Selatan</option>
+                <option value="Sulawesi Tenggara">Sulawesi Tenggara</option>
+                <option value="Gorontalo">Gorontalo</option>
+                <option value="Sulawesi Barat">Sulawesi Barat</option>
+                <option value="Maluku">Maluku</option>
+                <option value="Maluku Utara">Maluku Utara</option>
+                <option value="Papua">Papua</option>
+                <option value="Papua Barat">Papua Barat</option>
+                <option value="Papua Pegunungan">Papua Pegunungan</option>
+                <option value="Papua Tengah">Papua Tengah</option>
+                <option value="Papua Selatan">Papua Selatan</option>
+                <option value="Papua Barat Daya">Papua Barat Daya</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="kota" class="form-label">Kota/Kabupaten</label>
+              <select class="form-select" id="kota" required>
+                <option value="">Pilih Kota</option>
+                <!-- Kamu bisa isi via JS sesuai provinsi -->
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="kurir" class="form-label">Opsi Kurir</label>
+              <select class="form-select" id="kurir" required>
+                <option value="">Pilih Kurir Pengiriman</option>
+                <option value="Pos Indonesia">Pos Indonesia</option>
+                <option value="JNE">JNE</option>
+                <option value="JNT">JNT</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="paymentMethod" class="form-label">Metode Pembayaran</label>
+              <select class="form-select" id="paymentMethod" required>
+                <option value="">Pilih Metode Pembayaran</option>
+                <option value="Transfer">Transfer Bank</option>
+                <option value="COD">COD - Khusus POS Indonesia</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="alamatLengkap" class="form-label">Detail Alamat Lengkap</label>
+              <textarea class="form-control" id="alamatLengkap" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary mt-3 w-100 py-2">Checkout Sekarang</button>
+          </div>
+        </div>
+
+        <!-- Kolom Kanan -->
+        <div class="col-lg-5 order-lg-last">
+          <div class="summary-box">
+            <h4 style="color:#8B004B;font-weight:600;">Ringkasan Pesanan</h4>
+            <ul class="list-group mb-3" id="checkoutItems"></ul>
+            <div class="mt-3">
+              <div class="d-flex justify-content-between mt-2">
+                <strong>Berat Total:</strong>
+                <span id="beratDisplay">0 kg</span>
+              </div>
+              <div class="d-flex justify-content-between mt-2">
+                <strong>Berat Dibulatkan:</strong>
+                <span id="beratBulatDisplay">0 kg</span>
+              </div>
+              <div class="d-flex justify-content-between mt-2">
+                <strong>Subtotal:</strong>
+                <span id="subtotalDisplay">Rp 0</span>
+              </div>
+              <div class="d-flex justify-content-between mt-2">
+                <strong>Ongkir:</strong>
+                <span id="ongkirDisplay">Rp 0</span>
+              </div>
+              <hr>
+              <div class="d-flex justify-content-between mt-2">
+                <strong>Total Bayar:</strong>
+                <strong id="checkoutTotal">Rp 0</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+        
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const email = localStorage.getItem("email");
+    const name = localStorage.getItem("name");
+// ===== NAVBAR MOBILE (DROPDOWN & SUBMENU) =====
+document.querySelectorAll('.nav-item.dropdown > .nav-link.dropdown-toggle').forEach(drop => {
+  drop.addEventListener('click', function(e) {
+    if (window.innerWidth < 992) { // hanya untuk mobile/tablet
+      e.preventDefault();
+      e.stopPropagation();
+      const menu = this.nextElementSibling;
+      if (menu) {
+        // toggle show pada menu utama
+        menu.classList.toggle('show');
+      }
+    }
+  });
+});
+
+// Toggle untuk caret submenu (misal Baju Wanita → Dress/Blouse)
+document.querySelectorAll('.dropdown-submenu-toggle').forEach(btn => {
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const parent = this.closest('.dropdown-submenu');
+    parent.classList.toggle('show');
+
+    // tutup submenu lain biar gak numpuk
+    document.querySelectorAll('.dropdown-submenu').forEach(s => {
+      if (s !== parent) s.classList.remove('show');
+    });
+  });
+});
+
+// Klik di luar → tutup semua submenu
+document.addEventListener('click', () => {
+  document.querySelectorAll('.dropdown-submenu').forEach(s => s.classList.remove('show'));
+});
+    if (email && name) {
+      // ✅ Sembunyikan tombol login & daftar, tampilkan yang lain
+      document.getElementById("loginButton").style.display = "none";
+      document.getElementById("registerButton").style.display = "none";
+      document.getElementById("logoutButton").style.display = "inline-block";
+      document.getElementById("manageAccountButton").style.display = "inline-block";
+      document.getElementById("statusButton").style.display = "inline-block";
+      document.getElementById("cartButton").style.display = "inline-block";
+
+      updateCartCount(email);
+    } else {
+      alert("Silakan login terlebih dahulu.");
+      window.location.href = "login.html";
+    }
+
+    // ✅ Fungsi Logout
+    document.getElementById("logoutButton").addEventListener("click", () => {
+      localStorage.clear();
+      window.location.reload();
+    });
+
+    // ✅ Update jumlah item keranjang
+    async function updateCartCount(email) {
+      try {
+        const res = await fetch(`/api/keranjang/jumlah/${email}`);
+        const data = await res.json();
+        document.getElementById("cartCount").textContent = data.totalItem || 0;
+      } catch (err) {
+        console.error("Gagal memuat jumlah keranjang:", err);
+      }
+    }
+  });
+</script>
+
+<script>
+  // ✅ Auto Isi Nama & Email dari localStorage
+  document.addEventListener("DOMContentLoaded", () => {
+    const email = localStorage.getItem("email");
+    const name = localStorage.getItem("name");
+
+    if (!email || !name) {
+      alert("Silakan login terlebih dahulu.");
+      window.location.href = "login.html";
+      return;
+    }
+
+    const namaPenerimaEl = document.getElementById("namaPenerima");
+    const emailEl = document.getElementById("email");
+    if (namaPenerimaEl) namaPenerimaEl.value = name;
+    if (emailEl) emailEl.value = email;
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+<script>
+  // =================== KONDISI PEMBAYARAN DAN KURIR =====================
+  const kurirSelect = document.getElementById('kurir');
+  const paymentMethod = document.getElementById('paymentMethod');
+
+  paymentMethod.addEventListener('change', function () {
+    const selectedPayment = paymentMethod.value;
+
+    if (selectedPayment === 'COD') {
+      // ✅ COD otomatis memilih Pos Indonesia dan mengunci pilihan
+      kurirSelect.value = 'Pos Indonesia';
+      kurirSelect.disabled = true;
+      kurirSelect.classList.add('disabled');
+    } else {
+      // ✅ Jangan reset kurir jika user sudah memilih sebelumnya
+      kurirSelect.disabled = false;
+      kurirSelect.classList.remove('disabled');
+
+      // ✅ Reset hanya jika sebelumnya di-set otomatis oleh COD
+      if (kurirSelect.value === 'Pos Indonesia') {
+        kurirSelect.value = '';
+      }
+    }
+
+    // ✅ Update ulang total jika ada perubahan
+    updateTotalDenganOngkir();
+  });
+</script>
+
+
+        
+        
+        
+        <script>
+          // =================== CEK LOGIN & ISI OTOMATIS FORM =====================
+          const email = localStorage.getItem('email');
+          const name = localStorage.getItem('name');
+        
+          if (!email || !name) {
+            alert("Silakan login terlebih dahulu.");
+            window.location.href = 'login.html';
+          }
+        
+          // Hanya set elemen yang memang ada di halaman ini
+          const namaPenerimaEl = document.getElementById('namaPenerima');
+          if (namaPenerimaEl) {
+            namaPenerimaEl.value = name;
+          }
+        
+          const emailEl = document.getElementById('email');
+          if (emailEl) {
+            emailEl.value = email;
+          }
+        </script>
+        
+        
+        
+        <script>
+            const provinsiEl = document.getElementById('provinsi');
+            const kotaEl = document.getElementById('kota');
+            
+            const dataKota = {
+    "Aceh": [
+        "Banda Aceh", "Sabang", "Langsa", "Lhokseumawe", "Subulussalam",
+        "Aceh Barat", "Aceh Barat Daya", "Aceh Besar", "Aceh Jaya", "Aceh Selatan",
+        "Aceh Singkil", "Aceh Tamiang", "Aceh Tengah", "Aceh Tenggara", "Aceh Timur",
+        "Aceh Utara", "Bener Meriah", "Bireuen", "Gayo Lues", "Nagan Raya",
+        "Pidie", "Pidie Jaya", "Simeulue"
+    ],
+    "Sumatera Utara": [
+        "Medan", "Binjai", "Tebing Tinggi", "Pematangsiantar", "Padangsidimpuan", "Gunungsitoli",
+        "Asahan", "Batubara", "Dairi", "Deli Serdang", "Humbang Hasundutan", "Karo", "Labuhanbatu",
+        "Labuhanbatu Selatan", "Labuhanbatu Utara", "Langkat", "Mandailing Natal", "Nias",
+        "Nias Barat", "Nias Selatan", "Nias Utara", "Padang Lawas", "Padang Lawas Utara",
+        "Pakpak Bharat", "Samosir", "Serdang Bedagai", "Simalungun", "Tapanuli Selatan",
+        "Tapanuli Tengah", "Tapanuli Utara", "Toba"
+    ],
+    "Sumatera Barat": [
+        "Padang", "Bukittinggi", "Payakumbuh", "Pariaman", "Sawahlunto", "Solok", "Padang Panjang",
+        "Agam", "Dharmasraya", "Kepulauan Mentawai", "Lima Puluh Kota", "Padang Pariaman",
+        "Pasaman", "Pasaman Barat", "Pesisir Selatan", "Sijunjung", "Solok Selatan", "Tanah Datar"
+    ],
+    "Riau": [
+        "Pekanbaru", "Dumai", "Bengkalis", "Indragiri Hilir", "Indragiri Hulu", "Kampar",
+        "Kuantan Singingi", "Pelalawan", "Rokan Hilir", "Rokan Hulu", "Siak", "Kepulauan Meranti"
+    ],
+    "Jambi": [
+        "Jambi", "Sungai Penuh", "Batanghari", "Bungo", "Kerinci", "Merangin",
+        "Muaro Jambi", "Sarolangun", "Tanjung Jabung Barat", "Tanjung Jabung Timur", "Tebo"
+    ],
+    "Sumatera Selatan": [
+        "Palembang", "Lubuklinggau", "Pagar Alam", "Prabumulih",
+        "Banyuasin", "Empat Lawang", "Lahat", "Muara Enim", "Musi Banyuasin",
+        "Musi Rawas", "Musi Rawas Utara", "Ogan Ilir", "Ogan Komering Ilir",
+        "Ogan Komering Ulu", "Ogan Komering Ulu Selatan", "Ogan Komering Ulu Timur",
+        "Penukal Abab Lematang Ilir"
+    ],
+    "Bengkulu": [
+        "Bengkulu", "Bengkulu Selatan", "Bengkulu Tengah", "Bengkulu Utara",
+        "Kaur", "Kepahiang", "Lebong", "Mukomuko", "Rejang Lebong", "Seluma"
+    ],
+    "Lampung": [
+        "Bandar Lampung", "Metro", "Lampung Barat", "Lampung Selatan", "Lampung Tengah",
+        "Lampung Timur", "Lampung Utara", "Mesuji", "Pesawaran", "Pesisir Barat", "Pringsewu",
+        "Tanggamus", "Tulang Bawang", "Tulang Bawang Barat", "Way Kanan"
+    ],
+    "Kepulauan Bangka Belitung": [
+        "Pangkalpinang", "Bangka", "Bangka Barat", "Bangka Selatan",
+        "Bangka Tengah", "Belitung", "Belitung Timur"
+    ],
+    "Kepulauan Riau": [
+        "Batam", "Tanjung Pinang", "Bintan", "Karimun", "Lingga", "Natuna", "Kepulauan Anambas"
+    ],
+    
+    // (Sumatera sudah ada di bagian sebelumnya)
+    
+    "DKI Jakarta": [
+        "Jakarta Pusat", "Jakarta Utara", "Jakarta Timur",
+        "Jakarta Selatan", "Jakarta Barat", "Kepulauan Seribu"
+    ],
+    "Jawa Barat": [
+        "Bandung", "Bekasi", "Bogor", "Cimahi", "Cirebon", "Depok", "Sukabumi", "Tasikmalaya", "Banjar",
+        "Bandung Barat", "Bekasi (Kabupaten)", "Bogor (Kabupaten)", "Cianjur", "Ciamis", "Cirebon (Kabupaten)",
+        "Garut", "Indramayu", "Karawang", "Kuningan", "Majalengka", "Pangandaran", "Purwakarta",
+        "Subang", "Sumedang", "Sukabumi (Kabupaten)", "Tasikmalaya (Kabupaten)"
+    ],
+    "Jawa Tengah": [
+        "Semarang", "Surakarta", "Magelang", "Salatiga", "Tegal", "Banjarnegara", "Banyumas", "Batang", "Blora",
+        "Boyolali", "Brebes", "Cilacap", "Demak", "Grobogan", "Jepara", "Karanganyar", "Kebumen", "Kendal",
+        "Klaten", "Kudus", "Magelang (Kabupaten)", "Pati", "Pekalongan", "Pemalang", "Purbalingga", "Purworejo",
+        "Rembang", "Semarang (Kabupaten)", "Sragen", "Sukoharjo", "Tegal (Kabupaten)", "Temanggung", "Wonogiri", "Wonosobo"
+    ],
+    "DI Yogyakarta": [
+        "Yogyakarta", "Bantul", "Gunungkidul", "Kulon Progo", "Sleman"
+    ],
+    "Jawa Timur": [
+        "Surabaya", "Batu", "Blitar", "Kediri", "Madiun", "Malang", "Mojokerto", "Pasuruan", "Probolinggo",
+        "Bangkalan", "Banyuwangi", "Blitar (Kabupaten)", "Bojonegoro", "Bondowoso", "Gresik", "Jember", "Jombang",
+        "Kediri (Kabupaten)", "Lamongan", "Lumajang", "Madiun (Kabupaten)", "Magetan", "Malang (Kabupaten)",
+        "Mojokerto (Kabupaten)", "Nganjuk", "Ngawi", "Pacitan", "Pamekasan", "Pasuruan (Kabupaten)",
+        "Ponorogo", "Probolinggo (Kabupaten)", "Sampang", "Sidoarjo", "Situbondo", "Sumenep", "Trenggalek",
+        "Tuban", "Tulungagung"
+    ],
+    "Banten": [
+        "Serang", "Tangerang", "Cilegon", "Tangerang Selatan",
+        "Lebak", "Pandeglang", "Serang (Kabupaten)", "Tangerang (Kabupaten)"
+    ],
+    "Bali": [
+        "Denpasar", "Badung", "Bangli", "Buleleng", "Gianyar", "Jembrana",
+        "Karangasem", "Klungkung", "Tabanan"
+    ],
+    // Melanjutkan dari bagian sebelumnya
+
+    "Nusa Tenggara Barat": [
+        "Mataram", "Bima", "Dompu", "Lombok Barat", "Lombok Tengah", "Lombok Timur",
+        "Lombok Utara", "Sumbawa", "Sumbawa Barat"
+    ],
+    "Nusa Tenggara Timur": [
+        "Kupang", "Ende", "Maumere", "Atambua", "Alor", "Flores Timur", "Lembata", "Manggarai",
+        "Manggarai Barat", "Manggarai Timur", "Ngada", "Nagekeo", "Rote Ndao", "Sabu Raijua",
+        "Sikka", "Sumba Barat", "Sumba Barat Daya", "Sumba Tengah", "Sumba Timur",
+        "Timor Tengah Selatan", "Timor Tengah Utara"
+    ],
+    "Kalimantan Barat": [
+        "Pontianak", "Singkawang", "Bengkayang", "Kapuas Hulu", "Kayong Utara", "Ketapang",
+        "Kubu Raya", "Landak", "Melawi", "Mempawah", "Sambas", "Sanggau", "Sekadau", "Sintang"
+    ],
+    "Kalimantan Tengah": [
+        "Palangka Raya", "Barito Selatan", "Barito Timur", "Barito Utara", "Gunung Mas", "Kapuas",
+        "Katingan", "Kotawaringin Barat", "Kotawaringin Timur", "Lamandau", "Murung Raya",
+        "Pulang Pisau", "Seruyan", "Sukamara"
+    ],
+    "Kalimantan Selatan": [
+        "Banjarmasin", "Banjarbaru", "Balangan", "Banjar", "Barito Kuala", "Hulu Sungai Selatan",
+        "Hulu Sungai Tengah", "Hulu Sungai Utara", "Kotabaru", "Tabalong", "Tanah Bumbu",
+        "Tanah Laut", "Tapin"
+    ],
+    "Kalimantan Timur": [
+        "Samarinda", "Balikpapan", "Bontang", "Berau", "Kutai Barat", "Kutai Kartanegara",
+        "Kutai Timur", "Mahakam Ulu", "Paser", "Penajam Paser Utara"
+    ],
+    "Kalimantan Utara": [
+        "Tarakan", "Nunukan", "Malinau", "Tana Tidung", "Bulungan"
+    ],
+    "Sulawesi Utara": [
+        "Manado", "Bitung", "Tomohon", "Kotamobagu", "Bolaang Mongondow", "Bolaang Mongondow Selatan",
+        "Bolaang Mongondow Timur", "Bolaang Mongondow Utara", "Kepulauan Sangihe", "Kepulauan Sitaro",
+        "Kepulauan Talaud", "Minahasa", "Minahasa Selatan", "Minahasa Tenggara", "Minahasa Utara"
+    ],
+    "Sulawesi Tengah": [
+        "Palu", "Banggai", "Banggai Kepulauan", "Banggai Laut", "Buol", "Donggala", "Morowali",
+        "Morowali Utara", "Parigi Moutong", "Poso", "Sigi", "Tojo Una-Una", "Toli-Toli"
+    ],
+    "Sulawesi Selatan": [
+        "Makassar", "Palopo", "Parepare", "Bantaeng", "Barru", "Bone", "Bulukumba", "Enrekang", "Gowa",
+        "Jeneponto", "Luwu", "Luwu Timur", "Luwu Utara", "Maros", "Pangkajene dan Kepulauan", "Pinrang",
+        "Selayar", "Sidenreng Rappang", "Sinjai", "Soppeng", "Takalar", "Tana Toraja", "Toraja Utara", "Wajo"
+    ],
+    "Sulawesi Tenggara": [
+        "Kendari", "Baubau", "Bombana", "Buton", "Buton Selatan", "Buton Tengah", "Buton Utara", "Konawe",
+        "Konawe Kepulauan", "Konawe Selatan", "Konawe Utara", "Muna", "Muna Barat", "Wakatobi"
+    ],
+    "Gorontalo": [
+        "Gorontalo", "Gorontalo Utara", "Bone Bolango", "Boalemo", "Pohuwato"
+    ],
+    "Sulawesi Barat": [
+        "Mamuju", "Majene", "Mamasa", "Mamuju Tengah", "Pasangkayu", "Polewali Mandar"
+    ],
+    "Maluku": [
+        "Ambon", "Tual", "Buru", "Buru Selatan", "Kepulauan Aru", "Maluku Barat Daya", "Maluku Tengah",
+        "Maluku Tenggara", "Maluku Tenggara Barat", "Seram Bagian Barat", "Seram Bagian Timur"
+    ],
+    "Maluku Utara": [
+        "Ternate", "Tidore Kepulauan", "Halmahera Barat", "Halmahera Selatan", "Halmahera Tengah",
+        "Halmahera Timur", "Halmahera Utara", "Kepulauan Sula", "Pulau Morotai", "Pulau Taliabu"
+    ],
+    "Papua": [
+        "Jayapura", "Merauke", "Mimika", "Nabire", "Keerom", "Sarmi", "Yahukimo", "Yalimo", "Paniai",
+        "Dogiyai", "Intan Jaya", "Deiyai", "Puncak", "Puncak Jaya", "Lanny Jaya", "Nduga",
+        "Mamberamo Raya", "Mamberamo Tengah", "Tolikara", "Pegunungan Bintang", "Jayawijaya"
+    ],
+    "Papua Barat": [
+        "Manokwari", "Fakfak", "Kaimana", "Teluk Wondama", "Teluk Bintuni", "Sorong", "Sorong Selatan",
+        "Raja Ampat", "Tambrauw", "Maybrat"
+    ],
+    "Papua Pegunungan": [
+        "Jayawijaya", "Yahukimo", "Pegunungan Bintang", "Lanny Jaya", "Nduga",
+        "Mamberamo Tengah", "Tolikara", "Yalimo"
+    ],
+    "Papua Tengah": [
+        "Nabire", "Paniai", "Mimika", "Puncak", "Puncak Jaya", "Dogiyai", "Deiyai", "Intan Jaya"
+    ],
+    "Papua Selatan": [
+        "Merauke", "Mappi", "Asmat", "Boven Digoel"
+    ],
+    "Papua Barat Daya": [
+        "Sorong", "Sorong Selatan", "Maybrat", "Tambrauw", "Raja Ampat"
+    ]
+    }
+            provinsiEl.addEventListener('change', () => {
+            const provinsi = provinsiEl.value;
+            const kotaList = dataKota[provinsi] || [];
+            
+            kotaEl.innerHTML = '<option value="">Pilih Kota</option>'; // reset kota
+            kotaList.forEach(kota => {
+                const opt = document.createElement('option');
+                opt.value = kota;
+                opt.textContent = kota;
+                kotaEl.appendChild(opt);
+            });
+            });
+            </script>
+            <script>
+                const ongkirPosIndonesia = {
+  // Aceh
+  "Banda Aceh": 15000,
+  "Sabang": 17000,
+  "Langsa": 16000,
+  "Lhokseumawe": 16000,
+  "Subulussalam": 16500,
+  "Aceh Barat": 17000,
+  "Aceh Barat Daya": 17500,
+  "Aceh Besar": 15500,
+  "Aceh Jaya": 17000,
+  "Aceh Selatan": 17500,
+  "Aceh Singkil": 18000,
+  "Aceh Tamiang": 16000,
+  "Aceh Tengah": 17000,
+  "Aceh Tenggara": 17500,
+  "Aceh Timur": 16500,
+  "Aceh Utara": 16000,
+  "Bener Meriah": 17000,
+  "Bireuen": 16000,
+  "Gayo Lues": 18000,
+  "Nagan Raya": 17500,
+  "Pidie": 16000,
+  "Pidie Jaya": 16000,
+  "Simeulue": 19000,
+
+  // Sumatera Utara
+  "Medan": 10000,
+  "Binjai": 11000,
+  "Tebing Tinggi": 11500,
+  "Pematangsiantar": 12000,
+  "Padangsidimpuan": 14000,
+  "Gunungsitoli": 16000,
+  "Asahan": 12500,
+  "Batubara": 12000,
+  "Dairi": 13000,
+  "Deli Serdang": 10500,
+  "Humbang Hasundutan": 13500,
+  "Karo": 11500,
+  "Labuhanbatu": 13000,
+  "Labuhanbatu Selatan": 13500,
+  "Labuhanbatu Utara": 13000,
+  "Langkat": 11500,
+  "Mandailing Natal": 14000,
+  "Nias": 16000,
+  "Nias Barat": 16500,
+  "Nias Selatan": 17000,
+  "Nias Utara": 16500,
+  "Padang Lawas": 14000,
+  "Padang Lawas Utara": 14000,
+  "Pakpak Bharat": 13500,
+  "Samosir": 13000,
+  "Serdang Bedagai": 11500,
+  "Simalungun": 12500,
+  "Tapanuli Selatan": 13500,
+  "Tapanuli Tengah": 14000,
+  "Tapanuli Utara": 14000,
+  "Toba": 13000,
+
+  // Sumatera Barat
+  "Padang": 18000,
+  "Bukittinggi": 18000,
+  "Payakumbuh": 18000,
+  "Pariaman": 18000,
+  "Sawahlunto": 18000,
+  "Solok": 18000,
+  "Padang Panjang": 18000,
+  "Agam": 18000,
+  "Dharmasraya": 19000,
+  "Kepulauan Mentawai": 22000,
+  "Lima Puluh Kota": 18000,
+  "Padang Pariaman": 18000,
+  "Pasaman": 18500,
+  "Pasaman Barat": 19000,
+  "Pesisir Selatan": 19000,
+  "Sijunjung": 18500,
+  "Solok Selatan": 19000,
+  "Tanah Datar": 18000,
+
+  // Riau
+  "Pekanbaru": 18000,
+  "Dumai": 19000,
+  "Bengkalis": 19000,
+  "Indragiri Hilir": 20000,
+  "Indragiri Hulu": 19000,
+  "Kampar": 18500,
+  "Kuantan Singingi": 19500,
+  "Pelalawan": 19000,
+  "Rokan Hilir": 19500,
+  "Rokan Hulu": 19500,
+  "Siak": 19000,
+  "Kepulauan Meranti": 21000,
+
+  // Jambi
+  "Jambi": 20000,
+  "Sungai Penuh": 21000,
+  "Batanghari": 20000,
+  "Bungo": 21000,
+  "Kerinci": 22000,
+  "Merangin": 21000,
+  "Muaro Jambi": 20000,
+  "Sarolangun": 21000,
+  "Tanjung Jabung Barat": 21000,
+  "Tanjung Jabung Timur": 21000,
+  "Tebo": 21000,
+
+  // Sumatera Selatan
+  "Palembang": 22000,
+  "Lubuklinggau": 22000,
+  "Pagar Alam": 22000,
+  "Prabumulih": 22000,
+  "Banyuasin": 22000,
+  "Empat Lawang": 23000,
+  "Lahat": 23000,
+  "Muara Enim": 23000,
+  "Musi Banyuasin": 23000,
+  "Musi Rawas": 23000,
+  "Musi Rawas Utara": 23000,
+  "Ogan Ilir": 23000,
+  "Ogan Komering Ilir": 23000,
+  "Ogan Komering Ulu": 23000,
+  "Ogan Komering Ulu Selatan": 23000,
+  "Ogan Komering Ulu Timur": 23000,
+  "Penukal Abab Lematang Ilir": 23000,
+
+  // Bengkulu
+  "Bengkulu": 23000,
+  "Bengkulu Selatan": 23000,
+  "Bengkulu Tengah": 23000,
+  "Bengkulu Utara": 23000,
+  "Kaur": 23000,
+  "Kepahiang": 23000,
+  "Lebong": 23000,
+  "Mukomuko": 24000,
+  "Rejang Lebong": 23000,
+  "Seluma": 23000,
+  // Lampung
+"Bandar Lampung": 25000,
+"Metro": 25000,
+"Lampung Barat": 26000,
+"Lampung Selatan": 25000,
+"Lampung Tengah": 25000,
+"Lampung Timur": 25000,
+"Lampung Utara": 25000,
+"Mesuji": 26000,
+"Pesawaran": 25000,
+"Pesisir Barat": 27000,
+"Pringsewu": 25000,
+"Tanggamus": 26000,
+"Tulang Bawang": 26000,
+"Tulang Bawang Barat": 26000,
+"Way Kanan": 26000,
+
+// Kepulauan Bangka Belitung
+"Pangkalpinang": 28000,
+"Bangka": 28000,
+"Bangka Barat": 28000,
+"Bangka Selatan": 28000,
+"Bangka Tengah": 28000,
+"Belitung": 29000,
+"Belitung Timur": 29000,
+
+// Kepulauan Riau
+"Batam": 28000,
+"Tanjung Pinang": 29000,
+"Bintan": 29000,
+"Karimun": 29000,
+"Lingga": 30000,
+"Natuna": 32000,
+"Kepulauan Anambas": 33000,
+// DKI Jakarta
+"Jakarta Pusat": 30000,
+"Jakarta Utara": 30000,
+"Jakarta Timur": 30000,
+"Jakarta Selatan": 30000,
+"Jakarta Barat": 30000,
+"Kepulauan Seribu": 32000,
+
+// Jawa Barat
+"Bandung": 31000,
+"Bekasi": 31000,
+"Bogor": 31000,
+"Cimahi": 31000,
+"Cirebon": 31000,
+"Depok": 31000,
+"Sukabumi": 31000,
+"Tasikmalaya": 31000,
+"Banjar": 31000,
+"Bandung Barat": 31500,
+"Bekasi (Kabupaten)": 31500,
+"Bogor (Kabupaten)": 31500,
+"Cianjur": 31500,
+"Ciamis": 31500,
+"Cirebon (Kabupaten)": 31500,
+"Garut": 31500,
+"Indramayu": 31500,
+"Karawang": 31500,
+"Kuningan": 31500,
+"Majalengka": 31500,
+"Pangandaran": 32000,
+"Purwakarta": 31500,
+"Subang": 31500,
+"Sumedang": 31500,
+"Sukabumi (Kabupaten)": 31500,
+"Tasikmalaya (Kabupaten)": 31500,
+
+// Jawa Tengah
+"Semarang": 32000,
+"Surakarta": 32000,
+"Magelang": 32000,
+"Salatiga": 32000,
+"Tegal": 32000,
+"Banjarnegara": 32500,
+"Banyumas": 32500,
+"Batang": 32500,
+"Blora": 32500,
+"Boyolali": 32500,
+"Brebes": 32500,
+"Cilacap": 33000,
+"Demak": 32500,
+"Grobogan": 32500,
+"Jepara": 32500,
+"Karanganyar": 32500,
+"Kebumen": 32500,
+"Kendal": 32500,
+"Klaten": 32500,
+"Kudus": 32500,
+"Magelang (Kabupaten)": 32500,
+"Pati": 32500,
+"Pekalongan": 32500,
+"Pemalang": 32500,
+"Purbalingga": 32500,
+"Purworejo": 32500,
+"Rembang": 32500,
+"Semarang (Kabupaten)": 32500,
+"Sragen": 32500,
+"Sukoharjo": 32500,
+"Tegal (Kabupaten)": 32500,
+"Temanggung": 32500,
+"Wonogiri": 32500,
+"Wonosobo": 32500,
+
+// DI Yogyakarta
+"Yogyakarta": 33000,
+"Bantul": 33000,
+"Gunungkidul": 33500,
+"Kulon Progo": 33500,
+"Sleman": 33000,
+
+// Jawa Timur
+"Surabaya": 34000,
+"Batu": 34000,
+"Blitar": 34000,
+"Kediri": 34000,
+"Madiun": 34000,
+"Malang": 34000,
+"Mojokerto": 34000,
+"Pasuruan": 34000,
+"Probolinggo": 34000,
+"Bangkalan": 34500,
+"Banyuwangi": 35000,
+"Blitar (Kabupaten)": 34500,
+"Bojonegoro": 34500,
+"Bondowoso": 34500,
+"Gresik": 34000,
+"Jember": 34500,
+"Jombang": 34500,
+"Kediri (Kabupaten)": 34500,
+"Lamongan": 34000,
+"Lumajang": 34500,
+"Madiun (Kabupaten)": 34500,
+"Magetan": 34500,
+"Malang (Kabupaten)": 34500,
+"Mojokerto (Kabupaten)": 34500,
+"Nganjuk": 34500,
+"Ngawi": 34500,
+"Pacitan": 35000,
+"Pamekasan": 35000,
+"Pasuruan (Kabupaten)": 34500,
+"Ponorogo": 34500,
+"Probolinggo (Kabupaten)": 34500,
+"Sampang": 35000,
+"Sidoarjo": 34000,
+"Situbondo": 35000,
+"Sumenep": 36000,
+"Trenggalek": 34500,
+"Tuban": 34500,
+"Tulungagung": 34500,
+
+// Banten
+"Serang": 30000,
+"Tangerang": 30000,
+"Cilegon": 30000,
+"Tangerang Selatan": 30000,
+"Lebak": 30500,
+"Pandeglang": 31000,
+"Serang (Kabupaten)": 30500,
+"Tangerang (Kabupaten)": 30500,
+
+// Bali
+"Denpasar": 37000,
+"Badung": 37000,
+"Bangli": 37500,
+"Buleleng": 37500,
+"Gianyar": 37000,
+"Jembrana": 37500,
+"Karangasem": 38000,
+"Klungkung": 37500,
+"Tabanan": 37000,
+
+  // Nusa Tenggara Barat
+  "Mataram": 40000,
+  "Bima": 42000,
+  "Dompu": 41000,
+  "Lombok Barat": 40000,
+  "Lombok Tengah": 40000,
+  "Lombok Timur": 41000,
+  "Lombok Utara": 41000,
+  "Sumbawa": 42000,
+  "Sumbawa Barat": 42000,
+
+  // Nusa Tenggara Timur
+  "Kupang": 42000,
+  "Ende": 43000,
+  "Maumere": 43000,
+  "Atambua": 43000,
+  "Alor": 44000,
+  "Flores Timur": 43000,
+  "Lembata": 44000,
+  "Manggarai": 43000,
+  "Manggarai Barat": 43000,
+  "Manggarai Timur": 43000,
+  "Ngada": 44000,
+  "Nagekeo": 44000,
+  "Rote Ndao": 44000,
+  "Sabu Raijua": 45000,
+  "Sikka": 43000,
+  "Sumba Barat": 44000,
+  "Sumba Barat Daya": 44000,
+  "Sumba Tengah": 44000,
+  "Sumba Timur": 44000,
+  "Timor Tengah Selatan": 44000,
+  "Timor Tengah Utara": 44000,
+
+  // Kalimantan Barat
+  "Pontianak": 39000,
+  "Singkawang": 39000,
+  "Bengkayang": 40000,
+  "Kapuas Hulu": 41000,
+  "Kayong Utara": 40000,
+  "Ketapang": 40000,
+  "Kubu Raya": 39000,
+  "Landak": 40000,
+  "Melawi": 40000,
+  "Mempawah": 39000,
+  "Sambas": 40000,
+  "Sanggau": 40000,
+  "Sekadau": 40000,
+  "Sintang": 40000,
+
+  // Kalimantan Tengah
+  "Palangka Raya": 40000,
+  "Barito Selatan": 41000,
+  "Barito Timur": 41000,
+  "Barito Utara": 41000,
+  "Gunung Mas": 41000,
+  "Kapuas": 41000,
+  "Katingan": 41000,
+  "Kotawaringin Barat": 41000,
+  "Kotawaringin Timur": 41000,
+  "Lamandau": 41000,
+  "Murung Raya": 41000,
+  "Pulang Pisau": 41000,
+  "Seruyan": 41000,
+  "Sukamara": 41000,
+
+  // Kalimantan Selatan
+  "Banjarmasin": 40000,
+  "Banjarbaru": 40000,
+  "Balangan": 41000,
+  "Banjar": 41000,
+  "Barito Kuala": 41000,
+  "Hulu Sungai Selatan": 41000,
+  "Hulu Sungai Tengah": 41000,
+  "Hulu Sungai Utara": 41000,
+  "Kotabaru": 42000,
+  "Tabalong": 41000,
+  "Tanah Bumbu": 42000,
+  "Tanah Laut": 41000,
+  "Tapin": 41000,
+
+  // Kalimantan Timur
+  "Samarinda": 42000,
+  "Balikpapan": 42000,
+  "Bontang": 42000,
+  "Berau": 43000,
+  "Kutai Barat": 43000,
+  "Kutai Kartanegara": 43000,
+  "Kutai Timur": 43000,
+  "Mahakam Ulu": 44000,
+  "Paser": 43000,
+  "Penajam Paser Utara": 43000,
+
+  // Kalimantan Utara
+  "Tarakan": 43000,
+  "Nunukan": 44000,
+  "Malinau": 44000,
+  "Tana Tidung": 44000,
+  "Bulungan": 44000,
+
+  // Sulawesi Utara
+  "Manado": 41000,
+  "Bitung": 41000,
+  "Tomohon": 41000,
+  "Kotamobagu": 41000,
+  "Bolaang Mongondow": 42000,
+  "Bolaang Mongondow Selatan": 42000,
+  "Bolaang Mongondow Timur": 42000,
+  "Bolaang Mongondow Utara": 42000,
+  "Kepulauan Sangihe": 43000,
+  "Kepulauan Sitaro": 43000,
+  "Kepulauan Talaud": 43000,
+  "Minahasa": 41000,
+  "Minahasa Selatan": 42000,
+  "Minahasa Tenggara": 42000,
+  "Minahasa Utara": 42000,
+
+  // Sulawesi Tengah
+  "Palu": 42000,
+  "Banggai": 43000,
+  "Banggai Kepulauan": 43000,
+  "Banggai Laut": 43000,
+  "Buol": 43000,
+  "Donggala": 43000,
+  "Morowali": 43000,
+  "Morowali Utara": 43000,
+  "Parigi Moutong": 43000,
+  "Poso": 43000,
+  "Sigi": 43000,
+  "Tojo Una-Una": 43000,
+  "Toli-Toli": 43000,
+
+  // Sulawesi Selatan
+  "Makassar": 40000,
+  "Palopo": 41000,
+  "Parepare": 41000,
+  "Bantaeng": 41000,
+  "Barru": 41000,
+  "Bone": 41000,
+  "Bulukumba": 41000,
+  "Enrekang": 42000,
+  "Gowa": 41000,
+  "Jeneponto": 41000,
+  "Luwu": 42000,
+  "Luwu Timur": 42000,
+  "Luwu Utara": 42000,
+  "Maros": 41000,
+  "Pangkajene dan Kepulauan": 42000,
+  "Pinrang": 42000,
+  "Selayar": 43000,
+  "Sidenreng Rappang": 42000,
+  "Sinjai": 42000,
+  "Soppeng": 42000,
+  "Takalar": 41000,
+  "Tana Toraja": 43000,
+  "Toraja Utara": 43000,
+  "Wajo": 42000,
+
+  // Sulawesi Tenggara
+  "Kendari": 43000,
+  "Baubau": 43000,
+  "Bombana": 43000,
+  "Buton": 43000,
+  "Buton Selatan": 43000,
+  "Buton Tengah": 43000,
+  "Buton Utara": 43000,
+  "Konawe": 43000,
+  "Konawe Kepulauan": 44000,
+  "Konawe Selatan": 43000,
+  "Konawe Utara": 43000,
+  "Muna": 43000,
+  "Muna Barat": 43000,
+  "Wakatobi": 44000,
+
+  // Gorontalo
+  "Gorontalo": 42000,
+  "Gorontalo Utara": 42000,
+  "Bone Bolango": 42000,
+  "Boalemo": 42000,
+  "Pohuwato": 42000,
+
+  // Sulawesi Barat
+  "Mamuju": 43000,
+  "Majene": 43000,
+  "Mamasa": 43000,
+  "Mamuju Tengah": 43000,
+  "Pasangkayu": 43000,
+  "Polewali Mandar": 43000,
+
+  // Maluku
+  "Ambon": 45000,
+  "Tual": 45000,
+  "Buru": 45000,
+  "Buru Selatan": 45000,
+  "Kepulauan Aru": 46000,
+  "Maluku Barat Daya": 46000,
+  "Maluku Tengah": 45000,
+  "Maluku Tenggara": 46000,
+  "Maluku Tenggara Barat": 46000,
+  "Seram Bagian Barat": 45000,
+  "Seram Bagian Timur": 45000,
+
+  // Maluku Utara
+  "Ternate": 46000,
+  "Tidore Kepulauan": 46000,
+  "Halmahera Barat": 46000,
+  "Halmahera Selatan": 46000,
+  "Halmahera Tengah": 46000,
+  "Halmahera Timur": 46000,
+  "Halmahera Utara": 46000,
+  "Kepulauan Sula": 47000,
+  "Pulau Morotai": 47000,
+  "Pulau Taliabu": 47000,
+
+  // Papua
+  "Jayapura": 50000,
+  "Merauke": 50000,
+  "Mimika": 50000,
+  "Nabire": 50000,
+  "Keerom": 50000,
+  "Sarmi": 50000,
+  "Yahukimo": 51000,
+  "Yalimo": 51000,
+  "Paniai": 51000,
+  "Dogiyai": 51000,
+  "Intan Jaya": 51000,
+  "Deiyai": 51000,
+  "Puncak": 51000,
+  "Puncak Jaya": 51000,
+  "Lanny Jaya": 51000,
+  "Nduga": 51000,
+  "Mamberamo Raya": 51000,
+  "Mamberamo Tengah": 51000,
+  "Tolikara": 51000,
+  "Pegunungan Bintang": 51000,
+  "Jayawijaya": 51000,
+
+  // Papua Barat
+  "Manokwari": 50000,
+  "Fakfak": 50000,
+  "Kaimana": 50000,
+  "Teluk Wondama": 50000,
+  "Teluk Bintuni": 50000,
+  "Sorong": 50000,
+  "Sorong Selatan": 50000,
+  "Raja Ampat": 51000,
+  "Tambrauw": 51000,
+  "Maybrat": 51000,
+};
+
+
+
+
+  
+
+
+              </script>
+
+  <script>
+      const ongkirJNE = {
+        
+        
+  // Aceh
+  "Banda Aceh": 19000,
+  "Sabang": 21000,
+  "Langsa": 20000,
+  "Lhokseumawe": 20000,
+  "Subulussalam": 20500,
+  "Aceh Barat": 21000,
+  "Aceh Barat Daya": 21500,
+  "Aceh Besar": 19500,
+  "Aceh Jaya": 21000,
+  "Aceh Selatan": 21500,
+  "Aceh Singkil": 22000,
+  "Aceh Tamiang": 20000,
+  "Aceh Tengah": 21000,
+  "Aceh Tenggara": 21500,
+  "Aceh Timur": 20500,
+  "Aceh Utara": 20000,
+  "Bener Meriah": 21000,
+  "Bireuen": 20000,
+  "Gayo Lues": 22000,
+  "Nagan Raya": 21500,
+  "Pidie": 20000,
+  "Pidie Jaya": 20000,
+  "Simeulue": 24000,
+
+  // Sumatera Utara
+  "Medan": 13000,
+  "Binjai": 14000,
+  "Tebing Tinggi": 14500,
+  "Pematangsiantar": 15000,
+  "Padangsidimpuan": 17000,
+  "Gunungsitoli": 19000,
+  "Asahan": 15500,
+  "Batubara": 15000,
+  "Dairi": 16000,
+  "Deli Serdang": 13500,
+  "Humbang Hasundutan": 16500,
+  "Karo": 14500,
+  "Labuhanbatu": 16000,
+  "Labuhanbatu Selatan": 16500,
+  "Labuhanbatu Utara": 16000,
+  "Langkat": 14500,
+  "Mandailing Natal": 17000,
+  "Nias": 19000,
+  "Nias Barat": 19500,
+  "Nias Selatan": 20000,
+  "Nias Utara": 19500,
+  "Padang Lawas": 17000,
+  "Padang Lawas Utara": 17000,
+  "Pakpak Bharat": 16500,
+  "Samosir": 16000,
+  "Serdang Bedagai": 14500,
+  "Simalungun": 15500,
+  "Tapanuli Selatan": 16500,
+  "Tapanuli Tengah": 17000,
+  "Tapanuli Utara": 17000,
+  "Toba": 16000,
+
+  // Sumatera Barat
+  "Padang": 22000,
+  "Bukittinggi": 22000,
+  "Payakumbuh": 22000,
+  "Pariaman": 22000,
+  "Sawahlunto": 22000,
+  "Solok": 22000,
+  "Padang Panjang": 22000,
+  "Agam": 22000,
+  "Dharmasraya": 23000,
+  "Kepulauan Mentawai": 26000,
+  "Lima Puluh Kota": 22000,
+  "Padang Pariaman": 22000,
+  "Pasaman": 22500,
+  "Pasaman Barat": 23000,
+  "Pesisir Selatan": 23000,
+  "Sijunjung": 22500,
+  "Solok Selatan": 23000,
+  "Tanah Datar": 22000,
+
+  // Riau
+  "Pekanbaru": 22000,
+  "Dumai": 23000,
+  "Bengkalis": 23000,
+  "Indragiri Hilir": 24000,
+  "Indragiri Hulu": 23000,
+  "Kampar": 22500,
+  "Kuantan Singingi": 23500,
+  "Pelalawan": 23000,
+  "Rokan Hilir": 23500,
+  "Rokan Hulu": 23500,
+  "Siak": 23000,
+  "Kepulauan Meranti": 25000,
+
+  // Jambi
+  "Jambi": 24000,
+  "Sungai Penuh": 25000,
+  "Batanghari": 24000,
+  "Bungo": 25000,
+  "Kerinci": 26000,
+  "Merangin": 25000,
+  "Muaro Jambi": 24000,
+  "Sarolangun": 25000,
+  "Tanjung Jabung Barat": 25000,
+  "Tanjung Jabung Timur": 25000,
+  "Tebo": 25000,
+
+  // Sumatera Selatan
+  "Palembang": 26000,
+  "Lubuklinggau": 26000,
+  "Pagar Alam": 26000,
+  "Prabumulih": 26000,
+  "Banyuasin": 26000,
+  "Empat Lawang": 27000,
+  "Lahat": 27000,
+  "Muara Enim": 27000,
+  "Musi Banyuasin": 27000,
+  "Musi Rawas": 27000,
+  "Musi Rawas Utara": 27000,
+  "Ogan Ilir": 27000,
+  "Ogan Komering Ilir": 27000,
+  "Ogan Komering Ulu": 27000,
+  "Ogan Komering Ulu Selatan": 27000,
+  "Ogan Komering Ulu Timur": 27000,
+  "Penukal Abab Lematang Ilir": 27000,
+
+  // Bengkulu
+  "Bengkulu": 27000,
+  "Bengkulu Selatan": 27000,
+  "Bengkulu Tengah": 27000,
+  "Bengkulu Utara": 27000,
+  "Kaur": 27000,
+  "Kepahiang": 27000,
+  "Lebong": 27000,
+  "Mukomuko": 28000,
+  "Rejang Lebong": 27000,
+  "Seluma": 27000,
+
+  // Lampung
+  "Bandar Lampung": 27000,
+  "Metro": 27000,
+  "Lampung Barat": 28000,
+  "Lampung Selatan": 27000,
+  "Lampung Tengah": 27000,
+  "Lampung Timur": 27000,
+  "Lampung Utara": 27000,
+  "Mesuji": 28000,
+  "Pesawaran": 27000,
+  "Pesisir Barat": 29000,
+  "Pringsewu": 27000,
+  "Tanggamus": 28000,
+  "Tulang Bawang": 28000,
+  "Tulang Bawang Barat": 28000,
+  "Way Kanan": 28000,
+
+  // Kepulauan Bangka Belitung
+  "Pangkalpinang": 30000,
+  "Bangka": 30000,
+  "Bangka Barat": 30000,
+  "Bangka Selatan": 30000,
+  "Bangka Tengah": 30000,
+  "Belitung": 31000,
+  "Belitung Timur": 31000,
+
+  // Kepulauan Riau
+  "Batam": 30000,
+  "Tanjung Pinang": 31000,
+  "Bintan": 31000,
+  "Karimun": 31000,
+  "Lingga": 32000,
+  "Natuna": 34000,
+  "Kepulauan Anambas": 35000,
+   // DKI Jakarta
+   "Jakarta Pusat": 33000,
+    "Jakarta Utara": 33000,
+    "Jakarta Timur": 33000,
+    "Jakarta Selatan": 33000,
+    "Jakarta Barat": 33000,
+    "Kepulauan Seribu": 35000,
+
+    // Jawa Barat
+    "Bandung": 34000,
+    "Bekasi": 34000,
+    "Bogor": 34000,
+    "Cimahi": 34000,
+    "Cirebon": 34000,
+    "Depok": 34000,
+    "Sukabumi": 34000,
+    "Tasikmalaya": 34000,
+    "Banjar": 34000,
+    "Bandung Barat": 34500,
+    "Bekasi (Kabupaten)": 34500,
+    "Bogor (Kabupaten)": 34500,
+    "Cianjur": 34500,
+    "Ciamis": 34500,
+    "Cirebon (Kabupaten)": 34500,
+    "Garut": 34500,
+    "Indramayu": 34500,
+    "Karawang": 34500,
+    "Kuningan": 34500,
+    "Majalengka": 34500,
+    "Pangandaran": 35000,
+    "Purwakarta": 34500,
+    "Subang": 34500,
+    "Sumedang": 34500,
+    "Sukabumi (Kabupaten)": 34500,
+    "Tasikmalaya (Kabupaten)": 34500,
+
+    // Jawa Tengah
+    "Semarang": 35000,
+    "Surakarta": 35000,
+    "Magelang": 35000,
+    "Salatiga": 35000,
+    "Tegal": 35000,
+    "Banjarnegara": 35500,
+    "Banyumas": 35500,
+    "Batang": 35500,
+    "Blora": 35500,
+    "Boyolali": 35500,
+    "Brebes": 35500,
+    "Cilacap": 36000,
+    "Demak": 35500,
+    "Grobogan": 35500,
+    "Jepara": 35500,
+    "Karanganyar": 35500,
+    "Kebumen": 35500,
+    "Kendal": 35500,
+    "Klaten": 35500,
+    "Kudus": 35500,
+    "Magelang (Kabupaten)": 35500,
+    "Pati": 35500,
+    "Pekalongan": 35500,
+    "Pemalang": 35500,
+    "Purbalingga": 35500,
+    "Purworejo": 35500,
+    "Rembang": 35500,
+    "Semarang (Kabupaten)": 35500,
+    "Sragen": 35500,
+    "Sukoharjo": 35500,
+    "Tegal (Kabupaten)": 35500,
+    "Temanggung": 35500,
+    "Wonogiri": 35500,
+    "Wonosobo": 35500,
+
+    // DI Yogyakarta
+    "Yogyakarta": 36000,
+    "Bantul": 36000,
+    "Gunungkidul": 36500,
+    "Kulon Progo": 36500,
+    "Sleman": 36000,
+
+    // Jawa Timur
+    "Surabaya": 37000,
+    "Batu": 37000,
+    "Blitar": 37000,
+    "Kediri": 37000,
+    "Madiun": 37000,
+    "Malang": 37000,
+    "Mojokerto": 37000,
+    "Pasuruan": 37000,
+    "Probolinggo": 37000,
+    "Bangkalan": 37500,
+    "Banyuwangi": 38000,
+    "Blitar (Kabupaten)": 37500,
+    "Bojonegoro": 37500,
+    "Bondowoso": 37500,
+    "Gresik": 37000,
+    "Jember": 37500,
+    "Jombang": 37500,
+    "Kediri (Kabupaten)": 37500,
+    "Lamongan": 37000,
+    "Lumajang": 37500,
+    "Madiun (Kabupaten)": 37500,
+    "Magetan": 37500,
+    "Malang (Kabupaten)": 37500,
+    "Mojokerto (Kabupaten)": 37500,
+    "Nganjuk": 37500,
+    "Ngawi": 37500,
+    "Pacitan": 38000,
+    "Pamekasan": 38000,
+    "Pasuruan (Kabupaten)": 37500,
+    "Ponorogo": 37500,
+    "Probolinggo (Kabupaten)": 37500,
+    "Sampang": 38000,
+    "Sidoarjo": 37000,
+    "Situbondo": 38000,
+    "Sumenep": 39000,
+    "Trenggalek": 37500,
+    "Tuban": 37500,
+    "Tulungagung": 37500,
+
+    // Banten
+    "Serang": 33000,
+    "Tangerang": 33000,
+    "Cilegon": 33000,
+    "Tangerang Selatan": 33000,
+    "Lebak": 33500,
+    "Pandeglang": 34000,
+    "Serang (Kabupaten)": 33500,
+    "Tangerang (Kabupaten)": 33500,
+
+    // Bali
+    "Denpasar": 40000,
+    "Badung": 40000,
+    "Bangli": 40500,
+    "Buleleng": 40500,
+    "Gianyar": 40000,
+    "Jembrana": 40500,
+    "Karangasem": 41000,
+    "Klungkung": 40500,
+    "Tabanan": 40000,
+    // Nusa Tenggara Barat
+  "Mataram": 43000,
+  "Bima": 45000,
+  "Dompu": 44000,
+  "Lombok Barat": 43000,
+  "Lombok Tengah": 43000,
+  "Lombok Timur": 44000,
+  "Lombok Utara": 44000,
+  "Sumbawa": 45000,
+  "Sumbawa Barat": 45000,
+
+  // Nusa Tenggara Timur
+  "Kupang": 45000,
+  "Ende": 46000,
+  "Maumere": 46000,
+  "Atambua": 46000,
+  "Alor": 47000,
+  "Flores Timur": 46000,
+  "Lembata": 47000,
+  "Manggarai": 46000,
+  "Manggarai Barat": 46000,
+  "Manggarai Timur": 46000,
+  "Ngada": 47000,
+  "Nagekeo": 47000,
+  "Rote Ndao": 47000,
+  "Sabu Raijua": 48000,
+  "Sikka": 46000,
+  "Sumba Barat": 47000,
+  "Sumba Barat Daya": 47000,
+  "Sumba Tengah": 47000,
+  "Sumba Timur": 47000,
+  "Timor Tengah Selatan": 47000,
+  "Timor Tengah Utara": 47000,
+
+  // Kalimantan Barat
+  "Pontianak": 39000,
+  "Singkawang": 39000,
+  "Bengkayang": 40000,
+  "Kapuas Hulu": 41000,
+  "Kayong Utara": 40000,
+  "Ketapang": 40000,
+  "Kubu Raya": 39000,
+  "Landak": 40000,
+  "Melawi": 40000,
+  "Mempawah": 39000,
+  "Sambas": 40000,
+  "Sanggau": 40000,
+  "Sekadau": 40000,
+  "Sintang": 40000,
+
+  // Kalimantan Tengah
+  "Palangka Raya": 40000,
+  "Barito Selatan": 41000,
+  "Barito Timur": 41000,
+  "Barito Utara": 41000,
+  "Gunung Mas": 41000,
+  "Kapuas": 41000,
+  "Katingan": 41000,
+  "Kotawaringin Barat": 41000,
+  "Kotawaringin Timur": 41000,
+  "Lamandau": 41000,
+  "Murung Raya": 41000,
+  "Pulang Pisau": 41000,
+  "Seruyan": 41000,
+  "Sukamara": 41000,
+
+  // Kalimantan Selatan
+  "Banjarmasin": 40000,
+  "Banjarbaru": 40000,
+  "Balangan": 41000,
+  "Banjar": 41000,
+  "Barito Kuala": 41000,
+  "Hulu Sungai Selatan": 41000,
+  "Hulu Sungai Tengah": 41000,
+  "Hulu Sungai Utara": 41000,
+  "Kotabaru": 42000,
+  "Tabalong": 41000,
+  "Tanah Bumbu": 42000,
+  "Tanah Laut": 41000,
+  "Tapin": 41000,
+
+  // Kalimantan Timur
+  "Samarinda": 42000,
+  "Balikpapan": 42000,
+  "Bontang": 42000,
+  "Berau": 43000,
+  "Kutai Barat": 43000,
+  "Kutai Kartanegara": 43000,
+  "Kutai Timur": 43000,
+  "Mahakam Ulu": 44000,
+  "Paser": 43000,
+  "Penajam Paser Utara": 43000,
+
+  // Kalimantan Utara
+  "Tarakan": 43000,
+  "Nunukan": 44000,
+  "Malinau": 44000,
+  "Tana Tidung": 44000,
+  "Bulungan": 44000,
+
+  // Sulawesi Utara
+  "Manado": 44000,
+  "Bitung": 44000,
+  "Tomohon": 44000,
+  "Kotamobagu": 44000,
+  "Bolaang Mongondow": 45000,
+  "Bolaang Mongondow Selatan": 45000,
+  "Bolaang Mongondow Timur": 45000,
+  "Bolaang Mongondow Utara": 45000,
+  "Kepulauan Sangihe": 46000,
+  "Kepulauan Sitaro": 46000,
+  "Kepulauan Talaud": 46000,
+  "Minahasa": 44000,
+  "Minahasa Selatan": 45000,
+  "Minahasa Tenggara": 45000,
+  "Minahasa Utara": 45000,
+
+  // Sulawesi Tengah
+  "Palu": 45000,
+  "Banggai": 46000,
+  "Banggai Kepulauan": 46000,
+  "Banggai Laut": 46000,
+  "Buol": 46000,
+  "Donggala": 46000,
+  "Morowali": 46000,
+  "Morowali Utara": 46000,
+  "Parigi Moutong": 46000,
+  "Poso": 46000,
+  "Sigi": 46000,
+  "Tojo Una-Una": 46000,
+  "Toli-Toli": 46000,
+
+  // Sulawesi Selatan
+  "Makassar": 43000,
+  "Palopo": 44000,
+  "Parepare": 44000,
+  "Bantaeng": 44000,
+  "Barru": 44000,
+  "Bone": 44000,
+  "Bulukumba": 44000,
+  "Enrekang": 45000,
+  "Gowa": 44000,
+  "Jeneponto": 44000,
+  "Luwu": 45000,
+  "Luwu Timur": 45000,
+  "Luwu Utara": 45000,
+  "Maros": 44000,
+  "Pangkajene dan Kepulauan": 45000,
+  "Pinrang": 45000,
+  "Selayar": 46000,
+  "Sidenreng Rappang": 45000,
+  "Sinjai": 45000,
+  "Soppeng": 45000,
+  "Takalar": 44000,
+  "Tana Toraja": 46000,
+  "Toraja Utara": 46000,
+  "Wajo": 45000,
+
+  // Sulawesi Tenggara
+  "Kendari": 46000,
+  "Baubau": 46000,
+  "Bombana": 46000,
+  "Buton": 46000,
+  "Buton Selatan": 46000,
+  "Buton Tengah": 46000,
+  "Buton Utara": 46000,
+  "Konawe": 46000,
+  "Konawe Kepulauan": 47000,
+  "Konawe Selatan": 46000,
+  "Konawe Utara": 46000,
+  "Muna": 46000,
+  "Muna Barat": 46000,
+  "Wakatobi": 47000,
+
+  // Gorontalo
+  "Gorontalo": 45000,
+  "Gorontalo Utara": 45000,
+  "Bone Bolango": 45000,
+  "Boalemo": 45000,
+  "Pohuwato": 45000,
+
+  // Sulawesi Barat
+  "Mamuju": 46000,
+  "Majene": 46000,
+  "Mamasa": 46000,
+  "Mamuju Tengah": 46000,
+  "Pasangkayu": 46000,
+  "Polewali Mandar": 46000,
+
+  // Maluku
+  "Ambon": 48000,
+  "Tual": 48000,
+  "Buru": 48000,
+  "Buru Selatan": 48000,
+  "Kepulauan Aru": 49000,
+  "Maluku Barat Daya": 49000,
+  "Maluku Tengah": 48000,
+  "Maluku Tenggara": 49000,
+  "Maluku Tenggara Barat": 49000,
+  "Seram Bagian Barat": 48000,
+  "Seram Bagian Timur": 48000,
+
+  // Maluku Utara
+  "Ternate": 49000,
+  "Tidore Kepulauan": 49000,
+  "Halmahera Barat": 49000,
+  "Halmahera Selatan": 49000,
+  "Halmahera Tengah": 49000,
+  "Halmahera Timur": 49000,
+  "Halmahera Utara": 49000,
+  "Kepulauan Sula": 50000,
+  "Pulau Morotai": 50000,
+  "Pulau Taliabu": 50000,
+
+  // Papua
+  "Jayapura": 53000,
+  "Merauke": 53000,
+  "Mimika": 53000,
+  "Nabire": 53000,
+  "Keerom": 53000,
+  "Sarmi": 53000,
+  "Yahukimo": 54000,
+  "Yalimo": 54000,
+  "Paniai": 54000,
+  "Dogiyai": 54000,
+  "Intan Jaya": 54000,
+  "Deiyai": 54000,
+  "Puncak": 54000,
+  "Puncak Jaya": 54000,
+  "Lanny Jaya": 54000,
+  "Nduga": 54000,
+  "Mamberamo Raya": 54000,
+  "Mamberamo Tengah": 54000,
+  "Tolikara": 54000,
+  "Pegunungan Bintang": 54000,
+  "Jayawijaya": 54000,
+
+  // Papua Barat
+  "Manokwari": 53000,
+  "Fakfak": 53000,
+  "Kaimana": 53000,
+  "Teluk Wondama": 53000,
+  "Teluk Bintuni": 53000,
+  "Sorong": 53000,
+  "Sorong Selatan": 53000,
+  "Raja Ampat": 54000,
+  "Tambrauw": 54000,
+  "Maybrat": 54000,
+};
+
+
+
+
+ 
+</script>
+    <script>
+        const ongkirJNT = {
+  // Aceh
+  "Banda Aceh": 16000,
+  "Sabang": 18000,
+  "Langsa": 17000,
+  "Lhokseumawe": 17000,
+  "Subulussalam": 17500,
+  "Aceh Barat": 18000,
+  "Aceh Barat Daya": 18500,
+  "Aceh Besar": 16500,
+  "Aceh Jaya": 18000,
+  "Aceh Selatan": 18500,
+  "Aceh Singkil": 19000,
+  "Aceh Tamiang": 17000,
+  "Aceh Tengah": 18000,
+  "Aceh Tenggara": 18500,
+  "Aceh Timur": 17500,
+  "Aceh Utara": 17000,
+  "Bener Meriah": 18000,
+  "Bireuen": 17000,
+  "Gayo Lues": 19000,
+  "Nagan Raya": 18500,
+  "Pidie": 17000,
+  "Pidie Jaya": 17000,
+  "Simeulue": 21000,
+
+  // Sumatera Utara
+  "Medan": 11000,
+  "Binjai": 12000,
+  "Tebing Tinggi": 12500,
+  "Pematangsiantar": 13000,
+  "Padangsidimpuan": 15000,
+  "Gunungsitoli": 16000,
+  "Asahan": 13500,
+  "Batubara": 13000,
+  "Dairi": 14000,
+  "Deli Serdang": 11500,
+  "Humbang Hasundutan": 14500,
+  "Karo": 12500,
+  "Labuhanbatu": 14000,
+  "Labuhanbatu Selatan": 14500,
+  "Labuhanbatu Utara": 14000,
+  "Langkat": 12500,
+  "Mandailing Natal": 15000,
+  "Nias": 16000,
+  "Nias Barat": 16500,
+  "Nias Selatan": 17000,
+  "Nias Utara": 16500,
+  "Padang Lawas": 15000,
+  "Padang Lawas Utara": 15000,
+  "Pakpak Bharat": 14500,
+  "Samosir": 14000,
+  "Serdang Bedagai": 12500,
+  "Simalungun": 13500,
+  "Tapanuli Selatan": 14500,
+  "Tapanuli Tengah": 15000,
+  "Tapanuli Utara": 15000,
+  "Toba": 14000,
+
+  // Sumatera Barat
+  "Padang": 19000,
+  "Bukittinggi": 19000,
+  "Payakumbuh": 19000,
+  "Pariaman": 19000,
+  "Sawahlunto": 19000,
+  "Solok": 19000,
+  "Padang Panjang": 19000,
+  "Agam": 19000,
+  "Dharmasraya": 20000,
+  "Kepulauan Mentawai": 23000,
+  "Lima Puluh Kota": 19000,
+  "Padang Pariaman": 19000,
+  "Pasaman": 19500,
+  "Pasaman Barat": 20000,
+  "Pesisir Selatan": 20000,
+  "Sijunjung": 19500,
+  "Solok Selatan": 20000,
+  "Tanah Datar": 19000,
+
+  // Riau
+  "Pekanbaru": 19000,
+  "Dumai": 20000,
+  "Bengkalis": 20000,
+  "Indragiri Hilir": 21000,
+  "Indragiri Hulu": 20000,
+  "Kampar": 19500,
+  "Kuantan Singingi": 20500,
+  "Pelalawan": 20000,
+  "Rokan Hilir": 20500,
+  "Rokan Hulu": 20500,
+  "Siak": 20000,
+  "Kepulauan Meranti": 22000,
+
+  // Jambi
+  "Jambi": 21000,
+  "Sungai Penuh": 22000,
+  "Batanghari": 21000,
+  "Bungo": 22000,
+  "Kerinci": 23000,
+  "Merangin": 22000,
+  "Muaro Jambi": 21000,
+  "Sarolangun": 22000,
+  "Tanjung Jabung Barat": 22000,
+  "Tanjung Jabung Timur": 22000,
+  "Tebo": 22000,
+
+  // Sumatera Selatan
+  "Palembang": 23000,
+  "Lubuklinggau": 23000,
+  "Pagar Alam": 23000,
+  "Prabumulih": 23000,
+  "Banyuasin": 23000,
+  "Empat Lawang": 24000,
+  "Lahat": 24000,
+  "Muara Enim": 24000,
+  "Musi Banyuasin": 24000,
+  "Musi Rawas": 24000,
+  "Musi Rawas Utara": 24000,
+  "Ogan Ilir": 24000,
+  "Ogan Komering Ilir": 24000,
+  "Ogan Komering Ulu": 24000,
+  "Ogan Komering Ulu Selatan": 24000,
+  "Ogan Komering Ulu Timur": 24000,
+  "Penukal Abab Lematang Ilir": 24000,
+
+  // Bengkulu
+  "Bengkulu": 24000,
+  "Bengkulu Selatan": 24000,
+  "Bengkulu Tengah": 24000,
+  "Bengkulu Utara": 24000,
+  "Kaur": 24000,
+  "Kepahiang": 24000,
+  "Lebong": 24000,
+  "Mukomuko": 25000,
+  "Rejang Lebong": 24000,
+  "Seluma": 24000,
+
+  // Lampung
+  "Bandar Lampung": 24000,
+  "Metro": 24000,
+  "Lampung Barat": 25000,
+  "Lampung Selatan": 24000,
+  "Lampung Tengah": 24000,
+  "Lampung Timur": 24000,
+  "Lampung Utara": 24000,
+  "Mesuji": 25000,
+  "Pesawaran": 24000,
+  "Pesisir Barat": 26000,
+  "Pringsewu": 24000,
+  "Tanggamus": 25000,
+  "Tulang Bawang": 25000,
+  "Tulang Bawang Barat": 25000,
+  "Way Kanan": 25000,
+
+  // Kepulauan Bangka Belitung
+  "Pangkalpinang": 27000,
+  "Bangka": 27000,
+  "Bangka Barat": 27000,
+  "Bangka Selatan": 27000,
+  "Bangka Tengah": 27000,
+  "Belitung": 28000,
+  "Belitung Timur": 28000,
+
+  // Kepulauan Riau
+  "Batam": 27000,
+  "Tanjung Pinang": 28000,
+  "Bintan": 28000,
+  "Karimun": 28000,
+  "Lingga": 29000,
+  "Natuna": 31000,
+  "Kepulauan Anambas": 32000,
+
+  // DKI Jakarta
+  "Jakarta Pusat": 30000,
+  "Jakarta Utara": 30000,
+  "Jakarta Timur": 30000,
+  "Jakarta Selatan": 30000,
+  "Jakarta Barat": 30000,
+  "Kepulauan Seribu": 32000,
+
+  // Jawa Barat
+  "Bandung": 31000,
+  "Bekasi": 31000,
+  "Bogor": 31000,
+  "Cimahi": 31000,
+  "Cirebon": 31000,
+  "Depok": 31000,
+  "Sukabumi": 31000,
+  "Tasikmalaya": 31000,
+  "Banjar": 31000,
+  "Bandung Barat": 31500,
+  "Bekasi (Kabupaten)": 31500,
+  "Bogor (Kabupaten)": 31500,
+  "Cianjur": 31500,
+  "Ciamis": 31500,
+  "Cirebon (Kabupaten)": 31500,
+  "Garut": 31500,
+  "Indramayu": 31500,
+  "Karawang": 31500,
+  "Kuningan": 31500,
+  "Majalengka": 31500,
+  "Pangandaran": 32000,
+  "Purwakarta": 31500,
+  "Subang": 31500,
+  "Sumedang": 31500,
+  "Sukabumi (Kabupaten)": 31500,
+  "Tasikmalaya (Kabupaten)": 31500,
+
+  // Jawa Tengah
+  "Semarang": 32000,
+  "Surakarta": 32000,
+  "Magelang": 32000,
+  "Salatiga": 32000,
+  "Tegal": 32000,
+  "Banjarnegara": 32500,
+  "Banyumas": 32500,
+  "Batang": 32500,
+  "Blora": 32500,
+  "Boyolali": 32500,
+  "Brebes": 32500,
+  "Cilacap": 33000,
+  "Demak": 32500,
+  "Grobogan": 32500,
+  "Jepara": 32500,
+  "Karanganyar": 32500,
+  "Kebumen": 32500,
+  "Kendal": 32500,
+  "Klaten": 32500,
+  "Kudus": 32500,
+  "Magelang (Kabupaten)": 32500,
+  "Pati": 32500,
+  "Pekalongan": 32500,
+  "Pemalang": 32500,
+  "Purbalingga": 32500,
+  "Purworejo": 32500,
+  "Rembang": 32500,
+  "Semarang (Kabupaten)": 32500,
+  "Sragen": 32500,
+  "Sukoharjo": 32500,
+  "Tegal (Kabupaten)": 32500,
+  "Temanggung": 32500,
+  "Wonogiri": 32500,
+  "Wonosobo": 32500,
+
+  // DI Yogyakarta
+  "Yogyakarta": 33000,
+  "Bantul": 33000,
+  "Gunungkidul": 33500,
+  "Kulon Progo": 33500,
+  "Sleman": 33000,
+
+  // Jawa Timur
+  "Surabaya": 34000,
+  "Batu": 34000,
+  "Blitar": 34000,
+  "Kediri": 34000,
+  "Madiun": 34000,
+  "Malang": 34000,
+  "Mojokerto": 34000,
+  "Pasuruan": 34000,
+  "Probolinggo": 34000,
+  "Bangkalan": 34500,
+  "Banyuwangi": 35000,
+  "Blitar (Kabupaten)": 34500,
+  "Bojonegoro": 34500,
+  "Bondowoso": 34500,
+  "Gresik": 34000,
+  "Jember": 34500,
+  "Jombang": 34500,
+  "Kediri (Kabupaten)": 34500,
+  "Lamongan": 34000,
+  "Lumajang": 34500,
+  "Madiun (Kabupaten)": 34500,
+  "Magetan": 34500,
+  "Malang (Kabupaten)": 34500,
+  "Mojokerto (Kabupaten)": 34500,
+  "Nganjuk": 34500,
+  "Ngawi": 34500,
+  "Pacitan": 35000,
+  "Pamekasan": 35000,
+  "Pasuruan (Kabupaten)": 34500,
+  "Ponorogo": 34500,
+  "Probolinggo (Kabupaten)": 34500,
+  "Sampang": 35000,
+  "Sidoarjo": 34000,
+  "Situbondo": 35000,
+  "Sumenep": 36000,
+  "Trenggalek": 34500,
+  "Tuban": 34500,
+  "Tulungagung": 34500,
+
+  // Banten
+  "Serang": 31000,
+  "Tangerang": 31000,
+  "Cilegon": 31000,
+  "Tangerang Selatan": 31000,
+  "Lebak": 31500,
+  "Pandeglang": 32000,
+  "Serang (Kabupaten)": 31500,
+  "Tangerang (Kabupaten)": 31500,
+
+  // Bali
+  "Denpasar": 37000,
+  "Badung": 37000,
+  "Bangli": 37500,
+  "Buleleng": 37500,
+  "Gianyar": 37000,
+  "Jembrana": 37500,
+  "Karangasem": 38000,
+  "Klungkung": 37500,
+  "Tabanan": 37000,
+
+  // Nusa Tenggara Barat
+  "Mataram": 40000,
+  "Bima": 42000,
+  "Dompu": 41000,
+  "Lombok Barat": 40000,
+  "Lombok Tengah": 40000,
+  "Lombok Timur": 41000,
+  "Lombok Utara": 41000,
+  "Sumbawa": 42000,
+  "Sumbawa Barat": 42000,
+
+  // Nusa Tenggara Timur
+  "Kupang": 42000,
+  "Ende": 43000,
+  "Maumere": 43000,
+  "Atambua": 43000,
+  "Alor": 44000,
+  "Flores Timur": 43000,
+  "Lembata": 44000,
+  "Manggarai": 43000,
+  "Manggarai Barat": 43000,
+  "Manggarai Timur": 43000,
+  "Ngada": 44000,
+  "Nagekeo": 44000,
+  "Rote Ndao": 44000,
+  "Sabu Raijua": 45000,
+  "Sikka": 43000,
+  "Sumba Barat": 44000,
+  "Sumba Barat Daya": 44000,
+  "Sumba Tengah": 44000,
+  "Sumba Timur": 44000,
+  "Timor Tengah Selatan": 44000,
+  "Timor Tengah Utara": 44000,
+
+  // Kalimantan Barat
+  "Pontianak": 37000,
+  "Singkawang": 37000,
+  "Bengkayang": 38000,
+  "Kapuas Hulu": 39000,
+  "Kayong Utara": 38000,
+  "Ketapang": 38000,
+  "Kubu Raya": 37000,
+  "Landak": 38000,
+  "Melawi": 38000,
+  "Mempawah": 37000,
+  "Sambas": 38000,
+  "Sanggau": 38000,
+  "Sekadau": 38000,
+  "Sintang": 38000,
+
+  // Kalimantan Tengah
+  "Palangka Raya": 38000,
+  "Barito Selatan": 39000,
+  "Barito Timur": 39000,
+  "Barito Utara": 39000,
+  "Gunung Mas": 39000,
+  "Kapuas": 39000,
+  "Katingan": 39000,
+  "Kotawaringin Barat": 39000,
+  "Kotawaringin Timur": 39000,
+  "Lamandau": 39000,
+  "Murung Raya": 39000,
+  "Pulang Pisau": 39000,
+  "Seruyan": 39000,
+  "Sukamara": 39000,
+
+  // Kalimantan Selatan
+  "Banjarmasin": 38000,
+  "Banjarbaru": 38000,
+  "Balangan": 39000,
+  "Banjar": 39000,
+  "Barito Kuala": 39000,
+  "Hulu Sungai Selatan": 39000,
+  "Hulu Sungai Tengah": 39000,
+  "Hulu Sungai Utara": 39000,
+  "Kotabaru": 40000,
+  "Tabalong": 39000,
+  "Tanah Bumbu": 40000,
+  "Tanah Laut": 39000,
+  "Tapin": 39000,
+
+  // Kalimantan Timur
+  "Samarinda": 40000,
+  "Balikpapan": 40000,
+  "Bontang": 40000,
+  "Berau": 41000,
+  "Kutai Barat": 41000,
+  "Kutai Kartanegara": 41000,
+  "Kutai Timur": 41000,
+  "Mahakam Ulu": 42000,
+  "Paser": 41000,
+  "Penajam Paser Utara": 41000,
+
+  // Kalimantan Utara
+  "Tarakan": 41000,
+  "Nunukan": 42000,
+  "Malinau": 42000,
+  "Tana Tidung": 42000,
+  "Bulungan": 42000,
+  // Sulawesi Utara
+  "Kepulauan Sangihe": 44000,
+  "Kepulauan Sitaro": 44000,
+  "Kepulauan Talaud": 44000,
+  "Minahasa": 42000,
+  "Minahasa Selatan": 43000,
+  "Minahasa Tenggara": 43000,
+  "Minahasa Utara": 43000,
+
+  // Sulawesi Tengah
+  "Palu": 43000,
+  "Banggai": 44000,
+  "Banggai Kepulauan": 44000,
+  "Banggai Laut": 44000,
+  "Buol": 44000,
+  "Donggala": 44000,
+  "Morowali": 44000,
+  "Morowali Utara": 44000,
+  "Parigi Moutong": 44000,
+  "Poso": 44000,
+  "Sigi": 44000,
+  "Tojo Una-Una": 44000,
+  "Toli-Toli": 44000,
+
+  // Sulawesi Selatan
+  "Makassar": 40000,
+  "Palopo": 41000,
+  "Parepare": 41000,
+  "Bantaeng": 41000,
+  "Barru": 41000,
+  "Bone": 41000,
+  "Bulukumba": 41000,
+  "Enrekang": 42000,
+  "Gowa": 41000,
+  "Jeneponto": 41000,
+  "Luwu": 42000,
+  "Luwu Timur": 42000,
+  "Luwu Utara": 42000,
+  "Maros": 41000,
+  "Pangkajene dan Kepulauan": 42000,
+  "Pinrang": 42000,
+  "Selayar": 43000,
+  "Sidenreng Rappang": 42000,
+  "Sinjai": 42000,
+  "Soppeng": 42000,
+  "Takalar": 41000,
+  "Tana Toraja": 43000,
+  "Toraja Utara": 43000,
+  "Wajo": 42000,
+
+  // Sulawesi Tenggara
+  "Kendari": 44000,
+  "Baubau": 44000,
+  "Bombana": 44000,
+  "Buton": 44000,
+  "Buton Selatan": 44000,
+  "Buton Tengah": 44000,
+  "Buton Utara": 44000,
+  "Konawe": 44000,
+  "Konawe Kepulauan": 45000,
+  "Konawe Selatan": 44000,
+  "Konawe Utara": 44000,
+  "Muna": 44000,
+  "Muna Barat": 44000,
+  "Wakatobi": 45000,
+
+  // Gorontalo
+  "Gorontalo": 42000,
+  "Gorontalo Utara": 42000,
+  "Bone Bolango": 42000,
+  "Boalemo": 42000,
+  "Pohuwato": 42000,
+
+  // Sulawesi Barat
+  "Mamuju": 45000,
+  "Majene": 45000,
+  "Mamasa": 45000,
+  "Mamuju Tengah": 45000,
+  "Pasangkayu": 45000,
+  "Polewali Mandar": 45000,
+
+  // Maluku
+  "Ambon": 46000,
+  "Tual": 46000,
+  "Buru": 46000,
+  "Buru Selatan": 46000,
+  "Kepulauan Aru": 47000,
+  "Maluku Barat Daya": 47000,
+  "Maluku Tengah": 46000,
+  "Maluku Tenggara": 47000,
+  "Maluku Tenggara Barat": 47000,
+  "Seram Bagian Barat": 46000,
+  "Seram Bagian Timur": 46000,
+
+  // Maluku Utara
+  "Ternate": 47000,
+  "Tidore Kepulauan": 47000,
+  "Halmahera Barat": 47000,
+  "Halmahera Selatan": 47000,
+  "Halmahera Tengah": 47000,
+  "Halmahera Timur": 47000,
+  "Halmahera Utara": 47000,
+  "Kepulauan Sula": 48000,
+  "Pulau Morotai": 48000,
+  "Pulau Taliabu": 48000,
+
+  // Papua
+  "Jayapura": 50000,
+  "Merauke": 50000,
+  "Mimika": 50000,
+  "Nabire": 50000,
+  "Keerom": 50000,
+  "Sarmi": 50000,
+  "Yahukimo": 51000,
+  "Yalimo": 51000,
+  "Paniai": 51000,
+  "Dogiyai": 51000,
+  "Intan Jaya": 51000,
+  "Deiyai": 51000,
+  "Puncak": 51000,
+  "Puncak Jaya": 51000,
+  "Lanny Jaya": 51000,
+  "Nduga": 51000,
+  "Mamberamo Raya": 51000,
+  "Mamberamo Tengah": 51000,
+  "Tolikara": 51000,
+  "Pegunungan Bintang": 51000,
+  "Jayawijaya": 51000,
+
+  // Papua Barat
+  "Manokwari": 50000,
+  "Fakfak": 50000,
+  "Kaimana": 50000,
+  "Teluk Wondama": 50000,
+  "Teluk Bintuni": 50000,
+  "Sorong": 50000,
+  "Sorong Selatan": 50000,
+  "Raja Ampat": 51000,
+  "Tambrauw": 51000,
+  "Maybrat": 51000,
+};
+</script>
+<script>
+  let totalBelanja = 0;
+</script>
+
+<script>
+  fetch(`/api/keranjang/${email}`)
+    .then(res => res.json())
+    .then(items => {
+      const listEl = document.getElementById('checkoutItems');
+
+      if (!Array.isArray(items) || items.length === 0) {
+        listEl.innerHTML = "<li class='list-group-item'>Keranjang kosong</li>";
+        document.getElementById("subtotalDisplay").textContent = "Rp 0";
+        document.getElementById("ongkirDisplay").textContent = "Rp 0";
+        document.getElementById("checkoutTotal").textContent = "Rp 0";
+        return;
+      }
+
+      let total = 0;
+      let beratTotalGram = 0;
+      listEl.innerHTML = ""; // reset tampilan sebelum render ulang
+
+      items.forEach(item => {
+        const subtotal = item.harga * item.jumlah;
+        total += subtotal;
+        beratTotalGram += item.jumlah * (item.berat || 0);
+
+        const li = document.createElement('li');
+        li.className = 'list-group-item d-flex justify-content-between lh-sm';
+        li.dataset.produkId = item.produkId;
+        li.dataset.berat    = item.berat   || 0;
+        li.dataset.ukuran   = item.ukuran  || item.size || '';
+
+        li.innerHTML = `
+          <div>
+            <h6 class="my-0">${item.nama}</h6>
+            <small class="text-muted">
+              Jumlah: ${item.jumlah}
+              &middot; Ukuran: ${item.ukuran || item.size || '-'}
+              &middot; Berat/item: ${(item.berat || 0)} gr
+            </small>
+          </div>
+          <span class="text-muted">Rp ${subtotal.toLocaleString('id-ID')}</span>
+        `;
+        listEl.appendChild(li);
+      });
+
+      totalBelanja = total;
+
+      // simpan & tampilkan subtotal, berat, lalu hitung ulang ongkir
+      localStorage.setItem("checkoutBeratGram", beratTotalGram);
+      localStorage.setItem("checkoutBeratKg", Math.ceil(beratTotalGram / 1000));
+      document.getElementById('subtotalDisplay').textContent = `Rp ${total.toLocaleString('id-ID')}`;
+      updateTotalDenganOngkir();
+    })
+    .catch(err => {
+      document.getElementById("checkoutItems").innerHTML =
+        "<li class='list-group-item'>Terjadi kesalahan saat mengambil keranjang.</li>";
+      document.getElementById("subtotalDisplay").textContent = "Rp 0";
+      document.getElementById("ongkirDisplay").textContent = "Rp 0";
+      document.getElementById("checkoutTotal").textContent = "Rp 0";
+      console.error('Gagal mengambil keranjang:', err);
+    });
+</script>
+
+
+
+
+
+
+<!-- 5. Script Event Listener & Perhitungan Ongkir -->
+<script>
+  function updateTotalDenganOngkir() {
+    const kota = document.getElementById('kota').value;
+    const kurir = document.getElementById('kurir').value;
+
+    let ongkirPerKg = 0;
+    if (kurir === "Pos Indonesia") ongkirPerKg = ongkirPosIndonesia[kota] || 0;
+    if (kurir === "JNE") ongkirPerKg = ongkirJNE[kota] || 0;
+    if (kurir === "JNT") ongkirPerKg = ongkirJNT[kota] || 0;
+
+    // ✅ Ambil berat total dari localStorage
+    const beratGram = parseInt(localStorage.getItem("checkoutBeratGram")) || 0;
+    const beratAkuratKg = beratGram / 1000;         // contoh: 450gr → 0.45 kg
+    const beratBulatKg = Math.ceil(beratAkuratKg);  // dibulatkan ke atas untuk ongkir
+
+    // ✅ Hitung ongkir hanya jika kurir & kota terisi
+    let ongkir = 0;
+    if (kurir && kota) {
+      ongkir = ongkirPerKg * beratBulatKg;
+    }
+    const totalAkhir = totalBelanja + ongkir;
+
+    // ✅ Tampilkan berat akurat (2 angka di belakang koma)
+    const beratDisplayEl = document.getElementById('beratDisplay');
+    if (beratDisplayEl) {
+      beratDisplayEl.textContent = `${beratAkuratKg.toFixed(2)} kg`;
+    }
+
+    // ✅ Tampilkan berat bulat
+    const beratBulatDisplayEl = document.getElementById('beratBulatDisplay');
+    if (beratBulatDisplayEl) {
+      beratBulatDisplayEl.textContent = `${beratBulatKg} kg`;
+    }
+
+    // ✅ Tampilkan ongkir & total bayar
+    document.getElementById('ongkirDisplay').textContent = 'Rp ' + ongkir.toLocaleString('id-ID');
+    document.getElementById('checkoutTotal').textContent = 'Rp ' + totalAkhir.toLocaleString('id-ID');
+
+    // ✅ Simpan ke localStorage
+    localStorage.setItem("checkoutSubtotal", totalBelanja);
+    localStorage.setItem("checkoutOngkir", ongkir);
+    localStorage.setItem("checkoutTotal", totalAkhir);
+    localStorage.setItem("checkoutBeratAkuratKg", beratAkuratKg);
+    localStorage.setItem("checkoutBeratBulatKg", beratBulatKg);
+  }
+</script>
+
+
+
+        <script>
+            // =================== LOGOUT =====================
+            function logout() {
+            localStorage.clear();
+            window.location.href = 'login.html';
+            }
+        </script>
+
+            
+
+
+<script>
+  document.getElementById('provinsi').addEventListener('change', () => {
+    const provinsi = document.getElementById('provinsi').value;
+    const kotaList = dataKota[provinsi] || [];
+
+    const kotaEl = document.getElementById('kota');
+    kotaEl.innerHTML = '<option value="">Pilih Kota</option>';
+    kotaList.forEach(kota => {
+      const opt = document.createElement('option');
+      opt.value = kota;
+      opt.textContent = kota;
+      kotaEl.appendChild(opt);
+    });
+
+    // Reset pilihan kota, tapi tetap update total jika sebelumnya sudah ada data
+    updateTotalDenganOngkir();
+  });
+
+  document.getElementById('kota').addEventListener('change', updateTotalDenganOngkir);
+  document.getElementById('kurir').addEventListener('change', updateTotalDenganOngkir); // ← sudah diganti
+</script>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const form = document.getElementById("checkoutForm");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      // ✅ Ambil semua input dari form & localStorage
+      const namaPenerima = document.getElementById("namaPenerima")?.value.trim();
+      const alamat = document.getElementById("alamatLengkap")?.value;
+      const kota = document.getElementById("kota")?.value;
+      const provinsi = document.getElementById("provinsi")?.value;
+      const kurir = document.getElementById("kurir")?.value;
+      const metode = document.getElementById("paymentMethod")?.value.trim();
+      const email = document.getElementById("email")?.value.trim();
+      const phone = document.getElementById("phone")?.value.trim();
+
+      const subtotal = parseInt(localStorage.getItem("checkoutSubtotal")) || 0;
+      const ongkir = parseInt(localStorage.getItem("checkoutOngkir")) || 0;
+      const total = parseInt(localStorage.getItem("checkoutTotal")) || (subtotal + ongkir);
+      const beratGram = parseInt(localStorage.getItem("checkoutBeratGram")) || 0;
+      const items = JSON.parse(localStorage.getItem("cart") || "[]");
+
+      // ✅ Validasi data input form
+      if (!namaPenerima || !alamat || !kota || !provinsi || !kurir || !metode || !email || !phone || items.length === 0) {
+        alert("Mohon lengkapi semua data terlebih dahulu.");
+        return;
+      }
+
+      // ✅ CEK PRODUKID (WAJIB untuk backend stok)
+      for (const i of items) {
+        if (!i.produkId) {
+          alert(`Produk "${i.nama}" tidak memiliki produkId, checkout dibatalkan.`);
+          return;
+        }
+      }
+
+      // ✅ OPSIONAL: Validasi jumlah vs stok (aktifkan jika stok sudah ada di cart)
+      for (const i of items) {
+        if (i.stok && i.jumlah > i.stok) {
+          alert(`Stok untuk "${i.nama}" tidak cukup. Maksimal hanya ${i.stok} pcs.`);
+          return;
+        }
+      }
+
+      // ✅ Data detail pengiriman
+      const detailPesanan = {
+        provinsi,
+        kota,
+        alamat,
+        kurir,
+        ongkir,
+        berat: beratGram
+      };
+
+      // ✅ Simpan semua ke localStorage untuk halaman selanjutnya
+      localStorage.setItem("namaPenerima", namaPenerima);
+      localStorage.setItem("email", email);
+      localStorage.setItem("phone", phone);
+      localStorage.setItem("alamat", alamat);
+      localStorage.setItem("kota", kota);
+      localStorage.setItem("provinsi", provinsi);
+      localStorage.setItem("kurir", kurir);
+      localStorage.setItem("metode", metode);
+      localStorage.setItem("cart", JSON.stringify(items));
+      localStorage.setItem("checkoutSubtotal", subtotal);
+      localStorage.setItem("checkoutOngkir", ongkir);
+      localStorage.setItem("checkoutTotal", total);
+      localStorage.setItem("checkoutBeratGram", beratGram);
+
+      // === TRANSFER ===
+      if (metode === "Transfer") {
+        const transferData = {
+          namaPenerima,
+          email,
+          phone,
+          metode,
+          items,
+          subtotal,
+          ongkir,
+          total,
+          berat: beratGram,
+          detailPesanan
+        };
+        localStorage.setItem("pendingPesanan", JSON.stringify(transferData));
+        window.location.href = "pembayaranmanual.html";
+        return;
+      }
+
+      // === COD ===
+      if (metode === "COD") {
+        const codData = {
+          namaPenerima,
+          email,
+          phone,
+          metode,
+          items,
+          subtotal,
+          ongkir,
+          total,
+          berat: beratGram,
+          detailPesanan
+        };
+        localStorage.setItem("pendingPesanan", JSON.stringify(codData));
+        window.location.href = "cod.html";
+        return;
+      }
+
+      alert("Metode pembayaran tidak dikenali.");
+    });
+  });
+</script>
+
+
+<script>
+  function showToast(msg, type = "success") {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = 'toko-toast toko-toast-' + type;
+    let icon = `<i class="bi bi-check-circle-fill"></i>`;
+    if(type === "error") icon = `<i class="bi bi-x-circle-fill"></i>`;
+    if(type === "info") icon = `<i class="bi bi-info-circle-fill"></i>`;
+    toast.innerHTML = icon + `<span style="flex:1;">${msg}</span>`;
+    container.appendChild(toast);
+    setTimeout(() => {
+      toast.style.opacity = 0;
+      toast.style.transform = "translateY(30px) scale(0.98)";
+      setTimeout(() => toast.remove(), 400);
+    }, 2000);
+  }
+</script>
+
+
+
+
+        
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+          
+            
+          
+        
+        
+             
+              
+        
+    </body>
+    </html>

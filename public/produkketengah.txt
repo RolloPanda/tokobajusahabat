@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Barang Baru - Toko Baju Sahabat</title>
+  <link rel="icon" href="assets/favicon.ico" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    html, body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+                   "Noto Sans", "Liberation Sans", Arial, sans-serif,
+                   "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+      background-color: #f8f9fa;
+    }
+
+    .section-title {
+      text-align: center;
+      font-weight: bold;
+      margin-top: 3rem;
+      margin-bottom: 1.5rem;
+      color: #8B004B;
+    }
+
+    .produk-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.5rem;
+      padding: 0 2rem 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .produk-item {
+      width: 260px;
+      background: #fff;
+      border-radius: 1rem;
+      overflow: hidden;
+      box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
+      text-align: center;
+      transition: transform 0.2s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .produk-item:hover {
+      transform: translateY(-5px);
+    }
+
+    .produk-img {
+      width: 100%;
+      height: 220px;
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      flex-shrink: 0;
+    }
+
+    .produk-info {
+      padding: 1rem;
+    }
+
+    .produk-info h5 {
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    .produk-info p {
+      margin-bottom: 1rem;
+      color: #555;
+    }
+
+    .produk-btns {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      padding-bottom: 1rem;
+    }
+
+    .produk-btns .btn-outline-primary {
+      border-color: #8B004B;
+      color: #8B004B;
+    }
+
+    .produk-btns .btn-outline-primary:hover {
+      background-color: #8B004B;
+      color: white;
+    }
+
+    .dropdown-submenu {
+      position: relative;
+    }
+
+    .dropdown-submenu > .dropdown-menu {
+      top: 0;
+      left: 100%;
+      margin-top: -1px;
+    }
+
+    @media (min-width: 992px) {
+      .navbar .dropdown:hover > .dropdown-menu {
+        display: block;
+      }
+      .dropdown-submenu:hover > .dropdown-menu {
+        display: block;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">Toko Baju Sahabat</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Tentang</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Toko</a>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" href="penjualansemua.html">Semua Produk</a></li>
+              <li><a class="dropdown-item" href="barangpopuler.html">Barang Populer</a></li>
+              <li><a class="dropdown-item" href="barangbaru.html">Barang Baru</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li class="dropdown-submenu">
+                <a class="dropdown-item dropdown-toggle" href="bajuwanita.html">Baju Wanita</a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="dress.html">Dress</a></li>
+                  <li><a class="dropdown-item" href="blouse.html">Blouse</a></li>
+                  <li><a class="dropdown-item" href="tunik.html">Tunik</a></li>
+                  <li><a class="dropdown-item" href="gamis.html">Gamis</a></li>
+                  <li><a class="dropdown-item" href="rokcelana.html">Rok/Celana</a></li>
+                </ul>
+              </li>
+              <li><a class="dropdown-item" href="bajupria.html">Baju Pria</a></li>
+              <li><a class="dropdown-item" href="bajuanak.html">Baju Anak</a></li>
+              <li><a class="dropdown-item" href="busanamuslim.html">Busana Muslim</a></li>
+            </ul>
+          </li>
+        </ul>
+
+        <div class="d-flex align-items-center" style="gap: 0.5rem;">
+          <form class="d-flex" action="/search" method="GET">
+            <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="Cari Produk" />
+            <button class="btn btn-outline-success btn-sm" type="submit">Cari</button>
+          </form>
+          <a id="loginButton" href="login.html" class="btn btn-outline-primary btn-sm">Login</a>
+          <a id="registerButton" href="daftarakun.html" class="btn btn-outline-secondary btn-sm">Buat Akun</a>
+          <a id="manageAccountButton" href="akun.html" class="btn btn-outline-success btn-sm" style="display:none;">Kelola Akun</a>
+          <a id="statusButton" href="stpesanan.html" class="btn btn-outline-info btn-sm" style="display:none;">Status Pesanan</a>
+          <a id="cartButton" href="keranjangbelanja.html" class="btn btn-outline-warning btn-sm position-relative" style="display:none;">
+            <i class="bi bi-cart" style="font-size: 1.2rem;"></i>
+            <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+          </a>
+          <button id="logoutButton" class="btn btn-outline-danger btn-sm" style="display:none;">Logout</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Heading -->
+  <h3 class="section-title">Barang Baru</h3>
+  <div class="produk-container" id="produk-container"></div>
+
+  <!-- Script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const email = localStorage.getItem('email');
+      const name = localStorage.getItem('name');
+
+      if (email && name) {
+        document.getElementById('loginButton').style.display = 'none';
+        document.getElementById('registerButton').style.display = 'none';
+        document.getElementById('logoutButton').style.display = 'inline-block';
+        document.getElementById('manageAccountButton').style.display = 'inline-block';
+        document.getElementById('statusButton').style.display = 'inline-block';
+        document.getElementById('cartButton').style.display = 'inline-block';
+        updateCartCount();
+      }
+
+      document.getElementById('logoutButton').addEventListener('click', () => {
+        localStorage.clear();
+        window.location.reload();
+      });
+
+      async function updateCartCount() {
+        try {
+          const res = await fetch(`/api/keranjang/jumlah/${email}`);
+          const data = await res.json();
+          document.getElementById('cartCount').textContent = data.totalItem || 0;
+        } catch (err) {
+          console.error('Gagal memuat jumlah keranjang:', err);
+        }
+      }
+
+      async function loadProduk() {
+        try {
+          const res = await fetch('/api/produk');
+          const data = await res.json();
+          const container = document.getElementById('produk-container');
+          container.innerHTML = '';
+
+          const barangBaru = data.filter(p => p.statusProduk === "Barang Baru");
+
+          barangBaru.forEach(produk => {
+            const el = document.createElement('div');
+            el.className = 'produk-item';
+            el.innerHTML = `
+              <a href="detailproduk.html?id=${produk._id}" class="produk-img" style="background-image: url('/api/produk/gambar/${produk._id}');"></a>
+              <div class="produk-info">
+                <h5>${produk.nama}</h5>
+                <p>Rp ${produk.harga.toLocaleString('id-ID')}</p>
+                <div class="produk-btns">
+                  <a href="detailproduk.html?id=${produk._id}" class="btn btn-outline-primary btn-sm">Lihat Produk</a>
+                  ${email ? `<button class="btn btn-dark btn-sm" onclick='tambahKeKeranjang(${JSON.stringify({
+                    _id: produk._id,
+                    nama: produk.nama,
+                    harga: produk.harga
+                  })})'><i class="bi bi-cart-plus"></i></button>` : ''}
+                </div>
+              </div>
+            `;
+            container.appendChild(el);
+          });
+        } catch (err) {
+          console.error('Gagal memuat produk:', err);
+        }
+      }
+
+      window.tambahKeKeranjang = async (produk) => {
+        try {
+          const res = await fetch('/cart/tambah', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, produk })
+          });
+          const result = await res.json();
+          if (result.success) {
+            alert('Produk ditambahkan ke keranjang!');
+            updateCartCount();
+          } else {
+            alert(result.message || 'Gagal menambahkan.');
+          }
+        } catch (err) {
+          alert('Terjadi kesalahan.');
+        }
+      };
+
+      loadProduk();
+    });
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

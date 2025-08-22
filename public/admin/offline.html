@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Penjualan Offline — Dashboard Admin</title>
+  <link rel="icon" href="assets/favicon.ico" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+  <style>
+    html, body { font-family: system-ui, sans-serif; background:#f8f9fa; margin:0; height:100%; }
+    .navbar .btn-outline-primary { border-color: #8B004B; color: #8B004B; }
+    .navbar .btn-outline-primary:hover { background-color: #8B004B; color: #fff; }
+    .hero { background: linear-gradient(to right, #8B004B, #ad1457); color:#fff; padding:2rem 1rem; text-align:center; }
+    .sidebar { background:#fff; border-right:1px solid #e5e5e5; height:calc(100vh - 56px - 64px); padding-top:1rem; }
+    .sidebar a { color:#333; display:block; padding:.75rem 1.5rem; text-decoration:none; }
+    .sidebar a.active, .sidebar a:hover { background:#f1f1f1; color:#8B004B; }
+    .content { padding:2rem; }
+    .table-responsive { margin-top:1rem; background:#fff; border-radius:.5rem; box-shadow:0 .25rem .5rem rgba(0,0,0,0.1); }
+    .table-responsive th, .table-responsive td { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; vertical-align:middle; }
+    .toast-container { position:fixed; bottom:1rem; right:1rem; z-index:1055; }
+    .form-label { font-weight:500; }
+    .pointer { cursor:pointer; color:#6c63ff; text-decoration:underline; }
+    .modal-img { max-width:90vw; max-height:70vh; display:block; margin:auto; }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="dashboardadmin.html">Toko Baju Sahabat</a>
+      <div class="d-flex align-items-center ms-auto" style="gap:.5rem;">
+        <button id="logout" class="btn btn-outline-primary btn-sm">Logout</button>
+      </div>
+    </div>
+  </nav>
+  <!-- Hero -->
+  <section class="hero">
+    <h1>Penjualan Offline</h1>
+    <p>Catat transaksi penjualan langsung di toko secara cepat & efisien</p>
+  </section>
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+<nav class="col-md-2 sidebar d-none d-md-block">
+  <a href="dashboardadmin.html"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+  <a href="produkadmin.html" class="active"><i class="bi bi-tags me-2"></i>Kelola Produk</a>
+  <a href="stok.html"><i class="bi bi-box-seam me-2"></i>Manajemen Stok</a>
+  <a href="pembelian.html"><i class="bi bi-download me-2"></i>Pembelian (Barang Masuk)</a>
+  <a href="penjualan.html"><i class="bi bi-upload me-2"></i>Penjualan (Barang Keluar)</a>
+  <a href="offline.html"><i class="bi bi-shop me-2"></i>Penjualan Offline</a>
+  <a href="kelolapesanan.html"><i class="bi bi-inboxes me-2"></i>Kelola Pesanan Online</a>
+  <a href="laporan.html"><i class="bi bi-file-earmark-bar-graph me-2"></i>Laporan Stok</a>
+  <!-- ✅ Menu baru ditambahkan di sini -->
+  <a href="laporanpenjualan.html"><i class="bi bi-journal-text me-2"></i>Laporan Penjualan</a>
+  <a href="grafik.html"><i class="bi bi-bar-chart me-2"></i>Grafik</a>
+  <a href="pengaturan.html"><i class="bi bi-gear me-2"></i>Pengaturan Admin</a>
+</nav>
+      <!-- Main Content -->
+      <main class="col-md-10 content">
+        <!-- Form Input Penjualan Offline -->
+        <form id="offlineForm" class="row g-3 align-items-end mb-4" enctype="multipart/form-data" autocomplete="off">
+          <div class="col-md-4">
+            <label for="produk" class="form-label">Nama Produk</label>
+            <select id="produk" class="form-select" required></select>
+          </div>
+          <div class="col-md-2">
+            <label for="ukuran" class="form-label">Ukuran</label>
+            <select id="ukuran" class="form-select" required>
+              <option value="">Pilih Ukuran...</option>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <label for="jumlah" class="form-label">Jumlah</label>
+            <input type="number" class="form-control" id="jumlah" min="1" required />
+          </div>
+          <div class="col-md-2">
+            <label for="harga" class="form-label">Harga Satuan</label>
+            <input type="number" class="form-control" id="harga" min="0" required readonly />
+          </div>
+          <div class="col-md-2">
+            <label for="metode" class="form-label">Metode</label>
+            <select class="form-select" id="metode">
+              <option value="Cash">Cash</option>
+              <option value="Transfer">Transfer</option>
+            </select>
+          </div>
+          <div class="col-md-2" id="divBuktiTF" style="display:none;">
+            <label for="buktiTF" class="form-label">Bukti Transfer</label>
+            <input type="file" class="form-control" id="buktiTF" accept="image/*" />
+          </div>
+          <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100"><i class="bi bi-plus-circle"></i> Tambah</button>
+          </div>
+        </form>
+
+        <!-- Tabel Daftar Transaksi Offline -->
+        <h5 class="mt-4 mb-3">Daftar Produk Terjual (Belum Disimpan)</h5>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>No</th>
+                <th>Produk</th>
+                <th>Ukuran</th>
+                <th>Jumlah</th>
+                <th>Harga</th>
+                <th>Total</th>
+                <th>Metode</th>
+                <th>Bukti TF</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody id="tabelOfflineBody"></tbody>
+          </table>
+        </div>
+        <div class="mt-3 mb-3 fw-bold fs-5" id="totalPenjualan"></div>
+        <button class="btn btn-success" id="simpanTransaksi"><i class="bi bi-save"></i> Simpan Penjualan</button>
+
+        <!-- History Hari Ini -->
+        <hr class="my-4" />
+        <h5>Riwayat Penjualan Offline (Hari Ini)</h5>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Tanggal</th>
+                <th>Produk</th>
+                <th>Ukuran</th>
+                <th>Jumlah</th>
+                <th>Harga</th>
+                <th>Total</th>
+                <th>Metode</th>
+                <th>Bukti TF</th>
+              </tr>
+            </thead>
+            <tbody id="riwayatOfflineBody"></tbody>
+          </table>
+        </div>
+        <div class="fw-bold fs-5 mt-2 mb-2" id="totalRiwayatOffline"></div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal Bukti TF -->
+  <div class="modal fade" id="modalBuktiTF" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content p-2">
+        <img id="imgBuktiTF" class="modal-img" src="" alt="Bukti Transfer" />
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notifikasi -->
+  <div class="toast-container">
+    <div id="notifToast" class="toast align-items-center text-white bg-success border-0" role="alert">
+      <div class="d-flex">
+        <div class="toast-body" id="notifToastMsg"></div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    function formatRupiah(num) {
+      return 'Rp ' + (+num).toLocaleString('id-ID');
+    }
+
+    function showNotif(msg, color='success') {
+      const notif = document.getElementById('notifToast');
+      notif.className = `toast align-items-center text-white bg-${color} border-0`;
+      document.getElementById('notifToastMsg').textContent = msg;
+      const t = new bootstrap.Toast(notif);
+      t.show();
+    }
+
+    document.getElementById('logout').onclick = () => {
+      localStorage.removeItem('adminToken');
+      showNotif('Berhasil logout.', 'primary');
+      setTimeout(() => window.location.href = 'loginadmin.html', 900);
+    };
+
+    // Load produk dan render select ukuran
+    let produkList = [];
+    async function loadProduk() {
+      const res = await fetch('/api/produk');
+      const data = await res.json();
+      produkList = Array.isArray(data) ? data : (data.data || []);
+      const select = document.getElementById('produk');
+      select.innerHTML = '<option value="">-- Pilih Produk --</option>';
+      produkList.forEach(p => {
+        select.innerHTML += `<option value="${p._id}" data-harga="${p.harga}" data-stok='${JSON.stringify(p.stok)}'>${p.nama}</option>`;
+      });
+      select.onchange = renderUkuranSelect;
+    }
+    loadProduk();
+
+    // Render opsi ukuran saat produk dipilih
+    function renderUkuranSelect() {
+      const produkId = document.getElementById('produk').value;
+      const produk = produkList.find(p => p._id === produkId);
+      const ukuranSelect = document.getElementById('ukuran');
+      if (!produk || !produk.stok) {
+        ukuranSelect.innerHTML = '<option value="">-</option>';
+        ukuranSelect.disabled = true;
+      } else {
+        ukuranSelect.disabled = false;
+        const stok = produk.stok;
+        ukuranSelect.innerHTML = '<option value="">Pilih Ukuran...</option>' +
+          Object.keys(stok).map(u => `<option value="${u}">${u.toUpperCase()} (Stok: ${stok[u]})</option>`).join('');
+      }
+      document.getElementById('harga').value = produk ? produk.harga : '';
+      document.getElementById('jumlah').max = produk ? Math.max(...Object.values(produk.stok || {0:0})) : '';
+    }
+
+    document.getElementById('produk').onchange = renderUkuranSelect;
+
+    // Array transaksi offline sementara
+    let transaksiOffline = [];
+
+    document.getElementById('offlineForm').onsubmit = function(e) {
+      e.preventDefault();
+      const produkId = document.getElementById('produk').value;
+      const ukuran = document.getElementById('ukuran').value;
+      if (!produkId || !ukuran) return showNotif('Pilih produk dan ukuran!', 'danger');
+      const produkObj = produkList.find(p => p._id === produkId);
+      const stokUkuran = produkObj && produkObj.stok ? (produkObj.stok[ukuran] || 0) : 0;
+      const jumlah = parseInt(document.getElementById('jumlah').value);
+      const harga = parseInt(document.getElementById('harga').value);
+      const metode = document.getElementById('metode').value;
+      let buktiTFUrl = "";
+
+      if (!produkObj || !jumlah || !harga) return showNotif('Lengkapi data produk!', 'danger');
+      if (jumlah > stokUkuran) return showNotif('Jumlah melebihi stok ukuran!', 'danger');
+
+      // Bukti transfer wajib jika transfer
+      let fileObj = null;
+      if (metode === "Transfer") {
+        fileObj = document.getElementById('buktiTF').files[0];
+        if (!fileObj) return showNotif('Bukti transfer wajib diupload!', 'danger');
+        buktiTFUrl = URL.createObjectURL(fileObj);
+      }
+
+      transaksiOffline.push({
+        produkId, nama: produkObj.nama, ukuran, jumlah, harga, metode, buktiTF: fileObj, buktiTFUrl
+      });
+      renderTabel();
+      this.reset();
+      document.getElementById('produk').focus();
+      document.getElementById('divBuktiTF').style.display = "none";
+      document.getElementById('ukuran').disabled = true;
+    };
+
+    function renderTabel() {
+      const tbody = document.getElementById('tabelOfflineBody');
+      tbody.innerHTML = '';
+      let total = 0;
+      transaksiOffline.forEach((t, i) => {
+        total += t.harga * t.jumlah;
+        tbody.innerHTML += `
+          <tr>
+            <td>${i + 1}</td>
+            <td>${t.nama}</td>
+            <td>${t.ukuran ? t.ukuran.toUpperCase() : '-'}</td>
+            <td>${t.jumlah}</td>
+            <td>${formatRupiah(t.harga)}</td>
+            <td>${formatRupiah(t.harga * t.jumlah)}</td>
+            <td>${t.metode}</td>
+            <td>
+              ${
+                t.metode === 'Transfer'
+                  ? `<span class="pointer" onclick="showBuktiTF(${i})">Lihat</span>`
+                  : '-'
+              }
+            </td>
+            <td>
+              <button class="btn btn-danger btn-sm" onclick="hapusTransaksi(${i})"><i class="bi bi-trash"></i></button>
+            </td>
+          </tr>
+        `;
+      });
+      document.getElementById('totalPenjualan').textContent = 'Total: ' + formatRupiah(total);
+      if (transaksiOffline.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" class="text-center text-muted">Belum ada transaksi</td></tr>`;
+        document.getElementById('totalPenjualan').textContent = '';
+      }
+    }
+
+    window.hapusTransaksi = function(idx) {
+      transaksiOffline.splice(idx, 1);
+      renderTabel();
+    };
+
+    window.showBuktiTF = function(idx) {
+      const t = transaksiOffline[idx];
+      if (!t || !t.buktiTFUrl) return;
+      document.getElementById('imgBuktiTF').src = t.buktiTFUrl;
+      const modal = new bootstrap.Modal(document.getElementById('modalBuktiTF'));
+      modal.show();
+    };
+
+    document.getElementById('metode').onchange = function() {
+      document.getElementById('divBuktiTF').style.display = (this.value === 'Transfer') ? '' : 'none';
+    };
+
+    document.getElementById('simpanTransaksi').onclick = async function() {
+      if (transaksiOffline.length === 0) return showNotif('Belum ada transaksi!', 'danger');
+      if (!confirm('Simpan semua transaksi offline ini?')) return;
+      const formData = new FormData();
+      const items = [];
+      transaksiOffline.forEach((t, i) => {
+        items.push({
+          produkId: t.produkId,
+          nama: t.nama,
+          ukuran: t.ukuran,
+          jumlah: t.jumlah,
+          harga: t.harga,
+          metode: t.metode,
+          buktiTF: t.metode === 'Transfer' ? `buktiTF${i}` : undefined
+        });
+        if (t.metode === 'Transfer' && t.buktiTF) {
+          formData.append(`buktiTF${i}`, t.buktiTF);
+        }
+      });
+      formData.append('items', JSON.stringify(items));
+
+      const res = await fetch('/api/admin/pembayaranoffline', {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      if (data.success) {
+        showNotif('Transaksi offline berhasil disimpan!');
+        transaksiOffline = [];
+        renderTabel();
+        loadProduk();
+        loadRiwayatOffline();
+      } else {
+        showNotif('Gagal simpan transaksi: ' + (data.message || ''), 'danger');
+      }
+    };
+
+    // ===== RIWAYAT TRANSAKSI OFFLINE (HARI INI) =====
+    async function loadRiwayatOffline() {
+      const res = await fetch('/api/admin/pembayaranoffline/riwayat');
+      const data = await res.json();
+      const tbody = document.getElementById('riwayatOfflineBody');
+      tbody.innerHTML = '';
+      let totalOffline = 0;
+      if (!data.length) {
+        tbody.innerHTML = `<tr><td colspan="8" class="text-center text-muted">Belum ada transaksi offline hari ini</td></tr>`;
+        document.getElementById('totalRiwayatOffline').textContent = '';
+        return;
+      }
+      data.forEach(trx => {
+        totalOffline += trx.total || 0;
+        trx.items.forEach((item, idx) => {
+          tbody.innerHTML += `
+            <tr>
+              <td>${new Date(trx.tanggal).toLocaleString('id-ID')}</td>
+              <td>${item.nama}</td>
+              <td>${item.ukuran ? item.ukuran.toUpperCase() : '-'}</td>
+              <td>${item.jumlah}</td>
+              <td>${formatRupiah(item.harga)}</td>
+              <td>${formatRupiah(item.harga * item.jumlah)}</td>
+              <td>${item.metode}</td>
+              <td>
+                ${
+                  item.metode === 'Transfer' && item.buktiTF
+                    ? `<span class="pointer" onclick="showBuktiTF_History('${trx._id}', '${idx}')">Lihat</span>`
+                    : '-'
+                }
+              </td>
+            </tr>
+          `;
+        });
+      });
+      document.getElementById('totalRiwayatOffline').textContent = "Total Penjualan Offline Hari Ini: " + formatRupiah(totalOffline);
+    }
+
+    window.showBuktiTF_History = function(trxId, idx) {
+      const imgUrl = `/api/admin/pembayaranoffline/${trxId}/gambar/${idx}`;
+      document.getElementById('imgBuktiTF').src = imgUrl;
+      const modal = new bootstrap.Modal(document.getElementById('modalBuktiTF'));
+      modal.show();
+    };
+
+    // Initial load
+    loadRiwayatOffline();
+    renderTabel();
+  </script>
+</body>
+</html>

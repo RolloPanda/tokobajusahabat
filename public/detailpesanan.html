@@ -1,0 +1,815 @@
+  <!DOCTYPE html>
+  <html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Detail Pesanan - Toko Baju Sahabat</title>
+    <link rel="icon" href="assets/favicon.ico" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+ <style>
+      body { background-color: #f8f9fa; font-family: system-ui, sans-serif; padding-top: 70px; margin: 0; color: #222; }
+      .container.content-container { max-width: 900px; background: #fff; border-radius: 15px; padding: 2rem 2.5rem;
+        box-shadow: 0 0.3rem 0.9rem rgba(139,0,75,0.13); margin-bottom: 4rem; border: 2px solid #f8dff2;}
+      h2 { color: #8B004B; font-weight: 800; letter-spacing: 0.04em; margin-bottom: 1.5rem; text-align: center;
+        text-shadow: 0 1px 0 #fff5, 0 2px 7px #8b004b1e;}
+      .label-theme { color: #8B004B; font-weight: 700; letter-spacing: 0.01em; display: inline-block; margin-bottom: 0.15em;}
+      .value-main { color: #161616; font-weight: 500; }
+      .info-box { border: 1.5px solid #8B004B33; border-radius: 10px; background: #fdf6fa; padding: 1.2rem 1.4rem; margin-bottom: 1.2rem;}
+      .badge { font-weight: 700; font-size: 1.04em; padding: 0.5em 0.93em; border-radius: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em;}
+      .timeline-user { list-style: none; padding-left: 0; margin-bottom: 2.2rem; display: flex; justify-content: space-between; align-items: flex-start;
+        font-weight: 700; font-size: 0.99rem; color: #8B004B; text-transform: uppercase; letter-spacing: 0.04em; position: relative; gap: 0;}
+      .timeline-user li { position: relative; flex: 1; min-width: 0; text-align: center; color: #8B004B; padding: 0 0.4rem; display: flex; flex-direction: column; align-items: center; z-index: 1;}
+      .timeline-user li:not(:last-child)::after { content: ""; position: absolute; left: 50%; top: 15px; width: 100%; height: 4px; background: #eee; z-index: 0; transform: translateX(50%);}
+      .timeline-user li:last-child::after { display: none;}
+      .timeline-user li .status-circle { display: flex; align-items: center; justify-content: center; width: 28px; height: 28px; border-radius: 50%;
+        background-color: #fff; color: #8B004B; font-size: 1.07rem; font-weight: 700; margin-bottom: 0.45rem; border: 2.5px solid #8B004B; box-shadow: 0 0 13px #ffbee880; z-index: 2; position: relative; transition: 0.2s;}
+      .timeline-user li.done .status-circle { background-color: #8B004B; color: #fff; border: 2px solid #8B004B; box-shadow: none;}
+      .timeline-user li.current .status-circle { background-color: #fff; color: #8B004B; border: 2.5px solid #8B004B; box-shadow: 0 0 13px #ffbee880;}
+      .timeline-user li.rejected .status-circle { background-color: #dc3545; color: #fff; border-color: #dc3545; box-shadow: 0 0 14px #dc354577;}
+      .timeline-user li small { display: block; margin-top: 0.1rem; color: #8B004B; font-weight: 600; font-size: 0.85em;}
+      .timeline-user .retur-badge { font-size:0.92em; font-weight:600; padding:0.3em 0.9em; border-radius:0.7em; margin-top:0.3em; display:inline-block;}
+      .timeline-user .retur-badge.ditolak { background:#ffc9c9; color:#8B004B; }
+      .timeline-user .retur-badge.diterima { background:#e2ffe2; color:#008B2F; }
+      .timeline-user .retur-badge.menunggu { background:#fff3cd; color:#8B7300; }
+      @media (max-width: 768px) {
+        .container.content-container { padding: 1.2rem 0.7rem;}
+        h2 { font-size: 1.4rem; }
+        .table td, .table th { padding: 0.5rem 0.3rem;}
+        .timeline-user li .status-circle { width: 22px; height: 22px; font-size: 0.98rem;}
+      }
+      .table thead { background: #8B004B !important; color: #fff !important; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em;}
+      .table-striped > tbody > tr:nth-of-type(odd) { background-color: #fbe7f2;}
+      .table td, .table th { vertical-align: middle !important; border: none !important; padding: 0.72rem 1rem; color: #222;}
+      h5 { color: #8B004B; font-weight: 700; margin-bottom: 1.1rem; letter-spacing: 0.04em;}
+      hr.theme { border-top: 2px solid #8B004B18; opacity: 1; margin: 2rem 0 1.2rem 0;}
+      img[alt="Bukti Transfer"] { max-width: 340px; max-height: 320px; border-radius: 12px; border: 2px solid #f7d2ee; box-shadow: 0 1px 8px #8B004B22; margin: 0 auto; display: block;}
+      @media (max-width: 600px) { img[alt="Bukti Transfer"] { max-width: 100%; height: auto; } }
+      .navbar-brand { color: #8B004B !important; letter-spacing:.5px; }
+      .navbar { box-shadow: 0 2px 10px 0 rgba(139,0,75,.05);}
+      @media (min-width: 992px) {
+        .navbar .dropdown:hover > .dropdown-menu { display: block; margin-top: 0; animation: navDrop .17s;}
+        .dropdown-submenu:hover > .dropdown-menu { display: block; left: 100%; top: 0; margin-top: -1px;}
+      }
+      @keyframes navDrop { from { opacity: 0; transform: translateY(13px);} to { opacity: 1; transform: none;}
+      }
+      .navbar .dropdown-menu { border-radius: 0.7em; box-shadow: 0 6px 32px #8b004b20; border: 1.5px solid #8b004b0d; min-width: 210px; padding: .7em 0; margin-top: 0.6em; transition: box-shadow .13s;}
+      .navbar .dropdown-menu .dropdown-item { padding: .53em 1.3em; font-size: 1.08em; border-radius: 8px;}
+      .navbar .dropdown-menu .dropdown-item:active,
+      .navbar .dropdown-menu .dropdown-item:focus,
+      .navbar .dropdown-menu .dropdown-item:hover {
+        background: linear-gradient(90deg, #ffd1eb2a 0%, #8B004B11 100%);
+        color: #8B004B; font-weight: 500; box-shadow: 0 2px 7px #8B004B0c;}
+      .dropdown-divider { border-color:#eee; margin:.3em 0; }
+      .dropdown-submenu { position:relative; }
+      .dropdown-submenu > .dropdown-menu {
+        left: 100%; top: 0; margin-top: -1px; border-radius: 0.7em;
+        box-shadow: 0 6px 32px #8b004b1c; border: 1.5px solid #8b004b0d; min-width: 185px; display: none; position: absolute;}
+      .dropdown-submenu-toggle { background: none; border: none; outline: none; padding: 0 .3em; color: inherit; font-size: 1em; cursor: pointer; position: absolute; right: 1em; top: 0; bottom: 0; z-index: 3;}
+      .dropdown-submenu > .dropdown-menu.show { display: block !important;}
+
+      /* ====== Mobile Navbar behaviors gabungan ====== */
+      @media (max-width:991.98px){
+        .navbar .dropdown-menu { position: static !important; box-shadow: none; border-radius: 0.7em; margin-top: .6em;}
+        .dropdown-submenu > .dropdown-menu { position: static !important; margin: .25rem 0 .5rem 1.2rem; box-shadow: none; border: none; background: #fff; min-width: unset; display: none;}
+        .dropdown-submenu.show > .dropdown-menu { display: block !important;}
+        .navbar .collapse .d-flex { flex-wrap:wrap; gap:.5rem; }
+        .navbar .collapse form { width:100%; order:-1; margin-bottom:.25rem; }
+        .navbar .collapse form .form-control { width:100%; }
+        .navbar .collapse a.btn, .navbar .collapse button.btn { flex:1 1 auto; min-width:44%; }
+        .dropdown-submenu-toggle { display: inline-block;}
+      }
+      @media (max-width:600px){
+        .navbar .dropdown-menu { min-width: 95vw;}
+        .navbar-brand { font-size: 1.12em;}
+        .navbar .collapse a.btn, .navbar .collapse button.btn { min-width:48%; }
+      }
+
+      .action-btns {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 0.7rem;
+      }
+      .action-btns .btn {
+        min-width: 135px;
+        max-width: 220px;
+        padding: 0.6em 1.2em;
+        font-size: 1.04em;
+        font-weight: 600;
+        border-radius: 12px;
+      }
+      @media (max-width: 600px) {
+        .action-btns {
+          gap: 0.5rem;
+        }
+        .action-btns .btn {
+          min-width: 105px;
+          font-size: 0.94em;
+          padding: 0.47em 0.6em;
+        }
+      }
+
+      /* === RESPONSIVE TIMELINE FIX === */
+      @media (max-width: 768px) {
+        .timeline-user {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 1.2rem;
+          padding-left: 1rem;
+          position: relative;
+        }
+        .timeline-user::before {
+          content: "";
+          position: absolute;
+          left: 28px;
+          top: 15px;
+          bottom: 0;
+          width: 3px;
+          background: #eee;
+          z-index: 0;
+        }
+        .timeline-user li {
+          flex: none;
+          width: 100%;
+          text-align: left;
+          align-items: flex-start;
+          padding-left: 2.2rem;
+        }
+        .timeline-user li::after {
+          display: none !important;
+        }
+        .timeline-user li .status-circle {
+          margin-bottom: 0.3rem;
+          position: absolute;
+          left: 10px;
+        }
+        .timeline-user li div,
+        .timeline-user li small,
+        .timeline-user li .retur-badge,
+        .timeline-user li a.btn {
+          text-align: left;
+        }
+      }
+</style>
+
+
+  </head>
+  <body>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm fixed-top">
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="index.html">Toko Baju Sahabat</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+            <li class="nav-item"><a class="nav-link" href="#">Tentang</a></li>
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="dropdownToko" role="button" data-bs-toggle="dropdown" aria-expanded="false">Toko</a>
+              <ul class="dropdown-menu" aria-labelledby="dropdownToko">
+                <li><a class="dropdown-item" href="penjualansemua.html">Semua Produk</a></li>
+                <li><a class="dropdown-item" href="barangpopuler.html">Barang Populer</a></li>
+                <li><a class="dropdown-item" href="barangbaru.html">Barang Baru</a></li>
+                <li><hr class="dropdown-divider" /></li>
+                <li class="dropdown-submenu position-relative">
+  <a class="dropdown-item d-flex align-items-center justify-content-between"
+     href="#" aria-expanded="false">
+    Baju Wanita
+    <button class="btn btn-sm p-0 border-0 bg-transparent ms-2 submenu-toggle" 
+            type="button" aria-label="Buka submenu">
+      <i class="bi bi-caret-down-fill" aria-hidden="true"></i>
+    </button>
+  </a>
+  <ul class="dropdown-menu" aria-label="Submenu Baju Wanita">
+    <li><a class="dropdown-item" href="dress.html">Dress</a></li>
+    <li><a class="dropdown-item" href="blouse.html">Blouse</a></li>
+    <li><a class="dropdown-item" href="tunik.html">Tunik</a></li>
+    <li><a class="dropdown-item" href="gamis.html">Gamis</a></li>
+    <li><a class="dropdown-item" href="rokcelana.html">Rok/Celana</a></li>
+  </ul>
+</li>
+
+                <li><a class="dropdown-item" href="bajupria.html">Baju Pria</a></li>
+                <li><a class="dropdown-item" href="bajuanak.html">Baju Anak</a></li>
+                <li><a class="dropdown-item" href="busanamuslim.html">Busana Muslim</a></li>
+              </ul>
+            </li>
+          </ul>
+          <div class="d-flex align-items-center" style="gap: 0.5rem;">
+            <form class="d-flex" action="hasilpencarian.html" method="GET">
+              <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="Cari Produk" required />
+              <button class="btn btn-outline-success btn-sm" type="submit">Cari</button>
+            </form>
+            <a id="loginButton" href="login.html" class="btn btn-outline-primary btn-sm">Login</a>
+            <a id="registerButton" href="daftarakun.html" class="btn btn-outline-secondary btn-sm">Buat Akun</a>
+            <a id="manageAccountButton" href="akun.html" class="btn btn-outline-success btn-sm" style="display:none;">Kelola Akun</a>
+            <a id="statusButton" href="stpesanan.html" class="btn btn-outline-info btn-sm" style="display:none;">Status Pesanan</a>
+            <a id="cartButton" href="keranjangbelanja.html" class="btn btn-outline-warning btn-sm position-relative" style="display:none;">
+              <i class="bi bi-cart" style="font-size: 1.2rem;"></i>
+              <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+            </a>
+            <button id="logoutButton" class="btn btn-outline-danger btn-sm" style="display:none;">Logout</button>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="container content-container mt-4 mb-5">
+      <h2>Detail Pesanan</h2>
+      <ul class="timeline-user" id="statusTimeline"></ul>
+      <div id="detailContainer"></div>
+      <div id="actionContainer" class="mt-4"></div>
+    </div>
+<script>
+  // === TOAST ===
+  function showToast(msg, type = "success") {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.className = 'toko-toast toko-toast-' + type;
+    let icon = `<i class="bi bi-check-circle-fill"></i>`;
+    if (type === "error") icon = `<i class="bi bi-x-circle-fill"></i>`;
+    if (type === "info") icon = `<i class="bi bi-info-circle-fill"></i>`;
+    toast.innerHTML = icon + `<span style="flex:1;">${msg}</span>`;
+    container.appendChild(toast);
+    setTimeout(() => {
+      toast.style.opacity = 0;
+      toast.style.transform = "translateY(30px) scale(0.98)";
+      setTimeout(() => toast.remove(), 400);
+    }, 2000);
+  }
+
+  // === NAVBAR LOGIN/KERANJANG & PRODUK ===
+  document.addEventListener('DOMContentLoaded', () => {
+    const email = localStorage.getItem('email');
+    const name = localStorage.getItem('name');
+    let selectedSize = '';
+
+    if (email && name) {
+      document.getElementById('loginButton').style.display = 'none';
+      document.getElementById('registerButton').style.display = 'none';
+      document.getElementById('logoutButton').style.display = 'inline-block';
+      document.getElementById('manageAccountButton').style.display = 'inline-block';
+      document.getElementById('statusButton').style.display = 'inline-block';
+      document.getElementById('cartButton').style.display = 'inline-block';
+      updateCartCount();
+    }
+    document.getElementById('logoutButton').addEventListener('click', () => {
+      localStorage.clear();
+      window.location.reload();
+    });
+
+    async function updateCartCount() {
+      try {
+        const res = await fetch(`/api/keranjang/jumlah/${email}`);
+        const data = await res.json();
+        document.getElementById('cartCount').textContent = data.totalItem || 0;
+      } catch (err) {
+        console.error('Gagal memuat jumlah keranjang:', err);
+      }
+    }
+
+    // === PRODUK: load produk kategori Muslim, tombol cart + size modal ===
+    async function loadProduk() {
+      try {
+        const res = await fetch('/api/produk');
+        const data = await res.json();
+        const container = document.getElementById('produk-container');
+        if (!container) return;
+        container.innerHTML = '';
+
+        const muslim = data.filter(p => p.kategori && p.kategori.toLowerCase().includes('muslim'));
+        muslim.forEach(produk => {
+          const adaUkuran = produk.stok && Object.keys(produk.stok).length > 0;
+          const btnCart = email
+            ? `<button class="btn btn-dark btn-sm rounded-circle btn-cart" style="width:36px;height:36px;" data-id="${produk._id}"><i class="bi bi-cart-plus"></i></button>`
+            : '';
+
+          const el = document.createElement('div');
+          el.className = 'produk-item';
+          el.innerHTML = `
+            <a href="detailproduk.html?id=${produk._id}" class="produk-img"
+               style="background-image: url('/api/produk/gambar/${produk._id}');"
+               loading="lazy"></a>
+            <div class="produk-info">
+              <h5>${produk.nama}</h5>
+              <p>Rp ${produk.harga.toLocaleString('id-ID')}</p>
+              <div class="produk-btns">
+                <a href="detailproduk.html?id=${produk._id}" class="btn btn-outline-primary btn-sm">Lihat Produk</a>
+                ${btnCart}
+              </div>
+            </div>
+          `;
+          container.appendChild(el);
+
+          // tombol keranjang
+          if (adaUkuran && btnCart) {
+            el.querySelector('.btn-cart').addEventListener('click', async () => {
+              try {
+                const r = await fetch(`/api/produk/${produk._id}`);
+                const p = await r.json();
+                const stok = p.stok || {};
+                const chipContainer = document.getElementById('sizeChips');
+                chipContainer.innerHTML = '';
+                selectedSize = '';
+                document.getElementById('btnAddCart').disabled = true;
+
+                Object.keys(stok).forEach(u => {
+                  const btn = document.createElement('button');
+                  btn.type = 'button';
+                  btn.className = 'size-chip';
+                  btn.textContent = u.toUpperCase();
+                  if (stok[u] <= 0) btn.disabled = true;
+                  btn.addEventListener('click', () => {
+                    chipContainer.querySelectorAll('.size-chip').forEach(c => c.setAttribute('aria-pressed', 'false'));
+                    btn.setAttribute('aria-pressed', 'true');
+                    selectedSize = u;
+                    document.getElementById('btnAddCart').disabled = false;
+                  });
+                  chipContainer.appendChild(btn);
+                });
+
+                const form = document.getElementById('sizeForm');
+                form.dataset.produkId = produk._id;
+                form.dataset.nama = produk.nama;
+                form.dataset.harga = produk.harga;
+
+                bootstrap.Modal.getOrCreateInstance(document.getElementById('sizeModal')).show();
+              } catch {
+                showToast('Gagal mengambil data ukuran', 'error');
+              }
+            });
+          } else if (btnCart) {
+            el.querySelector('.btn-cart').addEventListener('click', () => {
+              tambahKeKeranjang({
+                _id: produk._id,
+                nama: produk.nama,
+                harga: produk.harga,
+                jumlah: 1
+              });
+            });
+          }
+        });
+      } catch (err) {
+        console.error('Gagal memuat produk:', err);
+      }
+    }
+
+    document.getElementById('sizeForm')?.addEventListener('submit', async e => {
+      e.preventDefault();
+      if (!selectedSize) return;
+      const f = e.currentTarget;
+      const bodyProduk = {
+        _id: f.dataset.produkId,
+        nama: f.dataset.nama,
+        harga: Number(f.dataset.harga),
+        jumlah: 1,
+        ukuran: selectedSize
+      };
+      try {
+        const resp = await fetch('/api/keranjang/tambah', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, produk: bodyProduk })
+        });
+        const j = await resp.json();
+        if (j.success) {
+          showToast('Produk ditambahkan ke keranjang!');
+          updateCartCount();
+          bootstrap.Modal.getOrCreateInstance(document.getElementById('sizeModal')).hide();
+        } else {
+          showToast(j.message || 'Gagal menambah', 'error');
+        }
+      } catch {
+        showToast('Terjadi kesalahan', 'error');
+      }
+    });
+
+    async function tambahKeKeranjang(produk) {
+      try {
+        const res = await fetch('/api/keranjang/tambah', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, produk })
+        });
+        const result = await res.json();
+        if (result.success) {
+          showToast('Produk ditambahkan ke keranjang!');
+          updateCartCount();
+        } else {
+          showToast(result.message || 'Gagal menambahkan.', 'error');
+        }
+      } catch (err) {
+        showToast('Terjadi kesalahan.', 'error');
+      }
+    }
+
+    loadProduk();
+    initMobileSubmenu(); // aktifkan submenu mobile
+  });
+
+  // === SUBMENU MOBILE ===
+  function initMobileSubmenu() {
+    document.querySelectorAll('.submenu-toggle').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        const submenu = btn.closest('.dropdown-submenu');
+        if (submenu) {
+          submenu.classList.toggle('show');
+          const expanded = submenu.classList.contains('show');
+          btn.setAttribute('aria-expanded', expanded);
+          const target = submenu.querySelector('.dropdown-menu');
+          if (target) target.classList.toggle('show', expanded);
+        }
+      });
+    });
+  }
+
+  // === FORMAT UTIL ===
+  function formatDate(d) {
+    if (!d) return '-';
+    const dt = new Date(d);
+    return !isNaN(dt.getTime()) ? dt.toLocaleString('id-ID') : '-';
+  }
+  function formatHarga(n) {
+    return "Rp " + (n || 0).toLocaleString('id-ID');
+  }
+  function formatKurir(k) {
+    const map = { pos: "POS Indonesia", jne: "JNE", jnt: "JNT" };
+    return map[k?.toLowerCase()] || k || "-";
+  }
+  // === DETAIL PESANAN ===
+  const query = new URLSearchParams(window.location.search);
+  const id = query.get("id");
+  if (!id) {
+    alert("ID pesanan tidak ditemukan.");
+    window.location.href = "stpesanan.html";
+  }
+
+  async function getReturStatus() {
+    try {
+      const r = await fetch(`/api/pembayaran/retur/${id}`);
+      if (r.ok) return await r.json();
+    } catch {}
+    return null;
+  }
+
+  async function buildTimeline(o, retur) {
+    const steps = [
+      { key: "Menunggu Konfirmasi", label: "Menunggu Konfirmasi", date: o.createdAt || null },
+      { key: "Diproses", label: "Diproses", date: o.diprosesAt || null },
+      { key: "Ditolak", label: "Ditolak", date: o.status === "Ditolak" ? o.updatedAt : null },
+      { key: "Dikirim", label: "Dikirim", date: o.dikirimAt || null },
+      { key: "Diterima", label: "Diterima", date: o.diterimaAt || null },
+      { key: "Selesai", label: "Selesai", date: o.selesaiAt || null },
+      { key: "Ajukan Retur", label: "Ajukan Retur", date: o.returAt || null }
+    ];
+    if (o.returAt) {
+      steps.push(
+        { key: "Retur Selesai", label: "Retur Selesai", date: o.returSelesaiAt || null },
+        { key: "Retur Ditolak", label: "Retur Ditolak", date: o.returDitolakAt || null }
+      );
+    }
+    let idxAktif = steps.findIndex(s => s.key === o.status);
+    if (["Retur Selesai", "Retur Ditolak"].includes(o.status)) {
+      idxAktif = steps.findIndex(s => s.key === o.status);
+    }
+    const timelineEl = document.getElementById("statusTimeline");
+    timelineEl.innerHTML = steps.map((step, idx) => {
+      let className = "";
+      if (idx < idxAktif && step.date) className = "done";
+      else if (idx === idxAktif) {
+        if (o.status === "Ditolak" && step.key === "Ditolak") className = "current rejected";
+        else if (o.status === "Retur Ditolak" && step.key === "Retur Ditolak") className = "current rejected";
+        else className = "current";
+      }
+      let customContent = "";
+      if (step.key === "Ajukan Retur" && retur && retur.status) {
+        let badgeClass = "";
+        switch (retur.status) {
+          case "Menunggu Konfirmasi": badgeClass = "menunggu"; break;
+          case "Diproses":            badgeClass = "menunggu"; break;
+          case "Diterima":            badgeClass = "diterima"; break;
+          case "Ditolak":             badgeClass = "ditolak"; break;
+          default:                    badgeClass = "menunggu";
+        }
+        customContent = `
+          <span class="retur-badge ${badgeClass}">${retur.status}</span>
+          <a href="detailretur.html?id=${o._id}" 
+            class="btn btn-sm btn-outline-primary mt-2"
+            style="font-weight: 600; min-width: 120px; padding: 0.3em 0.9em; font-size: 0.9rem; border-radius: 0.6rem; align-self: center;">
+            <i class="bi bi-eye me-1"></i> Detail Retur
+          </a>
+        `;
+      }
+
+      return `
+        <li class="${className}">
+          <span class="status-circle">${idx + 1}</span>
+          <div>${step.label}</div>
+          <small>${formatDate(step.date)}</small>
+          ${customContent}
+        </li>
+      `;
+    }).join("");
+  }
+
+  async function loadDetail() {
+    const c = document.getElementById("detailContainer");
+    const a = document.getElementById("actionContainer");
+    a.innerHTML = "";
+    try {
+      const res = await fetch(`/api/pembayaran/${id}`);
+      if (!res.ok) throw new Error("Gagal mengambil data");
+      const o = await res.json();
+      if (!o) {
+        c.innerHTML = "<p>Pesanan tidak ditemukan.</p>";
+        return;
+      }
+      const retur = await getReturStatus();
+      await buildTimeline(o, retur);
+
+      let totalBeratGram = 0;
+      (o.items || []).forEach(i => totalBeratGram += (i.berat || 0) * i.jumlah);
+      const beratAkurat = (totalBeratGram / 1000).toFixed(2) + " kg";
+      const beratBulat = Math.ceil(totalBeratGram / 1000) + " kg";
+
+      let html = `
+      <div class="row">
+        <div class="col-md-6 mb-3">
+          <div class="info-box">
+            <div class="label-theme">ID Pesanan</div>
+            <div class="value-main mb-2">${o._id}</div>
+            <div class="label-theme">Tanggal Order</div>
+            <div class="value-main mb-2">${formatDate(o.tanggal)}</div>
+            <div class="label-theme">Status</div>
+            <div class="mb-2">
+              <span class="badge ${
+                o.status === "Diproses" ? "bg-warning text-dark" :
+                o.status === "Dikirim" ? "bg-info text-dark" :
+                (o.status === "Diterima" || o.status === "Selesai") ? "bg-success" :
+                o.status === "Ditolak" ? "bg-danger" :
+                (o.status === "Ajukan Retur" || o.status === "Retur Ditolak") ? "bg-warning text-dark" :
+                o.status === "Retur Selesai" ? "bg-success text-white" : "bg-secondary"
+              }">${o.status}</span>
+            </div>
+            <div id="autoSelesaiCountdown"></div>
+            <div class="label-theme">Email</div>
+            <div class="value-main mb-2">${o.email}</div>
+            <div class="label-theme">Nama Penerima</div>
+            <div class="value-main mb-2">${o.namaPenerima || '-'}</div>
+            <div class="label-theme">No. Telepon</div>
+            <div class="value-main mb-2">${o.phone || '-'}</div>
+            <div class="label-theme">Metode Pembayaran</div>
+            <div class="value-main mb-2">${o.metode}</div>
+            ${o.metode === 'Transfer' ? `
+              <div class="label-theme">Nama Rekening</div>
+              <div class="value-main mb-2">${o.namaRekening || '-'}</div>
+            ` : ''}
+          </div>
+        </div>
+        <div class="col-md-6 mb-3">
+          <div class="info-box">
+            <div class="label-theme">Alamat Pengiriman</div>
+            <div class="value-main mb-2">${o.detailPesanan?.alamat || '-'}<br>
+            ${o.detailPesanan?.kota || '-'}, ${o.detailPesanan?.provinsi || '-'}</div>
+            <div class="label-theme">Kurir</div>
+            <div class="value-main mb-2">${formatKurir(o.detailPesanan?.kurir)}</div>
+            <div class="label-theme">Resi</div>
+            <div class="value-main mb-2">${o.detailPesanan?.resi || '-'}</div>
+            <div class="label-theme">Subtotal</div>
+            <div class="value-main mb-2">${formatHarga(o.subtotal)}</div>
+            <div class="label-theme">Ongkir</div>
+            <div class="value-main mb-2">${formatHarga(o.detailPesanan?.ongkir)}</div>
+            <div class="label-theme">Total</div>
+            <div class="value-main mb-2"><strong>${formatHarga(o.total)}</strong></div>
+            <div class="label-theme">Berat Akurat</div>
+            <div class="value-main mb-2">${beratAkurat}</div>
+            <div class="label-theme">Berat Dibulatkan</div>
+            <div class="value-main mb-2">${beratBulat}</div>
+          </div>
+        </div>
+      </div>
+      <hr class="theme">
+      <h5><i class="bi bi-list-ul"></i> Daftar Produk</h5>
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped table-sm align-middle">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Nama Produk</th>
+              <th>Ukuran</th>
+              <th>Jumlah</th>
+              <th>Harga</th>
+              <th>Total</th>
+              <th>Berat/item</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${
+              (o.items || []).map((i, idx) => `
+                <tr>
+                  <td>${idx + 1}</td>
+                  <td>${i.nama}</td>
+                  <td>${i.ukuran ? i.ukuran.toUpperCase() : '-'}</td>
+                  <td>${i.jumlah}</td>
+                  <td>${formatHarga(i.harga)}</td>
+                  <td>${formatHarga(i.harga * i.jumlah)}</td>
+                  <td>${i.berat || 0} gr</td>
+                </tr>
+              `).join('')
+            }
+          </tbody>
+        </table>
+      </div>
+    `;
+
+      if (o.metode === "Transfer") {
+        html += `
+          <hr class="theme">
+          <div class="text-center">
+            <h5><i class="bi bi-receipt"></i> Bukti Transfer</h5>
+            <img src="/api/pembayaran/bukti/${o._id}" alt="Bukti Transfer" />
+          </div>
+        `;
+      }
+      c.innerHTML = html;
+      // Countdown otomatis selesai
+      if (o.status === "Diterima" && !o.selesaiAt && o.diterimaAt) {
+        const diterimaDate = new Date(o.diterimaAt);
+        const autoSelesaiDate = new Date(diterimaDate.getTime() + 24 * 60 * 60 * 1000);
+        const countdownDiv = document.getElementById("autoSelesaiCountdown");
+        function updateCountdown() {
+          const now = new Date();
+          const diff = autoSelesaiDate - now;
+          if (diff <= 0) {
+            countdownDiv.innerHTML = `<b>Pesanan akan (atau sudah) otomatis selesai.</b> Silakan refresh halaman.`;
+            return;
+          }
+          const jam = Math.floor(diff / (1000 * 60 * 60));
+          const menit = Math.floor((diff / (1000 * 60)) % 60);
+          const detik = Math.floor((diff / 1000) % 60);
+          countdownDiv.innerHTML = `Pesanan akan otomatis <b>SELESAI</b> dalam <b>${jam} jam ${menit} menit ${detik} detik</b> jika tidak ada komplain.`;
+          setTimeout(updateCountdown, 1000);
+        }
+        updateCountdown();
+      }
+
+      // Tombol Ajukan Retur & Selesai
+      let btnHTML = "";
+      if (o.status === "Diterima") {
+        let btnRetur = "";
+        if (!retur || !retur.status) {
+          if (o.metode && o.metode.toLowerCase() === "cod") {
+            btnRetur = `
+              <button id="btnAjukanReturCOD" class="btn btn-outline-danger">
+                <i class="bi bi-arrow-counterclockwise"></i> Ajukan Retur
+              </button>
+            `;
+          } else {
+            btnRetur = `
+              <a href="retur.html?id=${o._id}" class="btn btn-outline-danger">
+                <i class="bi bi-arrow-counterclockwise"></i> Ajukan Retur
+              </a>
+            `;
+          }
+        }
+        btnHTML = `
+          <div class="action-btns mb-2">
+            <button id="btnSelesaiPesanan" class="btn btn-primary">
+              <i class="bi bi-check-circle"></i> Pesanan Selesai
+            </button>
+            ${btnRetur}
+          </div>
+          <div id="selesaiInfo" class="mt-2 w-100 text-center"></div>
+        `;
+      } else if (o.status === "Dikirim") {
+        btnHTML = `
+          <div class="action-btns mb-2">
+            <button id="btnTerimaPesanan" class="btn btn-success">
+              <i class="bi bi-box-arrow-in-down"></i> Terima Pesanan
+            </button>
+          </div>
+          <div id="terimaInfo" class="mt-2 w-100 text-center"></div>
+        `;
+      }
+      a.innerHTML = btnHTML || "";
+
+      // Handler Ajukan Retur COD
+      if (document.getElementById("btnAjukanReturCOD")) {
+        document.getElementById("btnAjukanReturCOD").onclick = async function() {
+          this.disabled = true;
+          this.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Proses...';
+          try {
+            const res = await fetch(`/api/pembayaran/retur/${id}`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                alasan: "Retur melalui COD",
+                deskripsi: "Retur via COD (langsung otomatis ke POS Indonesia)",
+                bank: null, rekening: null, pemilik: null
+              })
+            });
+            const j = await res.json();
+            if (j.success) {
+              window.location.href = `refundcod.html?id=${id}`;
+            } else {
+              alert(j.message || "Gagal proses retur.");
+              this.disabled = false;
+              this.innerHTML = '<i class="bi bi-arrow-counterclockwise"></i> Ajukan Retur';
+            }
+          } catch (e) {
+            alert("Terjadi error: " + e.message);
+            this.disabled = false;
+            this.innerHTML = '<i class="bi bi-arrow-counterclockwise"></i> Ajukan Retur';
+          }
+        };
+      }
+
+      // Tombol Selesai
+      if (o.status === "Diterima" && document.getElementById("btnSelesaiPesanan")) {
+        document.getElementById("btnSelesaiPesanan").onclick = async function() {
+          this.disabled = true;
+          this.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Proses...';
+          const info = document.getElementById("selesaiInfo");
+          info.textContent = "";
+          try {
+            const res = await fetch(`/api/pembayaran/${id}/selesai`, { method: "PATCH", headers: {'Content-Type':'application/json'} });
+            const json = await res.json();
+            if (json.success) {
+              info.innerHTML = `<span class="text-success">${json.message || "Pesanan selesai. Terima kasih!"}</span>`;
+              setTimeout(() => location.reload(), 1200);
+            } else {
+              info.innerHTML = `<span class="text-danger">${json.message || "Gagal update status"}</span>`;
+              this.disabled = false;
+              this.innerHTML = '<i class="bi bi-check-circle"></i> Pesanan Selesai';
+            }
+          } catch (err) {
+            info.innerHTML = `<span class="text-danger">Terjadi error: ${err.message}</span>`;
+            this.disabled = false;
+            this.innerHTML = '<i class="bi bi-check-circle"></i> Pesanan Selesai';
+          }
+        };
+      }
+
+      // Tombol Terima (jika status Dikirim)
+      if (o.status === "Dikirim" && document.getElementById("btnTerimaPesanan")) {
+        document.getElementById("btnTerimaPesanan").onclick = async function() {
+          this.disabled = true;
+          this.innerHTML = '<span class="spinner-border spinner-border-sm"></span> Proses...';
+          const info = document.getElementById("terimaInfo");
+          info.textContent = "";
+          try {
+            const res = await fetch(`/api/pembayaran/${id}/terima`, { method: "PATCH", headers: {'Content-Type':'application/json'} });
+            const json = await res.json();
+            if (json.success) {
+              info.innerHTML = `<span class="text-success">${json.message || "Pesanan telah diterima!"}</span>`;
+              setTimeout(() => location.reload(), 1200);
+            } else {
+              info.innerHTML = `<span class="text-danger">${json.message || "Gagal update status"}</span>`;
+              this.disabled = false;
+              this.innerHTML = '<i class="bi bi-box-arrow-in-down"></i> Terima Pesanan';
+            }
+          } catch (err) {
+            info.innerHTML = `<span class="text-danger">Terjadi error: ${err.message}</span>`;
+            this.disabled = false;
+            this.innerHTML = '<i class="bi bi-box-arrow-in-down"></i> Terima Pesanan';
+          }
+        };
+      }
+
+      // Tombol WhatsApp Retur di bawah aksi
+      const whatsappHTML = `
+        <div class="w-100 mt-4 text-center">
+          <div style="margin-bottom:8px;">
+            <strong>Butuh info atau ingin lanjut proses retur?</strong><br>
+            <span>Layanan cepat & mudah, retur bukan drama! Klik tombol di bawah untuk chat WhatsApp admin kami.</span>
+          </div>
+          <a href="https://wa.me/628972950372?text=Halo%20admin,%20saya%20mau%20info%20retur%20atau%20lanjutkan%20proses%20retur%20pesanan%20saya."
+            target="_blank"
+            class="btn"
+            style="display:inline-flex;align-items:center;background-color:#25D366;color:white;font-weight:700;padding:12px 28px;border-radius:10px;font-size:1.13em;box-shadow:0 2px 8px rgba(0,0,0,0.08)">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WA" style="width:25px;height:25px;margin-right:12px;">
+            Hubungi WhatsApp Admin
+          </a>
+        </div>
+      `;
+      a.insertAdjacentHTML('beforeend', whatsappHTML);
+
+    } catch (err) {
+      console.error(err);
+      alert("Gagal mengambil detail pesanan.");
+      window.location.href = "stpesanan.html";
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", loadDetail);
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+  </html>

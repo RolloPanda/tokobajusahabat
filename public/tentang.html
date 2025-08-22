@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tentang | Toko Baju Sahabat</title>
+  <link rel="icon" href="assets/favicon.ico" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body { font-family: system-ui,sans-serif; background: #f8f9fa; min-height: 100vh; }
+    .navbar-brand { color: #8B004B !important; letter-spacing:.5px; }
+    .navbar { box-shadow: 0 2px 10px 0 rgba(139,0,75,.05);}
+
+    .navbar .dropdown-menu {
+      border-radius: 0.7em; box-shadow: 0 6px 32px #8b004b20;
+      border: 1.5px solid #8b004b0d; min-width: 210px;
+      padding: .7em 0; margin-top: 0.6em;
+    }
+    .navbar .dropdown-menu .dropdown-item {
+      padding: .53em 1.3em; transition: background .15s, color .15s;
+      font-size: 1.05em; border-radius: 8px;
+    }
+    .navbar .dropdown-menu .dropdown-item:hover,
+    .navbar .dropdown-menu .dropdown-item:focus {
+      background: linear-gradient(90deg, #ffd1eb2a 0%, #8B004B11 100%);
+      color: #8B004B; font-weight: 500; box-shadow: 0 2px 7px #8B004B0c;
+    }
+    .dropdown-divider { border-color:#eee; margin:.3em 0; }
+    .dropdown-submenu { position:relative; }
+    .dropdown-submenu > .dropdown-menu {
+      left: 100%; top: 0; margin-top: -1px;
+      border-radius: 0.7em; box-shadow: 0 6px 32px #8b004b1c;
+      border: 1.5px solid #8b004b0d; min-width: 185px;
+      display: none; position: absolute;
+    }
+
+    @media (min-width: 992px) {
+      .navbar .dropdown:hover > .dropdown-menu { display: block; margin-top: 0; animation: navDrop .17s; }
+      .dropdown-submenu:hover > .dropdown-menu { display: block; left: 100%; top: 0; margin-top: -1px; }
+    }
+    @keyframes navDrop { from { opacity: 0; transform: translateY(13px);} to { opacity: 1; transform: none;} }
+
+    /* ====== Mobile Navbar behaviors ====== */
+    @media (max-width:991.98px){
+      .navbar .dropdown-menu { position: static !important; box-shadow: none; border-radius: 0.7em; margin-top: .6em; }
+      .dropdown-submenu > .dropdown-menu { position: static !important; margin: .25rem 0 .5rem 1.2rem; box-shadow: none; border: none; background: #fff; min-width: unset; display: none; }
+      .dropdown-submenu.show > .dropdown-menu { display: block !important; }
+
+      .navbar .collapse .d-flex { flex-wrap:wrap; gap:.5rem; }
+      .navbar .collapse form { width:100%; order:-1; margin-bottom:.25rem; }
+      .navbar .collapse form .form-control { width:100%; }
+      .navbar .collapse a.btn, .navbar .collapse button.btn { flex:1 1 auto; min-width:44%; }
+    }
+
+    @media (max-width:600px){
+      .navbar .dropdown-menu { min-width: 95vw;}
+      .navbar-brand { font-size: 1.12em;}
+      .navbar .collapse a.btn, .navbar .collapse button.btn { min-width:48%; }
+    }
+
+    /* HERO ABOUT */
+    .hero-about {
+      background: linear-gradient(90deg,#8B004B 45%,#ad1457 100%);
+      color: #fff; padding: 2.8rem 1rem 1.3rem;
+      border-radius: 0 0 2rem 2rem;
+      box-shadow: 0 4px 22px #8B004B11;
+      text-align: center; margin-bottom: 2.2rem;
+    }
+    .hero-about h1 { font-size: 2rem; font-weight: 700; margin-bottom: .7rem; letter-spacing:.5px; }
+    .hero-about p { font-size: 1.14rem; color: #fff9;}
+    /* CARD ABOUT */
+    .about-card {
+      background: #fff; border-radius: 1.2rem;
+      box-shadow: 0 4px 22px #8b004b0c;
+      padding: 2.1rem 2.2rem 1.6rem 2.2rem;
+      max-width: 820px; margin: 0 auto 2.2rem auto;
+      border: 1.5px solid #f9e1ed; position: relative;
+    }
+    .about-title { color: #8B004B; font-size: 1.39rem; font-weight: 700; margin-bottom: 1.3rem; }
+    .about-desc { font-size: 1.08rem; color: #343232; }
+    .about-list { margin:1.2rem 0 1.7rem 0; }
+    .about-list li { margin-bottom: .62em; font-size: 1.04rem; }
+    .about-contact {
+      display: flex; gap:2.3rem; flex-wrap: wrap; margin-top: 1.1rem;
+      justify-content: start;
+    }
+    .about-contact a {
+      display: flex; align-items: center; gap:.66em; font-size:1.05rem;
+      text-decoration: none; color: #8B004B;
+      font-weight: 500; background: #fff7fa;
+      padding:.5em 1.35em; border-radius:1.2em;
+      border: 1px solid #fad0e3; transition: box-shadow .15s, border .15s, background .17s;
+      box-shadow: 0 2px 8px #8b004b13;
+    }
+    .about-contact a:hover { background: #8B004B; color: #fff; border: 1px solid #8B004B;}
+    .about-contact i { font-size:1.19em; }
+    @media (max-width: 900px) { .about-card {padding: 1.15rem 1rem 1rem 1rem;} }
+    @media (max-width: 540px) { .about-contact { gap: .6rem;} }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">Toko Baju Sahabat</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+          <li class="nav-item"><a class="nav-link active" href="#">Tentang</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="dropdownToko" role="button" data-bs-toggle="dropdown" aria-expanded="false">Toko</a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownToko">
+              <li><a class="dropdown-item" href="penjualansemua.html">Semua Produk</a></li>
+              <li><a class="dropdown-item" href="barangpopuler.html">Barang Populer</a></li>
+              <li><a class="dropdown-item" href="barangbaru.html">Barang Baru</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li class="dropdown-submenu position-relative">
+                <a class="dropdown-item d-flex align-items-center justify-content-between" href="bajuwanita.html" aria-expanded="false">
+                  Baju Wanita
+                  <button class="btn btn-sm p-0 border-0 bg-transparent ms-2 submenu-toggle" type="button" aria-label="Buka submenu">
+                    <i class="bi bi-caret-down-fill"></i>
+                  </button>
+                </a>
+                <ul class="dropdown-menu" aria-label="Submenu Baju Wanita">
+                  <li><a class="dropdown-item" href="dress.html">Dress</a></li>
+                  <li><a class="dropdown-item" href="blouse.html">Blouse</a></li>
+                  <li><a class="dropdown-item" href="tunik.html">Tunik</a></li>
+                  <li><a class="dropdown-item" href="gamis.html">Gamis</a></li>
+                  <li><a class="dropdown-item" href="rokcelana.html">Rok/Celana</a></li>
+                </ul>
+              </li>
+              <li><a class="dropdown-item" href="bajupria.html">Baju Pria</a></li>
+              <li><a class="dropdown-item" href="bajuanak.html">Baju Anak</a></li>
+              <li><a class="dropdown-item" href="busanamuslim.html">Busana Muslim</a></li>
+            </ul>
+          </li>
+        </ul>
+        <div class="d-flex align-items-center" style="gap: 0.5rem;">
+          <form class="d-flex" action="hasilpencarian.html" method="GET">
+            <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="Cari Produk" required />
+            <button class="btn btn-outline-success btn-sm" type="submit">Cari</button>
+          </form>
+          <a id="loginButton" href="login.html" class="btn btn-outline-primary btn-sm">Login</a>
+          <a id="registerButton" href="daftarakun.html" class="btn btn-outline-secondary btn-sm">Buat Akun</a>
+          <a id="manageAccountButton" href="akun.html" class="btn btn-outline-success btn-sm" style="display:none;">Kelola Akun</a>
+          <a id="statusButton" href="stpesanan.html" class="btn btn-outline-info btn-sm" style="display:none;">Status Pesanan</a>
+          <a id="cartButton" href="keranjangbelanja.html" class="btn btn-outline-warning btn-sm position-relative" style="display:none;">
+            <i class="bi bi-cart" style="font-size: 1.2rem;"></i>
+            <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+          </a>
+          <button id="logoutButton" class="btn btn-outline-danger btn-sm" style="display:none;">Logout</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <!-- HERO About -->
+  <section class="hero-about">
+    <h1>Tentang Kami</h1>
+    <p>Toko Baju Sahabat hadir untuk seluruh keluarga Indonesia<br>
+       Murah, Indah, Bersahabat & Selalu Melayani dengan Hati!</p>
+  </section>
+
+  <div class="about-card">
+    <div class="about-title">
+      Toko Baju Sahabat
+    </div>
+    <div class="about-desc mb-3">
+      <b>Toko Baju Sahabat</b> beralamat di <b>Jalan Pasundan No 85, Kel. Sei Putih Timur, 
+      Kec. Medan Petisah, Kota Medan, Sumatera Utara</b>. Kami telah melayani pelanggan 
+      sejak <b>tahun 2020</b> dan dikenal sebagai toko baju yang murah, indah, dan bersahabat.<br><br>
+      Kami selalu menghadirkan koleksi baju wanita, pria, anak-anak, dan busana muslim 
+      dengan harga yang bersaing, kualitas terbaik, serta pelayanan ramah dan amanah.
+    </div>
+    <ul class="about-list">
+      <li><b>Berdiri Sejak:</b> 2020</li>
+      <li><b>Alamat:</b> Jalan Pasundan No 85, Sei Putih Timur, Medan Petisah, Kota Medan</li>
+      <li><b>Jam Operasional:</b> Senin - Sabtu, 08.00 - 20.30 WIB</li>
+      <li><b>Pengiriman:</b> Seluruh Indonesia</li>
+    </ul>
+    <div class="about-contact">
+      <a href="https://wa.me/6285261445799" target="_blank">
+        <i class="bi bi-whatsapp"></i> 0852-6144-5799
+      </a>
+      <a href="https://facebook.com/ernawati.simbolon" target="_blank">
+        <i class="bi bi-facebook"></i> Ernawati Simbolon
+      </a>
+      <a href="mailto:sahabat.baju@gmail.com">
+        <i class="bi bi-envelope"></i> Email
+      </a>
+    </div>
+    <div class="mt-4 text-center" style="color:#8B004B88; font-size:.97em;">
+      Tampil Lebih Gaya & Bersahabat Setiap Hari!
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // ===== Navbar mobile caret toggle =====
+    document.querySelectorAll('.submenu-toggle').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        e.stopPropagation();
+        const parent = btn.closest('.dropdown-submenu');
+        parent.classList.toggle('show');
+        const submenu = parent.querySelector('.dropdown-menu');
+        submenu.classList.toggle('show');
+      });
+    });
+
+    // ===== Auth button visibility (optional, sama dengan gamis.html) =====
+    document.addEventListener('DOMContentLoaded', () => {
+      const email = localStorage.getItem('email');
+      const name  = localStorage.getItem('name');
+
+      if (email && name) {
+        document.getElementById('loginButton').style.display = 'none';
+        document.getElementById('registerButton').style.display = 'none';
+        document.getElementById('logoutButton').style.display = 'inline-block';
+        document.getElementById('manageAccountButton').style.display = 'inline-block';
+        document.getElementById('statusButton').style.display = 'inline-block';
+        document.getElementById('cartButton').style.display = 'inline-block';
+      }
+
+      document.getElementById('logoutButton')?.addEventListener('click', () => {
+        localStorage.clear();
+        window.location.reload();
+      });
+    });
+  </script>
+</body>
+</html>

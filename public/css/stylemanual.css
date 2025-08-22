@@ -1,0 +1,119 @@
+/* === Font Global (override default Bootstrap) === */
+body,
+body *:not(.bi):not(svg):not(path) {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
+               "Noto Sans", "Liberation Sans", Arial, sans-serif,
+               "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+  font-size: 1.8rem;
+  line-height: 1.8;
+}
+
+/* Tambahan spesifik untuk navbar */
+.navbar,
+.navbar * {
+  font-family: inherit !important;
+}
+
+/* Monospace untuk elemen code/pre */
+code,
+pre {
+  font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+               "Courier New", monospace !important;
+}
+
+/* === Layout & Warna Dasar === */
+body {
+  background-color: #f4f5f7;
+  margin: 0;
+  padding: 0;
+}
+
+/* === Navbar === */
+nav.navbar {
+  background-color: #f8f9fa !important;
+  font-weight: 600;
+  font-size: 1.6rem;
+}
+
+nav.navbar .navbar-brand {
+  font-weight: 700;
+  font-size: 2rem;
+}
+
+nav.navbar .nav-link {
+  color: #000 !important;
+  font-size: 1.5rem;
+  padding: 1rem 1.5rem;
+}
+
+nav.navbar .dropdown-menu {
+  font-size: 1.4rem;
+}
+
+nav.navbar .btn {
+  font-size: 1.5rem;
+  padding: 0.7rem 1.8rem;
+}
+
+/* === Header === */
+header.py-5 {
+  background-color: #8B004B !important;
+}
+
+header .display-4 {
+  font-size: 4rem;
+  font-weight: 700;
+}
+
+header .lead {
+  font-size: 2.2rem;
+}
+
+/* === Section === */
+section.py-5 {
+  padding-top: 4rem !important;
+  padding-bottom: 4rem !important;
+}
+
+/* === Form === */
+form label {
+  font-weight: 700;
+  margin-bottom: 0.7rem;
+  display: block;
+  font-size: 1.7rem;
+}
+
+form input,
+form select {
+  font-size: 1.6rem;
+  padding: 0.8rem 1rem;
+  width: 100%;
+  margin-bottom: 1.8rem;
+  border: 1.5px solid #ccc;
+  border-radius: 6px;
+}
+
+form button {
+  font-size: 1.8rem;
+  padding: 1rem 2.5rem;
+  background-color: #8B004B;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form button:hover {
+  background-color: #a0005a;
+}
+
+/* === Box Info === */
+.info-pembayaran {
+  font-size: 1.6rem;
+  margin-bottom: 2rem;
+  background-color: #fff3f6;
+  border-left: 6px solid #8B004B;
+  padding: 1.2rem 1.5rem;
+  border-radius: 5px;
+}

@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hasil Pencarian - Toko Baju Sahabat</title>
+  <link rel="icon" href="assets/favicon.ico" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: #f8f9fa;
+      min-height: 100vh;
+    }
+
+    /* ====== Navbar ====== */
+    .navbar-brand { color: #8B004B !important; letter-spacing:.5px; }
+    .navbar { box-shadow: 0 2px 10px 0 rgba(139,0,75,.05);}
+
+    .navbar .dropdown-menu {
+      border-radius: 0.7em; box-shadow: 0 6px 32px #8b004b20; border: 1.5px solid #8b004b0d;
+      min-width: 210px; padding: .7em 0; margin-top: 0.6em; transition: box-shadow .13s;
+    }
+    .navbar .dropdown-menu .dropdown-item {
+      padding: .53em 1.3em; transition: background .15s, color .15s; font-size: 1.05em; border-radius: 8px;
+    }
+    .navbar .dropdown-menu .dropdown-item:hover,
+    .navbar .dropdown-menu .dropdown-item:focus {
+      background: linear-gradient(90deg, #ffd1eb2a 0%, #8B004B11 100%);
+      color: #8B004B; font-weight: 500; box-shadow: 0 2px 7px #8B004B0c;
+    }
+    .dropdown-divider { border-color:#eee; margin:.3em 0; }
+    .dropdown-submenu { position:relative; }
+    .dropdown-submenu > .dropdown-menu {
+      left: 100%; top: 0; margin-top: -1px; border-radius: 0.7em; box-shadow: 0 6px 32px #8b004b1c;
+      border: 1.5px solid #8b004b0d; min-width: 185px; display: none; position: absolute;
+    }
+
+    @media (min-width: 992px) {
+      .navbar .dropdown:hover > .dropdown-menu { display: block; margin-top: 0; animation: navDrop .17s; }
+      .dropdown-submenu:hover > .dropdown-menu { display: block; left: 100%; top: 0; margin-top: -1px; }
+    }
+    @keyframes navDrop { from { opacity: 0; transform: translateY(13px);} to { opacity: 1; transform: none;} }
+
+    /* ====== Mobile Navbar behaviors ====== */
+    @media (max-width:991.98px){
+      .navbar .dropdown-menu { position: static !important; box-shadow: none; border-radius: 0.7em; margin-top: .6em; }
+      .dropdown-submenu > .dropdown-menu { position: static !important; margin: .25rem 0 .5rem 1.2rem; box-shadow: none; border: none; background: #fff; min-width: unset; display: none; }
+      .dropdown-submenu.show > .dropdown-menu { display: block !important; }
+
+      .navbar .collapse .d-flex { flex-wrap:wrap; gap:.5rem; }
+      .navbar .collapse form { width:100%; order:-1; margin-bottom:.25rem; }
+      .navbar .collapse form .form-control { width:100%; }
+      .navbar .collapse a.btn, .navbar .collapse button.btn { flex:1 1 auto; min-width:44%; }
+    }
+
+    @media (max-width:600px){
+      .navbar .dropdown-menu { min-width: 95vw; }
+      .navbar-brand { font-size: 1.12em; }
+      .navbar .collapse a.btn, .navbar .collapse button.btn { min-width:48%; }
+    }
+
+    /* ====== Hasil Pencarian ====== */
+    .hasil-title {
+      color: #8B004B;
+      font-weight: 700;
+      margin: 2rem 0 1.5rem;
+      text-align: center;
+      letter-spacing: .5px;
+    }
+    .search-card {
+      border-radius: 15px;
+      box-shadow: 0 3px 16px #8b004b11;
+      border: none;
+      transition: box-shadow .18s, transform .15s;
+    }
+    .search-card:hover {
+      box-shadow: 0 7px 20px #8b004b18;
+      transform: translateY(-5px) scale(1.03);
+    }
+    .search-card-img {
+      border-radius: 15px 15px 0 0;
+      height: 155px;
+      object-fit: cover;
+      background: #fff;
+    }
+    .search-card-title {
+      color: #8B004B;
+      font-size: 1.03em;
+      font-weight: 600;
+    }
+    .prod-badge {
+      display:inline-block;
+      padding:.34em 1.1em .34em .75em;
+      border-radius:1em;
+      font-size:.97em;
+      background:linear-gradient(90deg,#ffd5e6 40%,#fff 100%);
+      color:#8B004B; font-weight:600;
+      margin-right:8px; margin-bottom:4px;
+      vertical-align:middle; letter-spacing:.02em;
+      box-shadow:0 1px 5px #8b004b15;
+    }
+    .prod-badge.stok { background:linear-gradient(90deg,#ddffe5 40%,#fff 100%); color:#009b57; }
+    .prod-badge.habis { background:#ffeaea; color:#c0392b; }
+
+    @media (max-width:600px){
+      .hasil-title { font-size:1.25rem; margin:1.5rem 0;}
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">Toko Baju Sahabat</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Tentang</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="dropdownToko" role="button" data-bs-toggle="dropdown" aria-expanded="false">Toko</a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownToko">
+              <li><a class="dropdown-item" href="penjualansemua.html">Semua Produk</a></li>
+              <li><a class="dropdown-item" href="barangpopuler.html">Barang Populer</a></li>
+              <li><a class="dropdown-item" href="barangbaru.html">Barang Baru</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li class="dropdown-submenu position-relative">
+                <a class="dropdown-item d-flex align-items-center justify-content-between"
+                   href="bajuwanita.html" aria-expanded="false">
+                  Baju Wanita
+                  <button class="btn btn-sm p-0 border-0 bg-transparent ms-2 submenu-toggle" type="button" aria-label="Buka submenu">
+                    <i class="bi bi-caret-down-fill" aria-hidden="true"></i>
+                  </button>
+                </a>
+                <ul class="dropdown-menu" aria-label="Submenu Baju Wanita">
+                  <li><a class="dropdown-item" href="dress.html">Dress</a></li>
+                  <li><a class="dropdown-item" href="blouse.html">Blouse</a></li>
+                  <li><a class="dropdown-item" href="tunik.html">Tunik</a></li>
+                  <li><a class="dropdown-item" href="gamis.html">Gamis</a></li>
+                  <li><a class="dropdown-item" href="rokcelana.html">Rok/Celana</a></li>
+                </ul>
+              </li>
+              <li><a class="dropdown-item" href="bajupria.html">Baju Pria</a></li>
+              <li><a class="dropdown-item" href="bajuanak.html">Baju Anak</a></li>
+              <li><a class="dropdown-item" href="busanamuslim.html">Busana Muslim</a></li>
+            </ul>
+          </li>
+        </ul>
+        <div class="d-flex align-items-center" style="gap: 0.5rem;">
+          <form class="d-flex" action="hasilpencarian.html" method="GET">
+            <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="Cari Produk" required />
+            <button class="btn btn-outline-success btn-sm" type="submit">Cari</button>
+          </form>
+          <a id="loginButton" href="login.html" class="btn btn-outline-primary btn-sm">Login</a>
+          <a id="registerButton" href="daftarakun.html" class="btn btn-outline-secondary btn-sm">Buat Akun</a>
+          <a id="manageAccountButton" href="akun.html" class="btn btn-outline-success btn-sm" style="display:none;">Kelola Akun</a>
+          <a id="statusButton" href="statuspesanan.html" class="btn btn-outline-info btn-sm" style="display:none;">Status Pesanan</a>
+          <a id="cartButton" href="keranjangbelanja.html" class="btn btn-outline-warning btn-sm position-relative" style="display:none;">
+            <i class="bi bi-cart" style="font-size: 1.2rem;"></i>
+            <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+          </a>
+          <button id="logoutButton" class="btn btn-outline-danger btn-sm" style="display:none;">Logout</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <!-- Page Title -->
+  <div class="container">
+    <h2 class="hasil-title">Hasil Pencarian untuk "<span id="searchQuery"></span>"</h2>
+    <div id="resultsContainer" class="row row-cols-1 row-cols-md-3 g-4"></div>
+    <div id="noResults" class="text-center text-muted" style="display:none;">
+      <p>Tidak ada produk yang sesuai.</p>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async () => {
+      // Login state
+      const email = localStorage.getItem("email");
+      const name = localStorage.getItem("name");
+      if (email && name) {
+        document.getElementById("loginButton").style.display = "none";
+        document.getElementById("registerButton").style.display = "none";
+        document.getElementById("logoutButton").style.display = "inline-block";
+        document.getElementById("manageAccountButton").style.display = "inline-block";
+        document.getElementById("statusButton").style.display = "inline-block";
+        document.getElementById("cartButton").style.display = "inline-block";
+        // update cart count
+        fetch(`/api/keranjang/jumlah/${email}`)
+          .then(res => res.json())
+          .then(d => document.getElementById("cartCount").textContent = d.totalItem||0)
+          .catch(()=>{});
+      }
+      document.getElementById("logoutButton")?.addEventListener("click", () => {
+        localStorage.clear();
+        window.location.reload();
+      });
+
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get("q") || "";
+      document.getElementById("searchQuery").textContent = q;
+
+      if (!q.trim()) return;
+
+      // Panggil API pencarian
+      try {
+        const res = await fetch(`/api/produk?q=${encodeURIComponent(q)}`);
+        const list = await res.json();
+
+        const container = document.getElementById("resultsContainer");
+        if (!Array.isArray(list) || list.length === 0) {
+          document.getElementById("noResults").style.display = "block";
+          return;
+        }
+        list.forEach(p => {
+          const col = document.createElement("div");
+          col.className = "col";
+          col.innerHTML = `
+            <div class="card search-card h-100">
+              <img src="/api/produk/gambar/${p._id}" class="card-img-top search-card-img" alt="${p.nama}" />
+              <div class="card-body d-flex flex-column">
+                <h5 class="card-title search-card-title">${p.nama}</h5>
+                <p class="card-text mb-1">Rp ${p.harga.toLocaleString("id-ID")}</p>
+                <div class="mb-2">
+                  <span class="prod-badge ${p.stok<1?'habis':'stok'}">
+                    ${p.stok<1?'Stok Habis':(p.stok<5?'Stok Hampir Habis':'Ready Stock')}
+                  </span>
+                </div>
+                <a href="detailproduk.html?id=${p._id}" class="btn btn-sm btn-outline-secondary mt-auto">Lihat Detail</a>
+              </div>
+            </div>
+          `;
+          container.appendChild(col);
+        });
+      } catch (err) {
+        console.error(err);
+        document.getElementById("noResults").textContent = "Terjadi kesalahan saat memuat pencarian.";
+        document.getElementById("noResults").style.display = "block";
+      }
+
+      // ===== Navbar mobile caret toggle =====
+      document.querySelectorAll('.submenu-toggle').forEach(btn => {
+        btn.addEventListener('click', e => {
+          e.preventDefault();
+          e.stopPropagation();
+          const parent = btn.closest('.dropdown-submenu');
+          parent.classList.toggle('show');
+          const submenu = parent.querySelector('.dropdown-menu');
+          submenu.classList.toggle('show');
+        });
+      });
+    });
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

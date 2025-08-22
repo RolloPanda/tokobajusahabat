@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kelola Pesanan — Dashboard Admin</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    html, body { font-family: system-ui, sans-serif; background-color: #f8f9fa; height: 100%; }
+    .btn-outline-primary { border-color: #8B004B; color: #8B004B; }
+    .btn-outline-primary:hover { background-color: #8B004B; color: white; }
+    .btn-outline-danger { border-color: #dc3545; color: #dc3545; }
+    .btn-outline-danger:hover { background-color: #dc3545; color: white; }
+    .btn-outline-info { border-color: #0dcaf0; color: #0dcaf0; }
+    .btn-outline-info:hover { background-color: #0dcaf0; color: white; }
+    .hero { background: linear-gradient(to right, #8B004B, #ad1457); color: white; padding: 3rem 1rem; text-align: center; }
+    .sidebar { background: #fff; border-right: 1px solid #e5e5e5; height: calc(100vh - 56px - 80px); padding-top: 1rem; }
+    .sidebar a { color: #333; display: block; padding: .75rem 1.5rem; text-decoration: none; }
+    .sidebar a.active, .sidebar a:hover { background-color: #f1f1f1; color: #8B004B; }
+    .content { padding: 2rem; }
+  </style>
+  <script>
+    const token = localStorage.getItem('adminToken');
+    if (!token) {
+      window.location.href = 'loginadmin.html';
+    }
+  </script>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="dashboardadmin.html">Toko Baju Sahabat</a>
+      <div class="d-flex align-items-center ms-auto" style="gap:.5rem;">
+        <button id="logout" class="btn btn-outline-primary btn-sm">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <h1>Kelola Pesanan</h1>
+    <p>Kelola semua pesanan online masuk, proses, dan tracking di sini</p>
+  </section>
+
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <nav class="col-md-2 sidebar d-none d-md-block">
+  <a href="dashboardadmin.html"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+  <a href="produkadmin.html" class="active"><i class="bi bi-tags me-2"></i>Kelola Produk</a>
+  <a href="stok.html"><i class="bi bi-box-seam me-2"></i>Manajemen Stok</a>
+  <a href="pembelian.html"><i class="bi bi-download me-2"></i>Pembelian (Barang Masuk)</a>
+  <a href="penjualan.html"><i class="bi bi-upload me-2"></i>Penjualan (Barang Keluar)</a>
+  <a href="offline.html"><i class="bi bi-shop me-2"></i>Penjualan Offline</a>
+  <a href="kelolapesanan.html"><i class="bi bi-inboxes me-2"></i>Kelola Pesanan Online</a>
+  <a href="laporan.html"><i class="bi bi-file-earmark-bar-graph me-2"></i>Laporan Stok</a>
+  <!-- ✅ Menu baru ditambahkan di sini -->
+  <a href="laporanpenjualan.html"><i class="bi bi-journal-text me-2"></i>Laporan Penjualan</a>
+  <a href="grafik.html"><i class="bi bi-bar-chart me-2"></i>Grafik</a>
+  <a href="pengaturan.html"><i class="bi bi-gear me-2"></i>Pengaturan Admin</a>
+</nav>
+      <!-- Main Content -->
+      <main class="col-md-10 content">
+        <!-- Filter Status Pesanan -->
+        <div class="mb-3 d-flex gap-2 align-items-center">
+          <label for="statusFilter" class="mb-0 fw-bold">Filter Status:</label>
+          <select id="statusFilter" class="form-select w-auto">
+            <option value="">Semua</option>
+            <option value="Menunggu Konfirmasi">Menunggu Konfirmasi</option>
+            <option value="Diproses">Diproses</option>
+            <option value="Ditolak">Ditolak</option>
+            <option value="Dikirim">Dikirim</option>
+            <option value="Diterima">Diterima</option>
+            <option value="Selesai">Selesai</option>
+            <option value="Ajukan Retur">Ajukan Retur</option>
+          </select>
+        </div>
+
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover" id="ordersTable">
+            <thead class="table-light">
+              <tr>
+                <th>#</th>
+                <th>Email</th>
+                <th>Metode</th>
+                <th>Status</th>
+                <th>Total</th>
+                <th>Tanggal</th>
+                <th>Aksi</th>
+              </tr>
+            </thead>
+            <tbody><!-- Data diisi oleh JS --></tbody>
+          </table>
+        </div>
+        <nav aria-label="Page navigation">
+          <ul class="pagination" id="pagination"></ul>
+        </nav>
+      </main>
+    </div>
+  </div>
+
+  <!-- Toast Notifikasi -->
+  <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
+    <div id="notifToast" class="toast align-items-center text-white bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+      <div class="d-flex">
+        <div class="toast-body" id="notifToastMsg"></div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Resi -->
+  <div class="modal fade" id="resiModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header bg-info text-white">
+          <h5 class="modal-title">Masukkan Nomor Resi</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="modalOrderId" />
+          <div class="mb-3">
+            <label for="modalResiInput" class="form-label">Nomor Resi</label>
+            <input type="text" id="modalResiInput" class="form-control" placeholder="Ketik nomor resi di sini…" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+          <button type="button" id="saveResiBtn" class="btn btn-info">Simpan & Kirim</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const apiBase = '/api/admin/pembayarans';
+    const resiModal = new bootstrap.Modal(document.getElementById('resiModal'));
+
+    function showToast(msg, color='primary') {
+      const toast = document.getElementById('notifToast');
+      toast.className = `toast align-items-center text-white bg-${color} border-0`;
+      document.getElementById('notifToastMsg').textContent = msg;
+      const t = new bootstrap.Toast(toast);
+      t.show();
+    }
+
+    document.getElementById('logout').addEventListener('click', () => {
+      localStorage.removeItem('adminToken');
+      showToast('Berhasil logout.', 'primary');
+      setTimeout(() => window.location.href = 'loginadmin.html', 900);
+    });
+
+    async function fetchOrders(page = 1, limit = 20) {
+      const status = document.getElementById('statusFilter').value;
+      let url = `${apiBase}?page=${page}&limit=${limit}`;
+      if (status) url += `&status=${encodeURIComponent(status)}`;
+      const res = await fetch(url, { headers: { 'Authorization': 'Bearer ' + token } });
+      if (!res.ok) return;
+      const { data: orders, page: cur, totalPages } = await res.json();
+      const tbody = document.querySelector('#ordersTable tbody');
+      tbody.innerHTML = '';
+
+      // Fetch retur status for each order
+      for (let i = 0; i < orders.length; i++) {
+        const o = orders[i];
+        const idx = (cur - 1) * limit + i + 1;
+        const st = o.status;
+        const badgeMap = {
+          'Menunggu Konfirmasi': 'bg-secondary',
+          'Diproses': 'bg-warning text-dark',
+          'Ditolak': 'bg-danger',
+          'Dikirim': 'bg-info text-dark',
+          'Diterima': 'bg-success',
+          'Selesai': 'bg-success',
+          'Ajukan Retur': 'bg-warning text-dark'
+        };
+        const badgeCls = badgeMap[st] || 'bg-light text-dark';
+
+        // Default action buttons
+        const btns = [
+          `<a href="dtlpesanan.html?id=${o._id}" class="btn btn-sm btn-outline-primary me-1">Detail</a>`
+        ];
+        if (st === 'Menunggu Konfirmasi') {
+          btns.push(`<button class="btn btn-sm btn-outline-success me-1" onclick="confirmOrder('${o._id}')">Proses</button>`);
+          btns.push(`<button class="btn btn-sm btn-outline-danger me-1" onclick="rejectOrder('${o._id}')">Tolak</button>`);
+        } else if (st === 'Diproses') {
+          btns.push(`<button class="btn btn-sm btn-outline-info me-1" onclick="openResiModal('${o._id}')">Masukkan Resi</button>`);
+        }
+
+        // **Tambahkan tombol Kelola Retur jika status Ajukan Retur**
+        if (st === 'Ajukan Retur') {
+          btns.push(`<a href="prosesretur.html?id=${o._id}" class="btn btn-sm btn-outline-warning me-1"><i class="bi bi-arrow-counterclockwise"></i> Kelola Retur</a>`);
+        }
+
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${idx}</td>
+          <td>${o.email}</td>
+          <td>${o.metode}</td>
+          <td><span class="badge ${badgeCls}">${st}</span></td>
+          <td>Rp ${o.total.toLocaleString('id-ID')}</td>
+          <td>${new Date(o.tanggal).toLocaleString('id-ID')}</td>
+          <td>${btns.join('')}</td>
+        `;
+        tbody.appendChild(tr);
+      }
+
+      renderPagination(cur, totalPages, limit);
+    }
+
+    function renderPagination(current, total, limit) {
+      const ul = document.getElementById('pagination');
+      ul.innerHTML = '';
+      for (let p = 1; p <= total; p++) {
+        const li = document.createElement('li');
+        li.className = 'page-item' + (p === current ? ' active' : '');
+        li.innerHTML = `<a class="page-link" href="#">${p}</a>`;
+        li.onclick = e => { e.preventDefault(); fetchOrders(p, limit); };
+        ul.appendChild(li);
+      }
+    }
+
+    async function confirmOrder(id) {
+      const res = await fetch(`${apiBase}/${id}/confirm`, { method: 'POST', headers: {'Authorization':'Bearer '+token} });
+      if (res.ok) {
+        showToast('Pesanan berhasil diproses!', 'success');
+      } else {
+        showToast('Gagal memproses pesanan.', 'danger');
+      }
+      fetchOrders();
+    }
+
+    async function rejectOrder(id) {
+      if (confirm('Yakin ingin menolak pesanan ini?')) {
+        const res = await fetch(`${apiBase}/${id}/reject`, { method: 'PATCH', headers: {'Authorization':'Bearer '+token} });
+        if (res.ok) {
+          showToast('Pesanan ditolak.', 'warning');
+        } else {
+          showToast('Gagal menolak pesanan.', 'danger');
+        }
+        fetchOrders();
+      }
+    }
+
+    function openResiModal(id) {
+      document.getElementById('modalOrderId').value = id;
+      document.getElementById('modalResiInput').value = '';
+      resiModal.show();
+    }
+
+    document.getElementById('saveResiBtn').addEventListener('click', async () => {
+      const id = document.getElementById('modalOrderId').value;
+      const resi = document.getElementById('modalResiInput').value.trim();
+      if (!resi) { showToast('Nomor resi wajib diisi!', 'warning'); return; }
+      const r = await fetch(`${apiBase}/${id}/resi`, {
+        method: 'PATCH',
+        headers: {'Content-Type':'application/json','Authorization':'Bearer '+token},
+        body: JSON.stringify({ resi })
+      });
+      if (r.ok) {
+        showToast('Resi disimpan.', 'success');
+        resiModal.hide();
+        fetchOrders();
+      } else {
+        let msg = 'Gagal menyimpan resi.';
+        try {
+          const resp = await r.json();
+          if (resp && resp.message) msg = resp.message;
+        } catch {}
+        showToast(msg, 'danger');
+      }
+    });
+
+    document.getElementById('statusFilter').addEventListener('change', () => fetchOrders(1));
+    document.addEventListener('DOMContentLoaded', () => fetchOrders());
+  </script>
+</body>
+</html>

@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Refund COD - Toko Baju Sahabat</title>
+  <link rel="icon" href="assets/favicon.ico" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
+  <style>
+    body { background: #f8f9fa; font-family: system-ui, sans-serif; min-height: 100vh; }
+    .navbar-brand { color: #8B004B !important; letter-spacing:.5px; }
+    .navbar { box-shadow: 0 2px 10px 0 rgba(139,0,75,.05); }
+
+    /* Navbar menu */
+    .navbar .dropdown-menu {
+      border-radius: 0.7em; box-shadow: 0 6px 32px #8b004b20;
+      border: 1.5px solid #8b004b0d; min-width: 210px;
+      padding: .7em 0; margin-top: 0.6em;
+    }
+    .navbar .dropdown-menu .dropdown-item {
+      padding: .53em 1.3em; font-size: 1.05em; border-radius: 8px;
+    }
+    .navbar .dropdown-menu .dropdown-item:hover {
+      background: linear-gradient(90deg,#ffd1eb2a 0%,#8B004B11 100%);
+      color:#8B004B; font-weight:500;
+    }
+    .dropdown-divider { border-color:#eee; margin:.3em 0; }
+    .dropdown-submenu { position:relative; }
+    .dropdown-submenu > .dropdown-menu {
+      left:100%; top:0; margin-top:-1px; border-radius:0.7em;
+      box-shadow:0 6px 32px #8b004b1c; border:1.5px solid #8b004b0d;
+      min-width:185px; display:none; position:absolute;
+    }
+    @media (min-width: 992px) {
+      .navbar .dropdown:hover > .dropdown-menu { display:block; margin-top:0; }
+      .dropdown-submenu:hover > .dropdown-menu { display:block; left:100%; top:0; margin-top:-1px;}
+    }
+    @media (max-width:991.98px){
+      .navbar .dropdown-menu { position: static !important; box-shadow: none; border-radius: 0.7em; margin-top: .6em; }
+      .dropdown-submenu > .dropdown-menu { position: static !important; margin-left:1.2em; box-shadow:none; border:none; display:none;}
+      .dropdown-submenu.show > .dropdown-menu { display:block !important;}
+      .navbar .collapse .d-flex { flex-wrap:wrap; gap:.5rem;}
+      .navbar .collapse form { width:100%; order:-1; margin-bottom:.25rem;}
+      .navbar .collapse a.btn, .navbar .collapse button.btn { flex:1 1 auto; min-width:44%;}
+    }
+
+    /* Refund COD Card */
+    .refundcod-card {
+      background: #fff; border-radius: 1.4rem; box-shadow: 0 10px 38px #8B004B1e;
+      padding: 2.5rem 2.2rem 2rem; max-width: 430px; margin: 3.7rem auto 2.7rem;
+      border: 1.7px solid #8B004B10; text-align:center;
+    }
+    .refundcod-card h2 { color:#8B004B; font-weight:bold; font-size:1.42rem; margin-bottom:.8rem;}
+    .refundcod-card .big-icon { font-size:3.5em; color:#FFA000; margin-bottom:.4em;}
+    .refundcod-card .property-row { display:flex; justify-content:space-between; margin-bottom:.63em; font-size:1.05em;}
+    .refundcod-card .property-label { color:#8B004B; font-weight:600; min-width:98px; text-align:left;}
+    .refundcod-card .property-value { color:#1b1b1b; font-weight:500; text-align:right;}
+    .refundcod-card .status-info { font-size:1.12em; color:#FFA000; font-weight:700; margin:1.2em 0 .4em;}
+    .refundcod-card .desc-text { color:#383838; margin-bottom:1.3em; font-size:1.02em; line-height:1.5;}
+    .refundcod-card .terimakasih { color:#8B004B; font-weight:bold; font-size:1.17em; margin-top:2.1em;}
+    .refundcod-card .contact-row { border-top:1px dashed #e0b9c9; padding-top:1.4em; margin-top:2.2em; font-size:.99em; color:#575757;}
+    .refundcod-card .contact-row a { color:#8B004B; font-weight:500; text-decoration:none; margin-right:1.1em;}
+    .refundcod-card .btn-back { margin-top:1.8em; border-radius:13px; font-weight:600; background:linear-gradient(90deg,#8B004B,#ad1457); color:#fff; padding:.73em 2em; border:none;}
+    .refundcod-card .btn-back:hover { background:linear-gradient(90deg,#710032,#8B004B); }
+    @media(max-width:600px){ .refundcod-card{padding:1.1rem .4rem;} .refundcod-card h2{font-size:1.13rem;} }
+  </style>
+</head>
+<body>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="index.html">Toko Baju Sahabat</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+        <li class="nav-item"><a class="nav-link" href="tentang.html">Tentang</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="dropdownToko" role="button" data-bs-toggle="dropdown">Toko</a>
+          <ul class="dropdown-menu" aria-labelledby="dropdownToko">
+            <li><a class="dropdown-item" href="penjualansemua.html">Semua Produk</a></li>
+            <li><a class="dropdown-item" href="barangpopuler.html">Barang Populer</a></li>
+            <li><a class="dropdown-item" href="barangbaru.html">Barang Baru</a></li>
+            <li><hr class="dropdown-divider" /></li>
+            <li class="dropdown-submenu position-relative">
+              <a class="dropdown-item d-flex align-items-center justify-content-between" href="bajuwanita.html">
+                Baju Wanita
+                <button class="btn btn-sm p-0 border-0 bg-transparent ms-2 submenu-toggle" type="button" aria-label="Buka submenu">
+                  <i class="bi bi-caret-down-fill"></i>
+                </button>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="dress.html">Dress</a></li>
+                <li><a class="dropdown-item" href="blouse.html">Blouse</a></li>
+                <li><a class="dropdown-item" href="tunik.html">Tunik</a></li>
+                <li><a class="dropdown-item" href="gamis.html">Gamis</a></li>
+                <li><a class="dropdown-item" href="rokcelana.html">Rok/Celana</a></li>
+              </ul>
+            </li>
+            <li><a class="dropdown-item" href="bajupria.html">Baju Pria</a></li>
+            <li><a class="dropdown-item" href="bajuanak.html">Baju Anak</a></li>
+            <li><a class="dropdown-item" href="busanamuslim.html">Busana Muslim</a></li>
+          </ul>
+        </li>
+      </ul>
+      <div class="d-flex align-items-center" style="gap: .5rem;">
+        <form class="d-flex" action="hasilpencarian.html" method="GET">
+          <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="Cari Produk" required />
+          <button class="btn btn-outline-success btn-sm" type="submit">Cari</button>
+        </form>
+        <a id="loginButton" href="login.html" class="btn btn-outline-primary btn-sm">Login</a>
+        <a id="registerButton" href="daftarakun.html" class="btn btn-outline-secondary btn-sm">Buat Akun</a>
+        <a id="manageAccountButton" href="akun.html" class="btn btn-outline-success btn-sm" style="display:none;">Kelola Akun</a>
+        <a id="statusButton" href="stpesanan.html" class="btn btn-outline-info btn-sm" style="display:none;">Status Pesanan</a>
+        <a id="cartButton" href="keranjangbelanja.html" class="btn btn-outline-warning btn-sm position-relative" style="display:none;">
+          <i class="bi bi-cart" style="font-size: 1.2rem;"></i>
+          <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+        </a>
+        <button id="logoutButton" class="btn btn-outline-danger btn-sm" style="display:none;">Logout</button>
+      </div>
+    </div>
+  </div>
+</nav>
+<!-- Main Card -->
+<div class="refundcod-card" id="refundCODCard">
+  <div class="big-icon"><i class="bi bi-cash-stack"></i></div>
+  <h2>Refund COD Anda Akan Diproses POS Indonesia</h2>
+  <div class="status-info"><i class="bi bi-truck"></i> Metode: COD (Bayar di Tempat)</div>
+  <div class="desc-text mb-3">
+    Retur Anda telah diterima dan <b>akan segera diproses oleh pihak POS Indonesia</b>.<br>
+    Mohon tunggu kedatangan kurir POS Indonesia untuk pengambilan barang dan pengembalian dana.<br>
+    Untuk info selanjutnya, pantau halaman pesanan atau hubungi admin.
+  </div>
+  <div id="props"></div>
+  <div class="terimakasih"><i class="bi bi-emoji-smile"></i> Terima kasih telah berbelanja di Toko Baju Sahabat!</div>
+  <div class="contact-row">
+    <span>Butuh bantuan? Hubungi Admin:</span><br>
+    <a href="https://wa.me/6285261445799" target="_blank"><i class="bi bi-whatsapp"></i> 0852-6144-5799</a>
+    <a href="https://facebook.com/ernawati.simbolon" target="_blank"><i class="bi bi-facebook"></i> Ernawati Simbolon</a>
+  </div>
+  <a href="stpesanan.html" class="btn btn-back mt-2"><i class="bi bi-arrow-left-circle"></i> Kembali ke Daftar Pesanan</a>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const email = localStorage.getItem('email');
+  const name  = localStorage.getItem('name');
+  if (email && name) {
+    loginButton.style.display = 'none'; registerButton.style.display='none';
+    logoutButton.style.display='inline-block';
+    manageAccountButton.style.display='inline-block';
+    statusButton.style.display='inline-block'; cartButton.style.display='inline-block';
+    updateCartCount();
+  }
+  logoutButton.addEventListener('click', () => { localStorage.clear(); window.location.reload(); });
+
+  async function updateCartCount() {
+    try {
+      const res = await fetch(`/api/keranjang/jumlah/${email}`);
+      const data = await res.json();
+      cartCount.textContent = data.totalItem || 0;
+    } catch {}
+  }
+
+  // Navbar mobile submenu toggle
+  document.querySelectorAll('.submenu-toggle').forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      e.preventDefault(); e.stopPropagation();
+      const parent = btn.closest('.dropdown-submenu');
+      parent.classList.toggle('show');
+      const submenu = parent.querySelector('.dropdown-menu');
+      submenu.classList.toggle('show');
+    });
+  });
+});
+
+// Ambil data pesanan
+document.addEventListener("DOMContentLoaded", async () => {
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get("id");
+  if (!id) return;
+  try {
+    const res = await fetch(`/api/pembayaran/${id}`);
+    if (!res.ok) return;
+    const o = await res.json();
+    let html = "";
+    html += `<div class="property-row"><span class="property-label">ID Pesanan</span><span class="property-value">${o._id}</span></div>`;
+    html += `<div class="property-row"><span class="property-label">Tanggal</span><span class="property-value">${new Date(o.tanggal).toLocaleString('id-ID')}</span></div>`;
+    html += `<div class="property-row"><span class="property-label">Nama Penerima</span><span class="property-value">${o.namaPenerima||'-'}</span></div>`;
+    html += `<div class="property-row"><span class="property-label">Kurir</span><span class="property-value">POS Indonesia</span></div>`;
+    html += `<div class="property-row"><span class="property-label">Provinsi</span><span class="property-value">${o.detailPesanan?.provinsi||'-'}</span></div>`;
+    html += `<div class="property-row"><span class="property-label">Kota</span><span class="property-value">${o.detailPesanan?.kota||'-'}</span></div>`;
+    html += `<div class="property-row"><span class="property-label">Subtotal</span><span class="property-value">Rp ${(o.subtotal||0).toLocaleString('id-ID')}</span></div>`;
+    html += `<div class="property-row"><span class="property-label">Ongkir</span><span class="property-value">Rp ${(o.detailPesanan?.ongkir||0).toLocaleString('id-ID')}</span></div>`;
+    html += `<div class="property-row"><span class="property-label">Total</span><span class="property-value">Rp ${(o.total||0).toLocaleString('id-ID')}</span></div>`;
+    document.getElementById("props").innerHTML = html;
+  } catch {}
+});
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

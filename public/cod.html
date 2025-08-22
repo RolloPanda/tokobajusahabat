@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Konfirmasi Pesanan COD - Toko Baju Sahabat</title>
+  <link rel="icon" href="assets/favicon.ico" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      background-color: #f8f9fa;
+      min-height: 100vh;
+    }
+    /* ===== NAVBAR ===== */
+    .navbar-brand { color: #8B004B !important; letter-spacing:.5px; }
+    .navbar { box-shadow: 0 2px 10px rgba(139,0,75,.05); }
+
+    .navbar .dropdown-menu {
+      border-radius: 0.7em; box-shadow: 0 6px 32px #8b004b20;
+      border: 1.5px solid #8b004b0d; min-width: 210px;
+      padding: .7em 0; margin-top: 0.6em;
+    }
+    .navbar .dropdown-menu .dropdown-item {
+      padding: .53em 1.3em; border-radius: 8px; font-size: 1.05em;
+    }
+    .navbar .dropdown-menu .dropdown-item:hover {
+      background: linear-gradient(90deg,#ffd1eb2a 0%,#8B004B11 100%);
+      color: #8B004B; font-weight: 500; box-shadow: 0 2px 7px #8B004B0c;
+    }
+    .dropdown-divider { margin:.3em 0; border-color:#eee; }
+    .dropdown-submenu { position:relative; }
+    .dropdown-submenu > .dropdown-menu {
+      left:100%; top:0; margin-top:-1px; border-radius:.7em;
+      box-shadow:0 6px 32px #8b004b1c; border:1.5px solid #8b004b0d;
+      min-width:185px; display:none; position:absolute;
+    }
+    @media(min-width:992px){
+      .navbar .dropdown:hover>.dropdown-menu{display:block; margin-top:0;}
+      .dropdown-submenu:hover>.dropdown-menu{display:block;}
+    }
+    @media(max-width:991.98px){
+      .navbar .dropdown-menu{position:static!important; box-shadow:none; margin-top:.6em;}
+      .dropdown-submenu>.dropdown-menu{position:static!important; margin:.25rem 0 .5rem 1.2rem; box-shadow:none; border:none; background:#fff; display:none;}
+      .dropdown-submenu.show>.dropdown-menu{display:block!important;}
+      .navbar .collapse .d-flex{flex-wrap:wrap; gap:.5rem;}
+      .navbar .collapse form{width:100%; order:-1; margin-bottom:.25rem;}
+      .navbar .collapse form .form-control{width:100%;}
+      .navbar .collapse a.btn,.navbar .collapse button.btn{flex:1 1 auto; min-width:44%;}
+    }
+    @media(max-width:600px){
+      .navbar .dropdown-menu{min-width:95vw;}
+      .navbar-brand{font-size:1.12em;}
+      .navbar .collapse a.btn,.navbar .collapse button.btn{min-width:48%;}
+    }
+
+    /* ===== MAIN CONTENT ===== */
+    main {
+      max-width: 640px;
+      margin: 3rem auto;
+      background: #fff;
+      border-radius: 1rem;
+      box-shadow: 0 0.3rem 0.8rem rgba(139,0,75,0.15);
+      padding: 2rem 2.2rem;
+      color: #555;
+      font-weight: 500;
+      line-height: 1.6;
+    }
+    main h3 {
+      color:#8B004B; font-weight:700; margin-bottom:1.7rem;
+      text-align:center; letter-spacing:.05em;
+    }
+    main ul {
+      list-style:none; padding-left:0; margin-bottom:2rem;
+      border-left:4px solid #8B004B; padding-left:1rem;
+    }
+    main ul li{margin-top:.8rem;}
+    main ul li strong{color:#8B004B;}
+    .alert-info {
+      background:#f0e6eb; color:#6e4554; border:none;
+      border-radius:.7rem; padding:1rem 1.5rem;
+      font-weight:600; font-size:1.05rem; margin-bottom:2rem;
+      box-shadow:inset 0 0 10px #d0a6bc80;
+    }
+    .btn-primary {
+      background:#8B004B; border-color:#8B004B;
+      font-weight:600; font-size:1.1rem;
+      padding:.65rem 1.25rem; border-radius:.7rem;
+      width:100%; box-shadow:0 5px 15px rgba(139,0,75,.3);
+    }
+    .btn-primary:hover {
+      background:#6a0037; border-color:#6a0037;
+      box-shadow:0 7px 20px rgba(139,0,75,.5);
+    }
+    @media(max-width:640px){
+      main{margin:2rem 1rem; padding:1.5rem;}
+    }
+
+    /* ===== TOAST ===== */
+    #toast-container {
+      position:fixed; top:50%; left:50%; transform:translate(-50%,-50%);
+      z-index:3000; pointer-events:none;
+    }
+    #toast-container .toast {
+      min-width:240px; max-width:340px;
+      border-radius:.7rem; background:linear-gradient(90deg,#8B004B,#ad1457);
+      color:#fff; box-shadow:0 4px 22px #8B004B80;
+      font-weight:600; font-size:1.05rem; padding:1rem 1.4rem;
+      display:flex; align-items:center; gap:.7rem;
+      opacity:0; transform:translateY(30px) scale(.95);
+      animation:toastIn .4s forwards;
+    }
+    @keyframes toastIn{to{opacity:1; transform:none;}}
+  </style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="index.html">Toko Baju Sahabat</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="index.html">Beranda</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Tentang</a></li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="dropdownToko" role="button" data-bs-toggle="dropdown" aria-expanded="false">Toko</a>
+          <ul class="dropdown-menu" aria-labelledby="dropdownToko">
+            <li><a class="dropdown-item" href="penjualansemua.html">Semua Produk</a></li>
+            <li><a class="dropdown-item" href="barangpopuler.html">Barang Populer</a></li>
+            <li><a class="dropdown-item" href="barangbaru.html">Barang Baru</a></li>
+            <li><hr class="dropdown-divider"/></li>
+            <li class="dropdown-submenu position-relative">
+              <a class="dropdown-item d-flex align-items-center justify-content-between" href="bajuwanita.html">
+                Baju Wanita
+                <button class="btn btn-sm p-0 border-0 bg-transparent ms-2 submenu-toggle" type="button"><i class="bi bi-caret-down-fill"></i></button>
+              </a>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="dress.html">Dress</a></li>
+                <li><a class="dropdown-item" href="blouse.html">Blouse</a></li>
+                <li><a class="dropdown-item" href="tunik.html">Tunik</a></li>
+                <li><a class="dropdown-item" href="gamis.html">Gamis</a></li>
+                <li><a class="dropdown-item" href="rokcelana.html">Rok/Celana</a></li>
+              </ul>
+            </li>
+            <li><a class="dropdown-item" href="bajupria.html">Baju Pria</a></li>
+            <li><a class="dropdown-item" href="bajuanak.html">Baju Anak</a></li>
+            <li><a class="dropdown-item" href="busanamuslim.html">Busana Muslim</a></li>
+          </ul>
+        </li>
+      </ul>
+      <div class="d-flex align-items-center" style="gap:.5rem;">
+        <form class="d-flex" action="hasilpencarian.html" method="GET">
+          <input class="form-control form-control-sm me-2" type="search" name="q" placeholder="Cari Produk" required>
+          <button class="btn btn-outline-success btn-sm" type="submit">Cari</button>
+        </form>
+        <a id="loginButton" href="login.html" class="btn btn-outline-primary btn-sm">Login</a>
+        <a id="registerButton" href="daftarakun.html" class="btn btn-outline-secondary btn-sm">Buat Akun</a>
+        <a id="manageAccountButton" href="akun.html" class="btn btn-outline-success btn-sm" style="display:none;">Kelola Akun</a>
+        <a id="statusButton" href="statuspesanan.html" class="btn btn-outline-info btn-sm" style="display:none;">Status Pesanan</a>
+        <a id="cartButton" href="keranjangbelanja.html" class="btn btn-outline-warning btn-sm position-relative" style="display:none;">
+          <i class="bi bi-cart" style="font-size:1.2rem;"></i>
+          <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+        </a>
+        <button id="logoutButton" class="btn btn-outline-danger btn-sm" style="display:none;">Logout</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<main>
+  <h3>Konfirmasi Pesanan COD</h3>
+  <p>Pesanan akan dikirim ke alamat yang Anda isi sebelumnya:</p>
+
+  <ul>
+    <li><strong>Nama Penerima:</strong> <span id="namaTampil"></span></li>
+    <li><strong>Email:</strong> <span id="emailTampil"></span></li>
+    <li><strong>Alamat:</strong> <span id="alamatTampil"></span></li>
+    <li><strong>Kota:</strong> <span id="kotaTampil"></span></li>
+    <li><strong>Provinsi:</strong> <span id="provinsiTampil"></span></li>
+    <li><strong>Kurir:</strong> <span id="kurirTampil"></span></li>
+    <li><strong>Berat Total:</strong> <span id="beratTampil">0 gram (0 kg)</span></li>
+  </ul>
+
+  <div class="mb-4">
+    <strong>Produk Dipesan:</strong>
+    <ul id="produkList"></ul>
+  </div>
+
+  <div class="alert alert-info" role="alert">
+    <div><span>Subtotal Produk:</span> <span id="subtotalText">Rp 0</span></div>
+    <div><span>Ongkir:</span> <span id="ongkirText">Rp 0</span></div>
+    <hr>
+    <div><strong>Total Bayar (COD):</strong> <strong id="totalText">Rp 0</strong></div>
+  </div>
+
+  <button id="konfirmasiBtn" class="btn btn-primary">Konfirmasi & Simpan Pesanan</button>
+</main>
+
+<div id="toast-container"></div>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const email = localStorage.getItem("email");
+  const name = localStorage.getItem("name");
+  let items = JSON.parse(localStorage.getItem("cart") || "[]");
+
+  // ==== Auth button handling ====
+  if (email && name) {
+    document.getElementById("loginButton").style.display = "none";
+    document.getElementById("registerButton").style.display = "none";
+    document.getElementById("logoutButton").style.display = "inline-block";
+    document.getElementById("manageAccountButton").style.display = "inline-block";
+    document.getElementById("statusButton").style.display = "inline-block";
+    document.getElementById("cartButton").style.display = "inline-block";
+    updateCartCount(email);
+  } else {
+    alert("Silakan login terlebih dahulu.");
+    window.location.href = "login.html";
+    return;
+  }
+
+  document.getElementById("logoutButton").addEventListener("click", () => {
+    localStorage.clear();
+    window.location.reload();
+  });
+
+  async function updateCartCount(email) {
+    try {
+      const res = await fetch(`/api/keranjang/jumlah/${email}`);
+      const data = await res.json();
+      document.getElementById("cartCount").textContent = data.totalItem || 0;
+    } catch (err) {
+      console.error("Gagal memuat jumlah keranjang:", err);
+    }
+  }
+
+  // ==== Submenu Mobile Toggle ====
+  function initMobileSubmenu(){
+    document.querySelectorAll('.submenu-toggle').forEach(btn=>{
+      btn.addEventListener('click',e=>{
+        e.preventDefault(); e.stopPropagation();
+        const submenu=btn.closest('.dropdown-submenu');
+        if(submenu){
+          submenu.classList.toggle('show');
+          const expanded=submenu.classList.contains('show');
+          btn.setAttribute('aria-expanded',expanded);
+          const target=submenu.querySelector('.dropdown-menu');
+          if(target) target.classList.toggle('show',expanded);
+        }
+      });
+    });
+  }
+  initMobileSubmenu();
+
+  // ==== Ambil & tampilkan detail pesanan ====
+  const namaPenerima = localStorage.getItem("namaPenerima") || "";
+  const alamat = localStorage.getItem("alamat") || "";
+  const kota = localStorage.getItem("kota") || "";
+  const provinsi = localStorage.getItem("provinsi") || "";
+  const kurir = localStorage.getItem("kurir") || "";
+  const phone = localStorage.getItem("phone") || "";
+  const subtotal = parseInt(localStorage.getItem("checkoutSubtotal")) || 0;
+  const ongkir = parseInt(localStorage.getItem("checkoutOngkir")) || 0;
+  const beratGram = parseInt(localStorage.getItem("checkoutBeratGram")) || 0;
+  const beratKg = Math.ceil(beratGram / 1000);
+  const total = subtotal + ongkir;
+
+  document.getElementById("namaTampil").textContent = namaPenerima;
+  document.getElementById("emailTampil").textContent = email;
+  document.getElementById("alamatTampil").textContent = alamat;
+  document.getElementById("kotaTampil").textContent = kota;
+  document.getElementById("provinsiTampil").textContent = provinsi;
+  document.getElementById("kurirTampil").textContent = kurir;
+  document.getElementById("subtotalText").textContent = "Rp " + subtotal.toLocaleString("id-ID");
+  document.getElementById("ongkirText").textContent = "Rp " + ongkir.toLocaleString("id-ID");
+  document.getElementById("totalText").textContent = "Rp " + total.toLocaleString("id-ID");
+  document.getElementById("beratTampil").textContent = `${beratGram} gram (${beratKg} kg)`;
+
+  // List produk
+  const produkList = document.getElementById("produkList");
+  produkList.innerHTML = "";
+  if (items.length > 0) {
+    items.forEach(item => {
+      produkList.innerHTML += `
+        <li>
+          ${item.nama} <span style="color:#8B004B;">x${item.jumlah}</span>
+          ${item.ukuran ? `<span style="color:#333; font-size:.95em;"> [Ukuran: <strong>${item.ukuran}</strong>]</span>` : ""}
+        </li>
+      `;
+    });
+  } else {
+    produkList.innerHTML = "<li><em>Keranjang kosong</em></li>";
+  }
+
+  // ==== Toast ====
+  function showToast(message, duration = 2500) {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = message;
+    container.appendChild(toast);
+    setTimeout(() => {
+      toast.style.opacity = 0;
+      toast.style.transform = 'translateY(30px) scale(0.95)';
+      setTimeout(() => toast.remove(), 400);
+    }, duration);
+  }
+
+  // ==== Submit Konfirmasi ====
+  document.getElementById("konfirmasiBtn").addEventListener("click", async () => {
+    // Validasi produkId
+    for (const i of items) {
+      if (!i.produkId) {
+        alert(`Produk "${i.nama}" tidak memiliki produkId, pesanan dibatalkan.`);
+        return;
+      }
+    }
+
+    const detailPesanan = { provinsi, kota, alamat, kurir, ongkir, berat: beratGram };
+
+    try {
+      const res = await fetch("/api/pembayaran", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email, phone, metode: "COD", namaPenerima,
+          subtotal, total, items, detailPesanan
+        })
+      });
+
+      const data = await res.json();
+      if (!res.ok || !data.success) throw new Error(data.message || "Gagal menyimpan pesanan");
+
+      showToast("Pesanan COD berhasil disimpan!");
+
+      // Bersihkan localStorage
+      [
+        "checkoutTotal","checkoutSubtotal","checkoutOngkir","alamat","kota","provinsi",
+        "kurir","metode","namaPenerima","phone","cart","checkoutBeratGram","checkoutBeratKg"
+      ].forEach(k => localStorage.removeItem(k));
+
+      setTimeout(() => window.location.href = "statuspesanan.html", 2000);
+
+    } catch (err) {
+      console.error(err);
+      alert("Terjadi kesalahan saat menyimpan pesanan.");
+    }
+  });
+});
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

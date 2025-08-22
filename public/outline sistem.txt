@@ -1,0 +1,173 @@
+🧭 1. HALAMAN UTAMA (HOME)
+Fitur:
+Banner promosi / slider
+
+Pencarian produk
+
+Kategori produk
+
+Produk unggulan / terbaru
+
+Testimoni pelanggan
+
+CTA (Call to Action): daftar akun, beli sekarang, promo
+
+🛍️ 2. HALAMAN PRODUK
+Fitur:
+Daftar produk dengan pagination
+
+Filter dan sort (kategori, harga, popularitas, rating)
+
+Pencarian produk
+
+Quick view produk
+
+📄 3. HALAMAN DETAIL PRODUK
+Fitur:
+Gambar produk (zoom + galeri)
+
+Nama, harga, deskripsi
+
+Ketersediaan stok
+
+Variasi produk (ukuran, warna)
+
+Tombol tambah ke keranjang
+
+Review & rating pelanggan
+
+Produk terkait
+
+🛒 4. HALAMAN KERANJANG BELANJA (CART)
+Fitur:
+Daftar item yang dipilih
+
+Update jumlah item
+m dari
+Hapus ite keranjang
+
+Estimasi ongkir (opsional)
+
+Total harga
+
+Tombol checkout
+
+💳 5. HALAMAN CHECKOUT
+Fitur:
+Form data pengiriman
+
+Pilihan metode pembayaran
+
+Ringkasan pesanan
+
+Input kode voucher / diskon
+
+Konfirmasi pesanan
+
+✅ 6. HALAMAN KONFIRMASI PESANAN
+Fitur:
+ID pesanan
+
+Ringkasan pemesanan
+
+Instruksi pembayaran (jika manual transfer)
+
+Link pelacakan pesanan (jika tersedia)
+
+👤 7. HALAMAN AKUN PENGGUNA
+Fitur:
+Login / register
+
+Lupa password
+
+Profil pengguna
+
+Daftar pesanan & status
+
+Riwayat belanja
+
+Alamat pengiriman
+
+Logout
+
+🔍 8. HALAMAN PENCARIAN
+Fitur:
+Hasil pencarian berdasarkan kata kunci
+
+Filter & sort hasil pencarian
+
+🚚 9. HALAMAN PELACAKAN PESANAN (TRACKING)
+Fitur:
+Input ID pesanan
+
+Status pengiriman
+
+Nomor resi & jasa kirim
+
+📝 10. HALAMAN TENTANG KAMI (ABOUT)
+Fitur:
+Profil toko
+
+Misi & visi
+
+Foto tim / lokasi
+
+📞 11. HALAMAN KONTAK
+Fitur:
+Form kontak
+
+Informasi kontak (WhatsApp, email, alamat)
+
+Link ke media sosial
+
+📚 12. HALAMAN FAQ
+Fitur:
+Tanya jawab seputar pemesanan, pengiriman, retur
+
+📃 13. HALAMAN KEBIJAKAN
+Sub-halaman:
+Kebijakan pengiriman
+
+Kebijakan retur & refund
+
+Syarat & ketentuan
+
+Privasi data pengguna
+
+🔧 14. HALAMAN ADMIN (BACKEND / DASHBOARD ADMIN)
+Fitur:
+Login admin
+
+Manajemen produk (CRUD)
+
+Manajemen kategori
+
+Manajemen stok
+
+Manajemen pesanan
+
+Manajemen pengguna
+
+Statistik penjualan
+
+Upload & kelola banner promo
+
+Kelola testimoni / review
+
+🔒 FITUR LAIN (UMUM)
+Sistem autentikasi pengguna (register/login/logout)
+
+Email notifikasi (untuk pesanan & konfirmasi)
+
+Responsif untuk mobile
+
+SEO friendly
+
+Integrasi payment gateway (contoh: Midtrans, Xendit, dll)
+
+Integrasi API ongkir (RajaOngkir, Gosend, dll)
+
+Keamanan form & input (validasi data)
+
+Backup data & database
+

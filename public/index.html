@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Toko Baju Sahabat</title>
+  <link rel="icon" href="assets/favicon.ico" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    /* ====== Base ====== */
+    :root { --brand:#8B004B; --brand-soft:#8b004b11; --shadow:0 4px 22px #8B004B11; }
+    * { box-sizing: border-box; }
+    html,body { height: 100%; }
+    body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; background:#f8f9fa; min-height:100vh; }
+    .container { max-width:1140px; }
+
+    /* ====== Navbar ====== */
+    .navbar-brand { color: var(--brand) !important; letter-spacing:.5px; }
+    .navbar { box-shadow: 0 2px 10px 0 rgba(139,0,75,.05);}
+    .navbar .dropdown-menu {
+      border-radius:.7em; box-shadow:0 6px 32px #8b004b20; border:1.5px solid #8b004b0d;
+      min-width:210px; padding:.7em 0; margin-top:.6em;
+    }
+    .navbar .dropdown-menu .dropdown-item {
+      padding:.53em 1.3em; transition:background .15s,color .15s; font-size:1.05em; border-radius:8px;
+    }
+    .navbar .dropdown-menu .dropdown-item:hover,
+    .navbar .dropdown-menu .dropdown-item:focus { background:linear-gradient(90deg,#ffd1eb2a 0%, #8B004B11 100%); color:var(--brand); font-weight:500; box-shadow:0 2px 7px #8B004B0c; }
+    .dropdown-divider { border-color:#eee; margin:.3em 0; }
+    .dropdown-submenu { position:relative; }
+    .dropdown-submenu > .dropdown-menu {
+      left:100%; top:0; margin-top:-1px; border-radius:.7em; box-shadow:0 6px 32px #8b004b1c;
+      border:1.5px solid #8b004b0d; min-width:185px; display:none; position:absolute;
+    }
+    @media (min-width:992px){
+      .navbar .dropdown:hover > .dropdown-menu { display:block; margin-top:0; animation:navDrop .17s; }
+      .dropdown-submenu:hover > .dropdown-menu { display:block; left:100%; top:0; margin-top:-1px; }
+    }
+    @keyframes navDrop { from{opacity:0; transform:translateY(13px);} to{opacity:1; transform:none;} }
+
+    /* ====== Mobile Navbar behaviors ====== */
+    @media (max-width:991.98px){
+      .navbar .dropdown-menu { position:static !important; box-shadow:none; border-radius:.7em; margin-top:.6em; }
+      .dropdown-submenu > .dropdown-menu { position:static !important; margin: .25rem 0 .5rem 1.2rem; box-shadow:none; border:none; background:#fff; min-width:unset; display:none; }
+      .dropdown-submenu.show > .dropdown-menu { display:block !important; }
+      /* Susun form & tombol saat collapse */
+      .navbar .collapse .d-flex { flex-wrap:wrap; gap:.5rem; }
+      .navbar .collapse form { width:100%; order: -1; margin-bottom:.25rem; }
+      .navbar .collapse form .form-control { width:100%; }
+      .navbar .collapse a.btn, .navbar .collapse button.btn { flex:1 1 auto; min-width:44%; }
+    }
+    @media (max-width:600px){
+      .navbar .dropdown-menu { min-width:95vw; }
+      .navbar-brand { font-size:1.12em; }
+      .navbar .collapse a.btn, .navbar .collapse button.btn { min-width:48%; }
+    }
+
+    /* ====== Hero ====== */
+    .hero-elite {
+      background: linear-gradient(90deg,var(--brand) 35%,#ad1457 100%);
+      color:#fff; padding:3.5rem 1rem 2.2rem; border-radius:0 0 2rem 2rem; box-shadow:var(--shadow);
+      text-align:center; margin-bottom:2.2rem;
+    }
+    .hero-elite h1 { font-size:2.15rem; font-weight:700; margin-bottom:1rem; letter-spacing:.5px; }
+    .hero-elite p { font-size:1.13rem; color:#fff9; }
+    @media (max-width:600px){
+      .hero-elite { padding:2.2rem 1rem 1.6rem; border-radius:0 0 1.4rem 1.4rem; }
+      .hero-elite h1 { font-size:1.65rem; }
+      .hero-elite p { font-size:1rem; }
+    }
+
+    /* ====== Buttons ====== */
+    .btn-toko-outline { border-color:#fff !important; color:#fff !important; background:transparent; transition:background .2s,color .2s; }
+    .btn-toko-outline:hover,.btn-toko-outline:focus { background-color:#fff !important; color:var(--brand) !important; border-color:#fff !important; }
+
+    /* ====== Produk grid & card ====== */
+    .produk-section-title { font-weight:bold; color:var(--brand); margin:2.3rem 0 1.2rem; text-align:center; font-size:1.28rem; letter-spacing:.5px; }
+    .produk-elite-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(195px,1fr)); gap:1.3rem; max-width:1140px; margin:0 auto 2.2rem; padding:0 1rem; }
+    @media (max-width:480px){
+      .produk-elite-grid { grid-template-columns: repeat(2,minmax(0,1fr)); gap: .9rem; padding:0 .75rem; }
+    }
+    .produk-elite-card {
+      background:#fff; border-radius:1rem; box-shadow:0 3px 14px #8B004B13; overflow:hidden; transition:transform .13s, box-shadow .13s, border-color .13s;
+      display:flex; flex-direction:column; min-height:355px; justify-content:space-between; border:1.5px solid #fff; position:relative;
+    }
+    .produk-elite-card:hover { transform:translateY(-4px) scale(1.035); box-shadow:0 8px 32px #8B004B1c; border:1.5px solid #8B004B33; }
+    @media (max-width:480px){ .produk-elite-card { min-height:320px; } }
+    @media (prefers-reduced-motion: reduce){
+      .produk-elite-card { transition:none; }
+      .produk-elite-card:hover { transform:none; }
+    }
+    .produk-elite-img { width:100%; aspect-ratio:1/1; background-size:cover; background-position:center; border-bottom:1px solid #eee; display:block; }
+    .produk-elite-info { padding:1.15rem .9rem .9rem; flex:1; display:flex; flex-direction:column; justify-content:space-between; align-items:center; text-align:center; }
+    .produk-elite-info h5 { font-size:1.08rem; font-weight:600; margin-bottom:.3rem; color:var(--brand); }
+    .produk-elite-info p { color:#555; font-size:.99rem; font-weight:500; margin-bottom:.7rem; }
+    .produk-btns { display:flex; justify-content:center; gap:.6rem; flex-wrap:wrap; }
+    .produk-btns .btn-outline-primary { border-color:var(--brand); color:var(--brand); font-weight:500; letter-spacing:.01em; }
+    .produk-btns .btn-outline-primary:hover { background-color:var(--brand); color:#fff; }
+    .produk-btns .btn-dark { font-weight:500; font-size:.98rem; }
+
+    /* ====== Toast ====== */
+    #toast-container {
+      position:fixed; top:env(safe-area-inset-top, 12px); left:50%; transform:translateX(-50%);
+      z-index:3000; max-width:94vw; pointer-events:none; display:flex; flex-direction:column; align-items:center;
+    }
+    .toko-toast {
+      min-width:220px; max-width:340px; color:#fff; background:linear-gradient(90deg,#8B004B,#ad1457); border-radius:13px; padding:1rem 1.25rem; margin-bottom:13px; box-shadow:var(--shadow);
+      display:flex; align-items:center; font-weight:500; font-size:1.04rem; opacity:0; transform:translateY(35px) scale(.95); animation:slideInCenter .48s forwards; gap:.7rem; pointer-events:auto;
+    }
+    .toko-toast.toko-toast-error{ background:linear-gradient(90deg,#C62828,#FF5252); }
+    .toko-toast.toko-toast-info{ background:linear-gradient(90deg,#1976D2,#64B5F6); }
+    @keyframes slideInCenter { to{ opacity:1; transform:none; } }
+
+    /* ====== Size chips & modal ====== */
+    .size-chips { display:flex; flex-wrap:wrap; gap:.6rem; justify-content:center; }
+    .size-chip {
+      padding:.45rem 1rem; border-radius:50px; border:2px solid var(--brand); background:#fff; color:var(--brand); cursor:pointer; font-weight:500; transition:all .25s; box-shadow:0 2px 4px rgba(0,0,0,.05);
+      min-width:44px; min-height:38px;
+    }
+    .size-chip[aria-pressed="true"]{ background:linear-gradient(90deg,#8B004B,#ad1457); color:#fff; box-shadow:0 4px 10px rgba(139,0,75,.3); transform:scale(1.05); }
+    .size-chip:hover:not(:disabled){ background:linear-gradient(90deg,#a9005d,#c2185b); color:#fff; transform:translateY(-2px); }
+    .size-chip:disabled{ border-color:#ccc; color:#ccc; cursor:not-allowed; background:#f8f9fa; }
+    #btnAddCart { background:linear-gradient(90deg,#8B004B,#ad1457); border:none; }
+    #btnAddCart:hover { background:linear-gradient(90deg,#a9005d,#c2185b); }
+
+    /* ====== Small helpers ====== */
+    .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="index.html">Toko Baju Sahabat</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon" aria-hidden="true"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link active" href="index.html">Beranda</a></li>
+          <li class="nav-item"><a class="nav-link" href="tentang.html">Tentang</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="dropdownToko" role="button" data-bs-toggle="dropdown" aria-expanded="false">Toko</a>
+            <ul class="dropdown-menu" aria-labelledby="dropdownToko">
+              <li><a class="dropdown-item" href="penjualansemua.html">Semua Produk</a></li>
+              <li><a class="dropdown-item" href="barangpopuler.html">Barang Populer</a></li>
+              <li><a class="dropdown-item" href="barangbaru.html">Barang Baru</a></li>
+              <li><hr class="dropdown-divider" /></li>
+              <li class="dropdown-submenu position-relative">
+                <a class="dropdown-item d-flex align-items-center justify-content-between" href="bajuwanita.html" aria-expanded="false">
+                  Baju Wanita
+                  <button class="btn btn-sm p-0 border-0 bg-transparent ms-2 submenu-toggle" type="button" aria-label="Buka submenu">
+                    <i class="bi bi-caret-down-fill" aria-hidden="true"></i>
+                  </button>
+                </a>
+                <ul class="dropdown-menu" aria-label="Submenu Baju Wanita">
+                  <li><a class="dropdown-item" href="dress.html">Dress</a></li>
+                  <li><a class="dropdown-item" href="blouse.html">Blouse</a></li>
+                  <li><a class="dropdown-item" href="tunik.html">Tunik</a></li>
+                  <li><a class="dropdown-item" href="gamis.html">Gamis</a></li>
+                  <li><a class="dropdown-item" href="rokcelana.html">Rok/Celana</a></li>
+                </ul>
+              </li>
+              <li><a class="dropdown-item" href="bajupria.html">Baju Pria</a></li>
+              <li><a class="dropdown-item" href="bajuanak.html">Baju Anak</a></li>
+              <li><a class="dropdown-item" href="busanamuslim.html">Busana Muslim</a></li>
+            </ul>
+          </li>
+        </ul>
+        <div class="d-flex align-items-center" style="gap:.5rem;">
+          <form class="d-flex" action="hasilpencarian.html" method="GET">
+            <label class="sr-only" for="searchInput">Cari Produk</label>
+            <input id="searchInput" class="form-control form-control-sm me-2" type="search" name="q" placeholder="Cari Produk" required />
+            <button class="btn btn-outline-success btn-sm" type="submit">Cari</button>
+          </form>
+          <a id="loginButton" href="login.html" class="btn btn-outline-primary btn-sm">Login</a>
+          <a id="registerButton" href="daftarakun.html" class="btn btn-outline-secondary btn-sm">Buat Akun</a>
+          <a id="manageAccountButton" href="akun.html" class="btn btn-outline-success btn-sm" style="display:none;">Kelola Akun</a>
+          <a id="statusButton" href="stpesanan.html" class="btn btn-outline-info btn-sm" style="display:none;">Status Pesanan</a>
+          <a id="cartButton" href="keranjangbelanja.html" class="btn btn-outline-warning btn-sm position-relative" style="display:none;">
+            <i class="bi bi-cart" style="font-size:1.2rem;"></i>
+            <span id="cartCount" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">0</span>
+          </a>
+          <button id="logoutButton" class="btn btn-outline-danger btn-sm" style="display:none;">Logout</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero-elite">
+    <h1>Selamat Datang di <span style="color:#FFD1EB;">Toko Baju Sahabat</span></h1>
+    <p class="mb-3">Murah, Indah dan Bersahabat<br/>Belanja Lebih Nyaman, Tampil Lebih Gaya!</p>
+    <a href="penjualansemua.html" class="btn btn-toko-outline btn-lg px-4 fw-bold rounded-pill mt-2 shadow-sm">Belanja Sekarang</a>
+  </section>
+
+  <!-- Produk -->
+  <div class="produk-section-title">Produk Unggulan</div>
+  <div class="produk-elite-grid" id="produk-container"></div>
+
+  <!-- Modal Pilih Ukuran -->
+  <div class="modal fade" id="sizeModal" tabindex="-1" aria-labelledby="sizeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <form id="sizeForm" class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="sizeModalLabel">Pilih Ukuran</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+        </div>
+        <div class="modal-body">
+          <div id="sizeChips" class="size-chips"></div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" id="btnAddCart" class="btn btn-primary" disabled>Tambah ke Keranjang</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // ====== Helper: Toast ======
+    function showToast(msg, type = "success") {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = 'toko-toast toko-toast-' + type;
+      let icon = '<i class="bi bi-check-circle-fill" aria-hidden="true"></i>';
+      if (type === "error") icon = '<i class="bi bi-x-circle-fill" aria-hidden="true"></i>';
+      if (type === "info") icon = '<i class="bi bi-info-circle-fill" aria-hidden="true"></i>';
+      toast.innerHTML = icon + '<span style="flex:1;">' + msg + '</span>';
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = 0;
+        toast.style.transform = "translateY(30px) scale(0.98)";
+        setTimeout(() => toast.remove(), 400);
+      }, 2000);
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const email = localStorage.getItem('email');
+      const name = localStorage.getItem('name');
+      let selectedSize = '';
+
+      // ====== Mobile submenu toggle (tanpa mengganggu desktop hover) ======
+      function initMobileSubmenu() {
+        const isMobile = window.matchMedia('(max-width: 991.98px)').matches;
+        document.querySelectorAll('.dropdown-submenu').forEach((sub) => {
+          const toggleBtn = sub.querySelector('.submenu-toggle');
+          const parentLink = sub.querySelector('a.dropdown-item');
+          if (!toggleBtn) return;
+
+          // Bersihkan handler dulu
+          toggleBtn.onclick = null;
+          parentLink.onclick = null;
+
+          if (isMobile) {
+            // Klik caret hanya toggle submenu; klik label kiri tetap bisa navigate (bajuwanita.html)
+            toggleBtn.addEventListener('click', (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              sub.classList.toggle('show');
+              const expanded = sub.classList.contains('show');
+              parentLink.setAttribute('aria-expanded', String(expanded));
+            });
+
+            // Tutup submenu lain saat buka satu (accordion-ish)
+            sub.addEventListener('click', (e) => {
+              if (!e.target.closest('.submenu-toggle')) return;
+              document.querySelectorAll('.dropdown-submenu.show').forEach(s => { if (s !== sub) s.classList.remove('show'); });
+            });
+          }
+        });
+      }
+      initMobileSubmenu();
+      window.addEventListener('resize', initMobileSubmenu);
+
+      // ====== Auth UI ======
+      if (email && name) {
+        document.getElementById('loginButton').style.display = 'none';
+        document.getElementById('registerButton').style.display = 'none';
+        document.getElementById('logoutButton').style.display = 'inline-block';
+        document.getElementById('manageAccountButton').style.display = 'inline-block';
+        document.getElementById('statusButton').style.display = 'inline-block';
+        document.getElementById('cartButton').style.display = 'inline-block';
+        updateCartCount();
+      }
+
+      document.getElementById('logoutButton').addEventListener('click', () => {
+        localStorage.clear();
+        window.location.reload();
+      });
+
+      async function updateCartCount() {
+        try {
+          const res = await fetch('/api/keranjang/jumlah/' + email);
+          const data = await res.json();
+          document.getElementById('cartCount').textContent = data.totalItem || 0;
+        } catch (err) {
+          console.error('Gagal memuat jumlah keranjang:', err);
+        }
+      }
+
+      // ====== Load Produk (Top 10) ======
+      async function loadProduk() {
+        try {
+          const res = await fetch('/api/produk?fields=nama,harga,stok');
+          const data = await res.json();
+          const produkTerbatas = (Array.isArray(data) ? data : []).slice(0, 10);
+          const container = document.getElementById('produk-container');
+          container.innerHTML = '';
+
+          produkTerbatas.forEach(produk => {
+            const adaUkuran = produk.stok && Object.keys(produk.stok).length > 0;
+            const btnCart = email
+              ? '<button class="btn btn-dark btn-sm rounded-circle btn-cart" style="width:36px;height:36px;" data-id="'+produk._id+'"><i class="bi bi-cart-plus"></i></button>'
+              : '';
+
+            const el = document.createElement('div');
+            el.className = 'produk-elite-card';
+            el.innerHTML = `
+              <a href="detailproduk.html?id=${produk._id}" class="produk-elite-img"
+                 style="background-image:url('/api/produk/gambar/${produk._id}');" loading="lazy" aria-label="Lihat ${produk.nama}"></a>
+              <div class="produk-elite-info">
+                <h5>${produk.nama}</h5>
+                <p>Rp ${Number(produk.harga).toLocaleString('id-ID')}</p>
+                <div class="produk-btns">
+                  <a href="detailproduk.html?id=${produk._id}" class="btn btn-outline-primary btn-sm rounded-pill">Lihat Produk</a>
+                  ${btnCart}
+                </div>
+              </div>
+            `;
+            container.appendChild(el);
+
+            if (adaUkuran && btnCart) {
+              el.querySelector('.btn-cart').addEventListener('click', async () => {
+                try {
+                  const r = await fetch('/api/produk/' + produk._id);
+                  const p = await r.json();
+                  const stok = p.stok || {};
+                  const chipContainer = document.getElementById('sizeChips');
+                  chipContainer.innerHTML = '';
+                  selectedSize = '';
+                  document.getElementById('btnAddCart').disabled = true;
+
+                  Object.keys(stok).forEach(u => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'size-chip';
+                    btn.textContent = u.toUpperCase();
+                    if (stok[u] <= 0) btn.disabled = true;
+                    btn.addEventListener('click', () => {
+                      chipContainer.querySelectorAll('.size-chip').forEach(c => c.setAttribute('aria-pressed','false'));
+                      btn.setAttribute('aria-pressed','true');
+                      selectedSize = u;
+                      document.getElementById('btnAddCart').disabled = false;
+                    });
+                    chipContainer.appendChild(btn);
+                  });
+                  const form = document.getElementById('sizeForm');
+                  form.dataset.produkId = produk._id;
+                  form.dataset.nama     = produk.nama;
+                  form.dataset.harga    = produk.harga;
+                  bootstrap.Modal.getOrCreateInstance(document.getElementById('sizeModal')).show();
+                } catch {
+                  showToast('Gagal mengambil data ukuran','error');
+                }
+              });
+            }
+          });
+        } catch (err) {
+          console.error('Gagal memuat produk:', err);
+        }
+      }
+
+      // ====== Add to cart submit ======
+      document.getElementById('sizeForm').addEventListener('submit', async e => {
+        e.preventDefault();
+        if (!selectedSize) return;
+        const f = e.currentTarget;
+        const bodyProduk = {
+          _id: f.dataset.produkId,
+          nama: f.dataset.nama,
+          harga: Number(f.dataset.harga),
+          jumlah: 1,
+          ukuran: selectedSize
+        };
+        try {
+          const resp = await fetch('/api/keranjang/tambah', {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({ email, produk: bodyProduk })
+          });
+          const j = await resp.json();
+          if (j.success) {
+            showToast('Produk ditambahkan ke keranjang!');
+            updateCartCount();
+            bootstrap.Modal.getOrCreateInstance(document.getElementById('sizeModal')).hide();
+          } else {
+            showToast(j.message || 'Gagal menambah', 'error');
+          }
+        } catch {
+          showToast('Terjadi kesalahan', 'error');
+        }
+      });
+
+      loadProduk();
+    });
+  </script>
+</body>
+</html>

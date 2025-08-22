@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Grafik — Dashboard Admin</title>
+  <link rel="icon" href="assets/favicon.ico" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    html, body { font-family: system-ui, sans-serif; background: #f8f9fa; margin:0; height:100%; }
+    .navbar .btn-outline-primary { border-color: #8B004B; color: #8B004B; }
+    .navbar .btn-outline-primary:hover { background-color: #8B004B; color: #fff; }
+    .hero { background: linear-gradient(to right, #8B004B, #ad1457); color:#fff; padding:2rem 1rem; text-align:center; }
+    .sidebar { background:#fff; border-right:1px solid #e5e5e5; height:calc(100vh - 56px - 64px); padding-top:1rem; }
+    .sidebar a { color:#333; display:block; padding:.75rem 1.5rem; text-decoration:none; }
+    .sidebar a.active, .sidebar a:hover { background:#f1f1f1; color:#8B004B; }
+    .content { padding:2rem; }
+    .card {
+      box-shadow:0 .25rem .5rem rgba(0,0,0,0.10);
+      border:none;
+      border-radius:1.1rem;
+      min-height:340px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      padding:2rem 1.5rem;
+      transition: box-shadow .2s;
+      background:#fff;
+    }
+    .card .chart-title { font-size:1.15rem; font-weight:600; margin-bottom:1rem; text-align:center; }
+    .card canvas { margin:auto; display:block; max-width:100%; max-height:240px; }
+    @media (max-width: 991px) {
+      .content { padding:1rem; }
+      .card { min-height:270px; padding:1rem 0.5rem; }
+    }
+    @media (max-width: 768px) {
+      .sidebar { display:none; }
+      .card { margin-bottom:1.5rem; min-height:200px; }
+    }
+    .row.grafik-row { row-gap:2rem; }
+  </style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="dashboardadmin.html">Toko Baju Sahabat</a>
+      <div class="d-flex align-items-center ms-auto" style="gap:.5rem;">
+      </div>
+    </div>
+  </nav>
+  <section class="hero">
+    <h1>Grafik Statistik Penjualan & Stok</h1>
+    <p>Visualisasi data penjualan online, offline, dan status stok produk</p>
+  </section>
+  <div class="container-fluid">
+    <div class="row">
+      <nav class="col-md-2 sidebar d-none d-md-block">
+  <a href="dashboardadmin.html"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a>
+  <a href="produkadmin.html" class="active"><i class="bi bi-tags me-2"></i>Kelola Produk</a>
+  <a href="stok.html"><i class="bi bi-box-seam me-2"></i>Manajemen Stok</a>
+  <a href="pembelian.html"><i class="bi bi-download me-2"></i>Pembelian (Barang Masuk)</a>
+  <a href="penjualan.html"><i class="bi bi-upload me-2"></i>Penjualan (Barang Keluar)</a>
+  <a href="offline.html"><i class="bi bi-shop me-2"></i>Penjualan Offline</a>
+  <a href="kelolapesanan.html"><i class="bi bi-inboxes me-2"></i>Kelola Pesanan Online</a>
+  <a href="laporan.html"><i class="bi bi-file-earmark-bar-graph me-2"></i>Laporan Stok</a>
+  <!-- ✅ Menu baru ditambahkan di sini -->
+  <a href="laporanpenjualan.html"><i class="bi bi-journal-text me-2"></i>Laporan Penjualan</a>
+  <a href="grafik.html"><i class="bi bi-bar-chart me-2"></i>Grafik</a>
+  <a href="pengaturan.html"><i class="bi bi-gear me-2"></i>Pengaturan Admin</a>
+</nav>
+      <main class="col-md-10 content">
+        <div class="row grafik-row">
+          <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <div class="card">
+              <div class="chart-title">Status Stok Produk</div>
+              <canvas id="stokStatusChart" width="340" height="220"></canvas>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <div class="card">
+              <div class="chart-title">Penjualan Online & Offline per Hari</div>
+              <canvas id="penjualanPeriodeChart" width="340" height="220"></canvas>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <div class="card">
+              <div class="chart-title">Penjualan per Kategori</div>
+              <canvas id="penjualanKategoriChart" width="340" height="220"></canvas>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <div class="card">
+              <div class="chart-title">Perputaran Stok Produk</div>
+              <canvas id="perputaranStokChart" width="340" height="220"></canvas>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <div class="card">
+              <div class="chart-title">Status Pesanan Online</div>
+              <canvas id="statusPesananChart" width="340" height="220"></canvas>
+            </div>
+          </div>
+          <div class="col-12 col-md-6 col-lg-4 mb-4">
+            <div class="card">
+              <div class="chart-title">Omzet per Channel</div>
+              <canvas id="omzetChannelChart" width="340" height="220"></canvas>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // STATUS STOK
+    // STATUS STOK PER SIZE
+// STATUS STOK PER SIZE (AKUMULASI SEMUA PRODUK)
+// STATUS STOK (TOTAL SEMUA UKURAN SEMUA PRODUK SESUAI PARAMETER LAPORAN STOK)
+async function fetchStokStatus() {
+  try {
+    const res = await fetch('/api/produk', {
+      headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') }
+    });
+    if (!res.ok) throw new Error('HTTP error: ' + res.status);
+    const products = await res.json();
+
+    let aman = 0, menipis = 0, kritis = 0, habis = 0;
+
+    products.forEach(p => {
+      if (typeof p.stok === 'object' && p.stok !== null) {
+        const stokObj = p.stok.entries ? Object.fromEntries(p.stok.entries()) : p.stok;
+        Object.values(stokObj).forEach(qty => {
+          if (qty === 0) habis++;
+          else if (qty < 40) kritis++;
+          else if (qty < 80) menipis++;
+          else aman++;
+        });
+      } else {
+        const qty = p.stok || 0;
+        if (qty === 0) habis++;
+        else if (qty < 40) kritis++;
+        else if (qty < 80) menipis++;
+        else aman++;
+      }
+    });
+
+    return { aman, menipis, kritis, habis };
+  } catch (err) {
+    alert('Gagal ambil data status stok: ' + err.message);
+    return null;
+  }
+}
+
+async function renderStokStatusChart() {
+  const data = await fetchStokStatus();
+  if (!data) return;
+  const ctx = document.getElementById('stokStatusChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: ['Aman', 'Menipis', 'Kritis', 'Habis'],
+      datasets: [{
+        data: [data.aman, data.menipis, data.kritis, data.habis],
+        backgroundColor: ['#28a745', '#ffc107', '#dc3545', '#212529']
+      }]
+    },
+    options: {
+      plugins: { legend: { position: 'top' } },
+      maintainAspectRatio: false
+    }
+  });
+}
+
+
+
+    // PENJUALAN PERIODE
+    async function fetchPenjualanPeriode() {
+      try {
+        const res = await fetch('/api/admin/grafik/penjualan-periode');
+        if (!res.ok) throw new Error('HTTP error: ' + res.status);
+        const json = await res.json();
+        return json.data;
+      } catch (err) {
+        alert('Gagal ambil data penjualan periode: ' + err.message);
+        return null;
+      }
+    }
+    async function renderPenjualanPeriodeChart() {
+      const data = await fetchPenjualanPeriode();
+      if (!data) return;
+      const ctx = document.getElementById('penjualanPeriodeChart').getContext('2d');
+      // Label tampil dalam format "DD-MM"
+      const labels = data.labels.map(dateStr => {
+        const d = new Date(dateStr);
+        return d.toLocaleDateString('id-ID', { day: '2-digit', month: '2-digit' });
+      });
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: 'Online',
+              data: data.online,
+              backgroundColor: '#ad1457'
+            },
+            {
+              label: 'Offline',
+              data: data.offline,
+              backgroundColor: '#8B004B'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { position: 'top' } },
+          maintainAspectRatio: false
+        }
+      });
+    }
+
+    // PENJUALAN KATEGORI
+    async function fetchPenjualanKategori() {
+      try {
+        const res = await fetch('/api/admin/grafik/penjualan-kategori');
+        if (!res.ok) throw new Error('HTTP error: ' + res.status);
+        const json = await res.json();
+        return json.data;
+      } catch (err) {
+        alert('Gagal ambil data penjualan kategori: ' + err.message);
+        return null;
+      }
+    }
+    async function renderPenjualanKategoriChart() {
+      const data = await fetchPenjualanKategori();
+      if (!data) return;
+      const ctx = document.getElementById('penjualanKategoriChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: data.labels,
+          datasets: [
+            {
+              label: 'Online',
+              data: data.online,
+              backgroundColor: '#ad1457'
+            },
+            {
+              label: 'Offline',
+              data: data.offline,
+              backgroundColor: '#8B004B'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { position: 'top' } },
+          maintainAspectRatio: false
+        }
+      });
+    }
+
+    // PERPUTARAN STOK
+    async function fetchPerputaranStok() {
+      try {
+        const res = await fetch('/api/admin/grafik/perputaran-stok');
+        if (!res.ok) throw new Error('HTTP error: ' + res.status);
+        const json = await res.json();
+        return json.data;
+      } catch (err) {
+        alert('Gagal ambil data perputaran stok: ' + err.message);
+        return null;
+      }
+    }
+    async function renderPerputaranStokChart() {
+      const data = await fetchPerputaranStok();
+      if (!data) return;
+      const ctx = document.getElementById('perputaranStokChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: data.map(d => d.nama),
+          datasets: [
+            {
+              label: 'Stok Awal',
+              data: data.map(d => d.stokAwal),
+              backgroundColor: '#ffc107'
+            },
+            {
+              label: 'Terjual',
+              data: data.map(d => d.terjual),
+              backgroundColor: '#dc3545'
+            },
+            {
+              label: 'Stok Akhir',
+              data: data.map(d => d.stokAkhir),
+              backgroundColor: '#28a745'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { position: 'top' } },
+          scales: { x: { stacked: true }, y: { beginAtZero: true } },
+          maintainAspectRatio: false
+        }
+      });
+    }
+
+    // STATUS PESANAN
+    async function fetchStatusPesanan() {
+      try {
+        const res = await fetch('/api/admin/grafik/status-pesanan');
+        if (!res.ok) throw new Error('HTTP error: ' + res.status);
+        const json = await res.json();
+        return json.data;
+      } catch (err) {
+        alert('Gagal ambil data status pesanan: ' + err.message);
+        return null;
+      }
+    }
+    async function renderStatusPesananChart() {
+      const data = await fetchStatusPesanan();
+      if (!data) return;
+      const ctx = document.getElementById('statusPesananChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: data.labels,
+          datasets: [
+            {
+              label: 'Jumlah Pesanan',
+              data: data.values,
+              backgroundColor: '#8B004B'
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { display: false } },
+          maintainAspectRatio: false
+        }
+      });
+    }
+
+    // OMZET CHANNEL
+    async function fetchOmzetChannel() {
+      try {
+        const res = await fetch('/api/admin/grafik/omzet-channel');
+        if (!res.ok) throw new Error('HTTP error: ' + res.status);
+        const json = await res.json();
+        return json.data;
+      } catch (err) {
+        alert('Gagal ambil data omzet channel: ' + err.message);
+        return null;
+      }
+    }
+    async function renderOmzetChannelChart() {
+      const data = await fetchOmzetChannel();
+      if (!data) return;
+      const ctx = document.getElementById('omzetChannelChart').getContext('2d');
+      new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: data.labels,
+          datasets: [
+            {
+              label: 'Omzet',
+              data: data.values,
+              backgroundColor: ['#ad1457', '#8B004B']
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { position: 'top' } },
+          maintainAspectRatio: false
+        }
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      renderStokStatusChart();
+      renderPenjualanPeriodeChart();
+      renderPenjualanKategoriChart();
+      renderPerputaranStokChart();
+      renderStatusPesananChart();
+      renderOmzetChannelChart();
+    });
+
+    document.getElementById('logout').onclick = () => {
+      localStorage.removeItem('adminToken');
+      window.location.href = 'masukadmin.html';
+    };
+  </script>
+</body>
+</html>
